@@ -27,15 +27,27 @@
     }
 
     .player-card {
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.9);
       color: #222;
       border-radius: 12px;
       padding: 15px;
-      margin: 10px 0;
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
     }
 
-    .player-card p {
-      margin: 6px 0;
+    .player-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 20px;
+      border: 2px solid #00c9a7;
+      background: #eee;
+    }
+
+    .player-info p {
+      margin: 5px 0;
     }
   </style>
 </head>
@@ -83,15 +95,30 @@
           return;
         }
 
-        container.innerHTML = players.map(p => `
-          <div class="player-card">
-            <p><strong>Name:</strong> ${p["Player_Name"]}</p>
-            <p><strong>Age:</strong> ${p["Player_Age"]}</p>
-            <p><strong>Height:</strong> ${p["Player_Height(cms)"]} cm</p>
-            <p><strong>Weight:</strong> ${p["Player_Weight(Kgs)"]} kg</p>
-            <p><strong>Education:</strong> ${p["Player_Education"]}</p>
-          </div>
-        `).join("");
+        container.innerHTML = players.map(p => {
+          let imgTag = '';
+          const rawLink = p["Player_Picture"];
+          if (rawLink && rawLink.includes("id=")) {
+            const fileId = new URL(rawLink).searchParams.get("id");
+            const publicUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+            imgTag = `<img class="player-image" src="${publicUrl}" alt="${p["Player_Name"]}">`;
+          } else {
+            imgTag = `<div class="player-image" style="display:flex;align-items:center;justify-content:center;font-size:12px;">N/A</div>`;
+          }
+
+          return `
+            <div class="player-card">
+              ${imgTag}
+              <div class="player-info">
+                <p><strong>Name:</strong> ${p["Player_Name"]}</p>
+                <p><strong>Age:</strong> ${p["Player_Age"]}</p>
+                <p><strong>Height:</strong> ${p["Player_Height(cms)"]} cm</p>
+                <p><strong>Weight:</strong> ${p["Player_Weight(Kgs)"]} kg</p>
+                <p><strong>Education:</strong> ${p["Player_Education"]}</p>
+              </div>
+            </div>
+          `;
+        }).join("");
       });
   </script>
 </body>

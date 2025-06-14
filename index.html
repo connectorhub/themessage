@@ -40,6 +40,7 @@
       gap: 20px;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      position: relative;
     }
 
     nav a {
@@ -49,12 +50,45 @@
       padding: 8px 16px;
       border-radius: 5px;
       transition: all 0.3s ease;
+      position: relative;
     }
 
     nav a:hover {
       background-color: #e67e22;
       color: white;
       transform: scale(1.05);
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 38px;
+      left: 0;
+      background-color: #ffffffee;
+      min-width: 160px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 5px;
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      display: block;
+      text-align: left;
+      padding: 10px 16px;
+      color: #2c3e50;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f0f0f0;
+      color: #e67e22;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
     }
 
     footer {
@@ -80,7 +114,19 @@
     <a href="business.html">Business</a>
     <a href="resume.html">Resume</a>
     <a href="projects.html">Projects</a>
-    <a href="sports.html">Sports</a>
+
+    <!-- Sports dropdown -->
+    <div class="dropdown">
+      <a href="sports.html">Sports ▾</a>
+      <div class="dropdown-content">
+        <a href="#">Football (Soccer)</a>
+        <a href="#">Cricket</a>
+        <a href="#">Basketball</a>
+        <a href="#">Hockey (Field & Ice)</a>
+        <a href="#">Volleyball</a>
+      </div>
+    </div>
+
     <a href="contact.html">Contact</a>
   </nav>
 

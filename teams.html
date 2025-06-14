@@ -44,6 +44,11 @@
       margin-right: 20px;
       border: 2px solid #00c9a7;
       background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      text-align: center;
     }
 
     .player-info p {
@@ -96,15 +101,28 @@
         }
 
         container.innerHTML = players.map(p => {
-          let imgTag = '';
           const rawLink = p["Player_Picture"];
-          if (rawLink && rawLink.includes("id=")) {
-            const fileId = new URL(rawLink).searchParams.get("id");
-            const publicUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-            imgTag = `<img class="player-image" src="${publicUrl}" alt="${p["Player_Name"]}">`;
-          } else {
-            imgTag = `<div class="player-image" style="display:flex;align-items:center;justify-content:center;font-size:12px;">N/A</div>`;
+          let fileId = "";
+
+          if (rawLink) {
+            try {
+              if (rawLink.includes("id=")) {
+                fileId = new URL(rawLink).searchParams.get("id");
+              } else if (rawLink.includes("/file/d/")) {
+                fileId = rawLink.split("/file/d/")[1]?.split("/")[0];
+              }
+            } catch (err) {
+              console.warn("Invalid Player_Picture link:", rawLink);
+            }
           }
+
+          const imageUrl = fileId
+            ? `https://drive.google.com/uc?export=view&id=${fileId}`
+            : "";
+
+          const imgTag = imageUrl
+            ? `<img class="player-image" src="${imageUrl}" alt="${p["Player_Name"]}">`
+            : `<div class="player-image">N/A</div>`;
 
           return `
             <div class="player-card">

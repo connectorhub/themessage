@@ -71,7 +71,7 @@
 
   <script>
     const sheetId = '1wODunklSmhWV2WzgqgwDAjhJ26WmF0B_qNfteYmdUfU';
-    const url = `https://opensheet.elk.sh/${sheetId}/Form%20Responses%201`;
+    const url = `https://opensheet.elk.sh/${sheetId}/CleanData`;
 
     let dataRows = [];
 
@@ -95,7 +95,7 @@
       .then(response => response.json())
       .then(rows => {
         dataRows = rows;
-        const countries = getUnique(rows, "Country's Name, the player belongs to ✅");
+        const countries = getUnique(rows, "Player_Country");
         populateDropdown(countrySel, countries);
         loader.style.display = 'none';
         enableAllDropdowns();
@@ -106,7 +106,7 @@
       });
 
     function getUnique(arr, col) {
-      return [...new Set(arr.map(item => item[col]).filter(Boolean))].sort();
+      return [...new Set(arr.map(item => item[col]?.trim()).filter(Boolean))].sort();
     }
 
     function populateDropdown(selectEl, items) {
@@ -125,40 +125,40 @@
 
     countrySel.addEventListener('change', () => {
       const filtered = dataRows.filter(row =>
-        row["Country's Name, the player belongs to ✅"] === countrySel.value
+        row["Player_Country"] === countrySel.value
       );
-      populateDropdown(provSel, getUnique(filtered, "Province/State's Name, the player belongs to ✅"));
+      populateDropdown(provSel, getUnique(filtered, "Player_Province/State"));
       clearDropdown(distSel);
       clearDropdown(tehSel);
     });
 
     provSel.addEventListener('change', () => {
       const filtered = dataRows.filter(row =>
-        row["Country's Name, the player belongs to ✅"] === countrySel.value &&
-        row["Province/State's Name, the player belongs to ✅"] === provSel.value
+        row["Player_Country"] === countrySel.value &&
+        row["Player_Province/State"] === provSel.value
       );
-      populateDropdown(distSel, getUnique(filtered, "District Name ✅"));
+      populateDropdown(distSel, getUnique(filtered, "Player_District"));
       clearDropdown(tehSel);
     });
 
     distSel.addEventListener('change', () => {
       const filtered = dataRows.filter(row =>
-        row["Country's Name, the player belongs to ✅"] === countrySel.value &&
-        row["Province/State's Name, the player belongs to ✅"] === provSel.value &&
-        row["District Name ✅"] === distSel.value
+        row["Player_Country"] === countrySel.value &&
+        row["Player_Province/State"] === provSel.value &&
+        row["Player_District"] === distSel.value
       );
-      populateDropdown(tehSel, getUnique(filtered, "Tehsil Name ✅"));
+      populateDropdown(tehSel, getUnique(filtered, "Player_Tehsil"));
     });
 
     searchBtn.addEventListener('click', () => {
       const filtered = dataRows.filter(row =>
-        row["Country's Name, the player belongs to ✅"] === countrySel.value &&
-        row["Province/State's Name, the player belongs to ✅"] === provSel.value &&
-        row["District Name ✅"] === distSel.value &&
-        row["Tehsil Name ✅"] === tehSel.value &&
-        row["Player of the Sports"]?.toLowerCase() === "football"
+        row["Player_Country"] === countrySel.value &&
+        row["Player_Province/State"] === provSel.value &&
+        row["Player_District"] === distSel.value &&
+        row["Player_Tehsil"] === tehSel.value &&
+        row["Player_Sport_Category"]?.toLowerCase() === "football"
       );
-      const teamNames = getUnique(filtered, "Enter the Team name");
+      const teamNames = getUnique(filtered, "Player_Team_Name");
       teamsList.innerHTML = teamNames.length
         ? teamNames.map(name => `<li>${name}</li>`).join('')
         : "<li>No teams found.</li>";

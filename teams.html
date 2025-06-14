@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Team Players</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 16px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .player-card {
+      background: rgba(255, 255, 255, 0.85);
+      color: #222;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 10px 0;
+    }
+
+    .player-card p {
+      margin: 6px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Team Players</h2>
+    <div id="player-list">Loading...</div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const sheetId = '1wODunklSmhWV2WzgqgwDAjhJ26WmF0B_qNfteYmdUfU';
+    const url = `https://opensheet.elk.sh/${sheetId}/CleanData`;
+
+    const filters = {
+      country: params.get("country"),
+      province: params.get("province"),
+      district: params.get("district"),
+      tehsil: params.get("tehsil"),
+      team: params.get("team")
+    };
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const players = data
+          .map(row => {
+            const trimmed = {};
+            for (let key in row) trimmed[key] = row[key]?.trim();
+            return trimmed;
+          })
+          .filter(p =>
+            p["Player_Country"] === filters.country &&
+            p["Player_Province/State"] === filters.province &&
+            p["Player_District"] === filters.district &&
+            p["Player_Tehsil"] === filters.tehsil &&
+            p["Player_Team_Name"] === filters.team &&
+            p["Player_Sport_Category"]?.toLowerCase() === "football"
+          );
+
+        const container = document.getElementById("player-list");
+
+        if (players.length === 0) {
+          container.innerHTML = "<p>No players found for this team.</p>";
+          return;
+        }
+
+        container.innerHTML = players.map(p => `
+          <div class="player-card">
+            <p><strong>Name:</strong> ${p["Player_Name"]}</p>
+            <p><strong>Age:</strong> ${p["Player_Age"]}</p>
+            <p><strong>Height:</strong> ${p["Player_Height(cms)"]} cm</p>
+            <p><strong>Weight:</strong> ${p["Player_Weight(Kgs)"]} kg</p>
+            <p><strong>Education:</strong> ${p["Player_Education"]}</p>
+          </div>
+        `).join("");
+      });
+  </script>
+</body>
+</html>

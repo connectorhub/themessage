@@ -75,6 +75,19 @@
       team: params.get("team")
     };
 
+    // Helper function to calculate age from MM/DD/YY or MM/DD/YYYY
+    function calculateAge(dobString) {
+      const parsed = new Date(dobString);
+      if (isNaN(parsed)) return "N/A";
+      const today = new Date();
+      let age = today.getFullYear() - parsed.getFullYear();
+      const m = today.getMonth() - parsed.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < parsed.getDate())) {
+        age--;
+      }
+      return age;
+    }
+
     fetch(url)
       .then(res => res.json())
       .then(data => {
@@ -124,12 +137,14 @@
             ? `<img class="player-image" src="${imageUrl}" alt="${p["Player_Name"]}" onerror="this.onerror=null;this.src='';this.outerHTML='<div class=\\'player-image\\'>N/A</div>';">`
             : `<div class="player-image">N/A</div>`;
 
+          const calculatedAge = calculateAge(p["Player_Age"]);
+
           return `
             <div class="player-card">
               ${imgTag}
               <div class="player-info">
                 <p><strong>Name:</strong> ${p["Player_Name"]}</p>
-                <p><strong>Age:</strong> ${p["Player_Age"]}</p>
+                <p><strong>Age:</strong> ${calculatedAge}</p>
                 <p><strong>Height:</strong> ${p["Player_Height(cms)"]} cm</p>
                 <p><strong>Weight:</strong> ${p["Player_Weight(Kgs)"]} kg</p>
                 <p><strong>Education:</strong> ${p["Player_Education"]}</p>

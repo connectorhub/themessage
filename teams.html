@@ -117,11 +117,11 @@
           }
 
           const imageUrl = fileId
-            ? `https://drive.google.com/uc?export=view&id=${fileId}`
+            ? `https://lh3.googleusercontent.com/d/${fileId}=s100`
             : "";
 
           const imgTag = imageUrl
-            ? `<img class="player-image" src="${imageUrl}" alt="${p["Player_Name"]}">`
+            ? `<img class="player-image" src="${imageUrl}" alt="${p["Player_Name"]}" onerror="this.onerror=null;this.src='';this.outerHTML='<div class=\\'player-image\\'>N/A</div>';">`
             : `<div class="player-image">N/A</div>`;
 
           return `

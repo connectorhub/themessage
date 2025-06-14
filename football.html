@@ -86,6 +86,16 @@
       text-align: center;
     }
 
+    #teams-list li a {
+      color: #222;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    #teams-list li a:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 600px) {
       .container {
         padding: 20px;
@@ -210,8 +220,18 @@
       );
 
       const teamNames = getUnique(filtered, "Player_Team_Name");
+
       teamsList.innerHTML = teamNames.length
-        ? teamNames.map(t => `<li>${t}</li>`).join("")
+        ? teamNames.map(team => {
+            const params = new URLSearchParams({
+              country: countrySel.value,
+              province: provSel.value,
+              district: distSel.value,
+              tehsil: tehSel.value,
+              team: team
+            }).toString();
+            return `<li><a href="teams.html?${params}">${team}</a></li>`;
+          }).join("")
         : "<li>No teams found.</li>";
     });
   </script>

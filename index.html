@@ -1,31 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>The Message - ConnectorHub</title>
   <style>
     body {
-      font-family: Arial;
-      text-align: center;
-      padding: 50px;
-      background-color: #f9f9f9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #eef2f3, #8e9eab);
+      color: #2c3e50;
     }
+
+    header {
+      background-color: #ffffffcc;
+      padding: 40px 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border-bottom: 4px solid #e67e22;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5em;
+      margin: 0 0 10px;
+    }
+
+    header p {
+      font-size: 1.2em;
+      margin: 0;
+    }
+
     nav {
       margin-top: 20px;
+      background: #ffffffaa;
+      padding: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
+
     nav a {
-      margin: 0 15px;
       text-decoration: none;
       color: #2c3e50;
-      font-weight: bold;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 5px;
+      transition: all 0.3s ease;
     }
+
     nav a:hover {
-      color: #e67e22;
+      background-color: #e67e22;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 50px;
     }
   </style>
 </head>
 <body>
-  <h1>📘 Welcome to The Message</h1>
-  <p>A hub of purpose, wisdom, and global knowledge</p>
+
+  <header>
+    <h1>📘 Welcome to The Message</h1>
+    <p>A hub of purpose, wisdom, and global knowledge</p>
+  </header>
 
   <nav>
     <a href="index.html">Home</a>
@@ -34,8 +80,13 @@
     <a href="business.html">Business</a>
     <a href="resume.html">Resume</a>
     <a href="projects.html">Projects</a>
-    <a href="sports.html">Sports</a> <!-- ✅ Fixed link -->
+    <a href="sports.html">Sports</a>
     <a href="contact.html">Contact</a>
   </nav>
+
+  <footer>
+    &copy; 2025 ConnectorHub – All rights reserved.
+  </footer>
+
 </body>
 </html>

@@ -6,16 +6,25 @@
   <title>Sports - The Message</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #e3f2fd, #ffffff);
-      color: #333;
+      margin: 0;
       padding: 40px;
+      font-family: Arial, sans-serif;
       text-align: center;
+      color: white;
+      background: linear-gradient(-45deg, #1e3c72, #2a5298, #e96443, #904e95);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     h1 {
-      color: #2c3e50;
-      font-size: 2em;
+      font-size: 2.5em;
+      margin-bottom: 20px;
     }
 
     .sports-list {
@@ -27,23 +36,24 @@
     }
 
     .sport-card {
-      background-color: #fff;
-      border-radius: 10px;
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
       padding: 20px;
-      width: 200px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: 0.3s;
+      width: 180px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
     }
 
     .sport-card:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      background-color: rgba(255, 255, 255, 0.25);
     }
 
     footer {
-      margin-top: 50px;
+      margin-top: 60px;
       font-size: 0.9em;
-      color: #666;
+      color: #ddd;
     }
 
     @media (max-width: 600px) {
@@ -64,6 +74,10 @@
     <div class="sport-card">Basketball</div>
     <div class="sport-card">Hockey</div>
     <div class="sport-card">Volleyball</div>
+    <div class="sport-card">Tennis</div>
+    <div class="sport-card">Athletics</div>
+    <div class="sport-card">Swimming</div>
+    <div class="sport-card">Wrestling</div>
   </div>
 
   <footer>&copy; 2025 ConnectorHub | Sports Section</footer>

@@ -112,7 +112,8 @@
     function trimRow(row) {
       const trimmed = {};
       for (let key in row) {
-        trimmed[key.trim()] = row[key]?.trim() || "";
+        const cleanKey = key.trim();
+        trimmed[cleanKey] = row[key]?.trim?.() || "";
       }
       return trimmed;
     }

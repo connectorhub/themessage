@@ -5,25 +5,44 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Football Registration</title>
   <style>
-    body { font-family: Arial; max-width: 800px; margin: auto; padding: 20px; }
-    select, button { margin: 10px 0; width: 100%; padding: 8px; font-size: 1rem; }
-    ul { list-style: none; padding-left: 0; }
-    li { padding: 8px; background: #eef; margin: 5px 0; border-radius: 4px; }
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background: #f2f6ff;
+    }
+    select, button {
+      margin: 10px 0;
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    li {
+      padding: 8px;
+      background: #d4e1ff;
+      margin: 5px 0;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
   <h1>Football Teams Lookup</h1>
 
-  <label>Country:</label>
+  <label for="country">Country:</label>
   <select id="country"></select>
 
-  <label>Province/State:</label>
+  <label for="province">Province/State:</label>
   <select id="province"></select>
 
-  <label>District:</label>
+  <label for="district">District:</label>
   <select id="district"></select>
 
-  <label>Tehsil:</label>
+  <label for="tehsil">Tehsil:</label>
   <select id="tehsil"></select>
 
   <button id="search">Search Teams</button>
@@ -43,72 +62,74 @@
     const searchBtn = document.getElementById('search');
     const teamsList = document.getElementById('teams-list');
 
-    // 1. Fetch Sheet Data
+    // Fetch Sheet Data
     fetch(url)
-      .then(r => r.json())
+      .then(response => response.json())
       .then(rows => {
         dataRows = rows;
-        populateDropdown(countrySel, getUnique(rows, 'Country\'s Name, the player belongs to ✅'));
+        const countries = getUnique(rows, "Country's Name, the player belongs to ✅");
+        populateDropdown(countrySel, countries);
+      })
+      .catch(error => {
+        console.error("Error fetching sheet data:", error);
       });
 
-    // 2. Utility to extract unique values
     function getUnique(arr, col) {
-      const s = new Set(arr.map(r => r[col]).filter(v => v));
-      return Array.from(s).sort();
+      return [...new Set(arr.map(item => item[col]).filter(Boolean))].sort();
     }
 
-    // 3. Populate dropdown
-    function populateDropdown(sel, items) {
-      sel.innerHTML = '<option value="">-- Select --</option>';
-      items.forEach(v => {
-        const o = document.createElement('option');
-        o.value = v;
-        o.textContent = v;
-        sel.append(o);
+    function populateDropdown(selectEl, items) {
+      selectEl.innerHTML = '<option value="">-- Select --</option>';
+      items.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item;
+        opt.textContent = item;
+        selectEl.appendChild(opt);
       });
     }
 
-    // 4. Update dependent dropdowns on change
-    countrySel.onchange = () => {
-      const f1 = dataRows.filter(r => r['Country\'s Name, the player belongs to ✅'] === countrySel.value);
-      populateDropdown(provSel, getUnique(f1, 'Province/State\'s Name, the player belongs to ✅'));
-      clearDropdown(distSel); clearDropdown(tehSel);
-    };
-
-    provSel.onchange = () => {
-      const f2 = dataRows.filter(r =>
-        r['Country\'s Name, the player belongs to ✅'] === countrySel.value &&
-        r['Province/State\'s Name, the player belongs to ✅'] === provSel.value
-      );
-      populateDropdown(distSel, getUnique(f2, 'District Name ✅'));
-      clearDropdown(tehSel);
-    };
-
-    distSel.onchange = () => {
-      const f3 = dataRows.filter(r =>
-        r['Country\'s Name, the player belongs to ✅'] === countrySel.value &&
-        r['Province/State\'s Name, the player belongs to ✅'] === provSel.value &&
-        r['District Name ✅'] === distSel.value
-      );
-      populateDropdown(tehSel, getUnique(f3, 'Tehsil Name ✅'));
-    };
-
-    function clearDropdown(sel) {
-      sel.innerHTML = '<option value="">-- Select --</option>';
+    function clearDropdown(selectEl) {
+      selectEl.innerHTML = '<option value="">-- Select --</option>';
     }
 
-    // 5. Search and display teams
-    searchBtn.onclick = () => {
-      const filtered = dataRows.filter(r =>
-        r['Country\'s Name, the player belongs to ✅'] === countrySel.value &&
-        r['Province/State\'s Name, the player belongs to ✅'] === provSel.value &&
-        r['District Name ✅'] === distSel.value &&
-        r['Tehsil Name ✅'] === tehSel.value &&
-        r['Player of the Sports'] === 'Football'
+    countrySel.addEventListener('change', () => {
+      const filtered = dataRows.filter(row =>
+        row["Country's Name, the player belongs to ✅"] === countrySel.value
       );
-      const teams = getUnique(filtered, 'Enter the Team name');
-      teamsList.innerHTML = teams.sort().map(t => `<li>${t}</li>`).join('');
-    };
+      populateDropdown(provSel, getUnique(filtered, "Province/State's Name, the player belongs to ✅"));
+      clearDropdown(distSel);
+      clearDropdown(tehSel);
+    });
+
+    provSel.addEventListener('change', () => {
+      const filtered = dataRows.filter(row =>
+        row["Country's Name, the player belongs to ✅"] === countrySel.value &&
+        row["Province/State's Name, the player belongs to ✅"] === provSel.value
+      );
+      populateDropdown(distSel, getUnique(filtered, "District Name ✅"));
+      clearDropdown(tehSel);
+    });
+
+    distSel.addEventListener('change', () => {
+      const filtered = dataRows.filter(row =>
+        row["Country's Name, the player belongs to ✅"] === countrySel.value &&
+        row["Province/State's Name, the player belongs to ✅"] === provSel.value &&
+        row["District Name ✅"] === distSel.value
+      );
+      populateDropdown(tehSel, getUnique(filtered, "Tehsil Name ✅"));
+    });
+
+    searchBtn.addEventListener('click', () => {
+      const filtered = dataRows.filter(row =>
+        row["Country's Name, the player belongs to ✅"] === countrySel.value &&
+        row["Province/State's Name, the player belongs to ✅"] === provSel.value &&
+        row["District Name ✅"] === distSel.value &&
+        row["Tehsil Name ✅"] === tehSel.value &&
+        row["Player of the Sports"]?.toLowerCase() === "football"
+      );
+      const teamNames = getUnique(filtered, "Enter the Team name");
+      teamsList.innerHTML = teamNames.map(name => `<li>${name}</li>`).join('');
+    });
   </script>
 </body>
 </html>

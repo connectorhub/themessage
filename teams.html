@@ -58,7 +58,7 @@
 </head>
 <body>
   <div class="container">
-    <h2>Team Players</h2>
+    <h2 id="page-heading">Team Players</h2>
     <div id="player-list">Loading...</div>
   </div>
 
@@ -75,7 +75,12 @@
       team: params.get("team")
     };
 
-    // Helper function to calculate age from MM/DD/YY or MM/DD/YYYY
+    // Update page title and heading with team name
+    if (filters.team) {
+      document.title = `Players of ${filters.team}`;
+      document.getElementById("page-heading").innerText = `Players of ${filters.team}`;
+    }
+
     function calculateAge(dobString) {
       const parsed = new Date(dobString);
       if (isNaN(parsed)) return "N/A";

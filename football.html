@@ -1,168 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Football Registration</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: auto;
-      padding: 20px;
-      background: #f2f6ff;
-    }
-    select, button {
-      margin: 10px 0;
-      width: 100%;
-      padding: 10px;
-      font-size: 1rem;
-    }
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-    li {
-      padding: 8px;
-      background: #d4e1ff;
-      margin: 5px 0;
-      border-radius: 4px;
-    }
-    #loader {
-      text-align: center;
-      margin: 20px 0;
-    }
-    .spinner {
-      border: 4px solid #d4e1ff;
-      border-top: 4px solid #007bff;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      animation: spin 1s linear infinite;
-      display: inline-block;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
-</head>
-<body>
-  <h1>Football Teams Lookup</h1>
+<script>
+  const sheetId = '1wODunklSmhWV2WzgqgwDAjhJ26WmF0B_qNfteYmdUfU';
+  const url = `https://opensheet.elk.sh/${sheetId}/CleanData`;
 
-  <div id="loader"><div class="spinner"></div> <p>Loading data...</p></div>
+  let dataRows = [];
 
-  <label for="country">Country:</label>
-  <select id="country" disabled></select>
+  const countrySel = document.getElementById('country');
+  const provSel = document.getElementById('province');
+  const distSel = document.getElementById('district');
+  const tehSel = document.getElementById('tehsil');
+  const searchBtn = document.getElementById('search');
+  const teamsList = document.getElementById('teams-list');
+  const loader = document.getElementById('loader');
 
-  <label for="province">Province/State:</label>
-  <select id="province" disabled></select>
+  function enableAllDropdowns() {
+    countrySel.disabled = false;
+    provSel.disabled = false;
+    distSel.disabled = false;
+    tehSel.disabled = false;
+    searchBtn.disabled = false;
+  }
 
-  <label for="district">District:</label>
-  <select id="district" disabled></select>
-
-  <label for="tehsil">Tehsil:</label>
-  <select id="tehsil" disabled></select>
-
-  <button id="search" disabled>Search Teams</button>
-
-  <h2>Teams:</h2>
-  <ul id="teams-list"></ul>
-
-  <script>
-    const sheetId = '1wODunklSmhWV2WzgqgwDAjhJ26WmF0B_qNfteYmdUfU';
-    const url = `https://opensheet.elk.sh/${sheetId}/CleanData`;
-
-    let dataRows = [];
-
-    const countrySel = document.getElementById('country');
-    const provSel = document.getElementById('province');
-    const distSel = document.getElementById('district');
-    const tehSel = document.getElementById('tehsil');
-    const searchBtn = document.getElementById('search');
-    const teamsList = document.getElementById('teams-list');
-    const loader = document.getElementById('loader');
-
-    function enableAllDropdowns() {
-      countrySel.disabled = false;
-      provSel.disabled = false;
-      distSel.disabled = false;
-      tehSel.disabled = false;
-      searchBtn.disabled = false;
-    }
-
-    fetch(url)
-      .then(response => response.json())
-      .then(rows => {
-        dataRows = rows;
-        const countries = getUnique(rows, "Player_Country");
-        populateDropdown(countrySel, countries);
-        loader.style.display = 'none';
-        enableAllDropdowns();
-      })
-      .catch(error => {
-        console.error("Error fetching sheet data:", error);
-        loader.innerHTML = "<p style='color:red;'>Failed to load data. Please refresh.</p>";
+  fetch(url)
+    .then(response => response.json())
+    .then(rows => {
+      dataRows = rows.map(row => {
+        // Trim all values in each row
+        const trimmedRow = {};
+        for (let key in row) {
+          trimmedRow[key] = row[key]?.trim();
+        }
+        return trimmedRow;
       });
 
-    function getUnique(arr, col) {
-      return [...new Set(arr.map(item => item[col]?.trim()).filter(Boolean))].sort();
-    }
-
-    function populateDropdown(selectEl, items) {
-      selectEl.innerHTML = '<option value="">-- Select --</option>';
-      items.forEach(item => {
-        const opt = document.createElement('option');
-        opt.value = item;
-        opt.textContent = item;
-        selectEl.appendChild(opt);
-      });
-    }
-
-    function clearDropdown(selectEl) {
-      selectEl.innerHTML = '<option value="">-- Select --</option>';
-    }
-
-    countrySel.addEventListener('change', () => {
-      const filtered = dataRows.filter(row =>
-        row["Player_Country"] === countrySel.value
-      );
-      populateDropdown(provSel, getUnique(filtered, "Player_Province/State"));
-      clearDropdown(distSel);
-      clearDropdown(tehSel);
+      const countries = getUnique(dataRows, "Player_Country");
+      populateDropdown(countrySel, countries);
+      loader.style.display = 'none';
+      enableAllDropdowns();
+    })
+    .catch(error => {
+      console.error("Error fetching sheet data:", error);
+      loader.innerHTML = "<p style='color:red;'>Failed to load data. Please refresh.</p>";
     });
 
-    provSel.addEventListener('change', () => {
-      const filtered = dataRows.filter(row =>
-        row["Player_Country"] === countrySel.value &&
-        row["Player_Province/State"] === provSel.value
-      );
-      populateDropdown(distSel, getUnique(filtered, "Player_District"));
-      clearDropdown(tehSel);
-    });
+  function getUnique(arr, col) {
+    return [...new Set(arr.map(item => item[col]).filter(Boolean))].sort();
+  }
 
-    distSel.addEventListener('change', () => {
-      const filtered = dataRows.filter(row =>
-        row["Player_Country"] === countrySel.value &&
-        row["Player_Province/State"] === provSel.value &&
-        row["Player_District"] === distSel.value
-      );
-      populateDropdown(tehSel, getUnique(filtered, "Player_Tehsil"));
+  function populateDropdown(selectEl, items) {
+    selectEl.innerHTML = '<option value="">-- Select --</option>';
+    items.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item;
+      opt.textContent = item;
+      selectEl.appendChild(opt);
     });
+  }
 
-    searchBtn.addEventListener('click', () => {
-      const filtered = dataRows.filter(row =>
-        row["Player_Country"] === countrySel.value &&
-        row["Player_Province/State"] === provSel.value &&
-        row["Player_District"] === distSel.value &&
-        row["Player_Tehsil"] === tehSel.value &&
-        row["Player_Sport_Category"]?.toLowerCase() === "football"
-      );
-      const teamNames = getUnique(filtered, "Player_Team_Name");
-      teamsList.innerHTML = teamNames.length
-        ? teamNames.map(name => `<li>${name}</li>`).join('')
-        : "<li>No teams found.</li>";
-    });
-  </script>
-</body>
-</html>
+  function clearDropdown(selectEl) {
+    selectEl.innerHTML = '<option value="">-- Select --</option>';
+  }
+
+  countrySel.addEventListener('change', () => {
+    const filtered = dataRows.filter(row =>
+      row["Player_Country"] === countrySel.value
+    );
+    populateDropdown(provSel, getUnique(filtered, "Player_Province/State"));
+    clearDropdown(distSel);
+    clearDropdown(tehSel);
+  });
+
+  provSel.addEventListener('change', () => {
+    const filtered = dataRows.filter(row =>
+      row["Player_Country"] === countrySel.value &&
+      row["Player_Province/State"] === provSel.value
+    );
+    populateDropdown(distSel, getUnique(filtered, "Player_District"));
+    clearDropdown(tehSel);
+  });
+
+  distSel.addEventListener('change', () => {
+    const filtered = dataRows.filter(row =>
+      row["Player_Country"] === countrySel.value &&
+      row["Player_Province/State"] === provSel.value &&
+      row["Player_District"] === distSel.value
+    );
+    populateDropdown(tehSel, getUnique(filtered, "Player_Tehsil"));
+  });
+
+  searchBtn.addEventListener('click', () => {
+    const filtered = dataRows.filter(row =>
+      row["Player_Country"] === countrySel.value &&
+      row["Player_Province/State"] === provSel.value &&
+      row["Player_District"] === distSel.value &&
+      row["Player_Tehsil"] === tehSel.value &&
+      row["Player_Sport_Category"]?.toLowerCase() === "football"
+    );
+    const teamNames = getUnique(filtered, "Player_Team_Name");
+    teamsList.innerHTML = teamNames.length
+      ? teamNames.map(name => `<li>${name}</li>`).join('')
+      : "<li>No teams found.</li>";
+  });
+</script>

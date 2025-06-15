@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - ConnectorHub</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #283c86, #45a247);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-box {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 30px 40px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      background-color: #ffffff;
+      color: #333;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #ddd;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h1>Login with Google</h1>
+    <button onclick="signInWithGoogle()">Sign in with Google</button>
+  </div>
+
+  <script>
+    // Replace this with your actual Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyD1gJ...yourAPIkey...",
+      authDomain: "project-841109582244.firebaseapp.com",
+      projectId: "project-841109582244",
+      storageBucket: "project-841109582244.appspot.com",
+      messagingSenderId: "841109582244",
+      appId: "1:841109582244:web:yourAppId"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    function signInWithGoogle() {
+      auth.signInWithPopup(provider)
+        .then(result => {
+          const user = result.user;
+          alert(`Welcome, ${user.displayName}`);
+          // Redirect or show logged-in state
+          window.location.href = "index.html";
+        })
+        .catch(error => {
+          console.error(error);
+          alert("Error signing in: " + error.message);
+        });
+    }
+  </script>
+</body>
+</html>

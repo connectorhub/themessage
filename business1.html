@@ -614,5 +614,42 @@
       }
     });
   </script>
+
+  <script>
+  // Check authentication status
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAAqMkxlTrgvPmJ5WdyeCwMWgcx2lW51WA",
+      authDomain: "connectorhubsignup.firebaseapp.com",
+      projectId: "connectorhubsignup",
+      storageBucket: "connectorhubsignup.firebasestorage.app",
+      messagingSenderId: "1069616706414",
+      appId: "1:1069616706414:web:f0843d21127b358390077f",
+      measurementId: "G-EEYDQT70JG"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    
+    // Check auth state
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = 'auth.html';
+      } else {
+        // User is logged in
+        console.log("User:", user);
+        // Update UI with user info if needed
+      }
+    });
+    
+    // Logout functionality
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      firebase.auth().signOut().then(() => {
+        window.location.href = 'auth.html';
+      });
+    });
+  });
+</script>
+  
 </body>
 </html>

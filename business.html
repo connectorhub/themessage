@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Marketplace - ConnectorHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+    
+    /* Header Styles */
+    header {
+      background-color: #ffffff;
+      padding: 15px 5%;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border-bottom: 4px solid #3498db;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo h1 {
+      font-size: 1.8rem;
+      margin-left: 10px;
+      color: #2c3e50;
+    }
+    
+    .logo i {
+      color: #3498db;
+      font-size: 2rem;
+    }
+    
+    nav {
+      display: flex;
+      gap: 15px;
+    }
+    
+    nav a {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 600;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+    
+    nav a:hover, nav a.active {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    .user-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    
+    .btn {
+      padding: 8px 20px;
+      border-radius: 5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    
+    .btn-primary {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 2px solid #3498db;
+      color: #3498db;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(to right, #3498db, #2c3e50);
+      color: white;
+      padding: 60px 5%;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero h2 {
+      font-size: 2.8rem;
+      margin-bottom: 15px;
+      animation: fadeIn 1s ease;
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto 30px;
+      animation: fadeIn 1.2s ease;
+    }
+    
+    .search-container {
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+      animation: fadeIn 1.4s ease;
+    }
+    
+    .search-container input {
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 50px;
+      border: none;
+      font-size: 1rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .search-container button {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      padding: 10px 20px;
+      border-radius: 50px;
+      border: none;
+      background: #3498db;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .search-container button:hover {
+      background: #2980b9;
+    }
+    
+    /* Categories Section */
+    .categories {
+      padding: 50px 5%;
+      background-color: white;
+    }
+    
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .section-title h2 {
+      font-size: 2.2rem;
+      color: #2c3e50;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+    }
+    
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 4px;
+      background: #3498db;
+    }
+    
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+    
+    .category-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      text-align: center;
+      padding: 30px 20px;
+    }
+    
+    .category-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .category-card i {
+      font-size: 3rem;
+      color: #3498db;
+      margin-bottom: 20px;
+    }
+    
+    .category-card h3 {
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+    
+    /* Services Section */
+    .services {
+      padding: 50px 5%;
+      background-color: #f8fafc;
+    }
+    
+    .filters {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 40px;
+    }
+    
+    .filter-btn {
+      padding: 8px 20px;
+      border-radius: 50px;
+      background: white;
+      border: 2px solid #3498db;
+      color: #3498db;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .filter-btn.active, .filter-btn:hover {
+      background: #3498db;
+      color: white;
+    }
+    
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+    }
+    
+    .service-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .service-image {
+      height: 200px;
+      background-color: #3498db;
+      background: linear-gradient(45deg, #3498db, #2c3e50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 3rem;
+    }
+    
+    .service-content {
+      padding: 25px;
+    }
+    
+    .service-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .profile-pic {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #3498db;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+    
+    .seller-info h4 {
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+    
+    .rating {
+      color: #f39c12;
+    }
+    
+    .service-title {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+    
+    .service-desc {
+      color: #7f8c8d;
+      margin-bottom: 20px;
+    }
+    
+    .service-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #ecf0f1;
+      padding-top: 15px;
+    }
+    
+    .price {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #2c3e50;
+    }
+    
+    .delivery {
+      color: #7f8c8d;
+      font-size: 0.9rem;
+    }
+    
+    /* How it Works */
+    .how-it-works {
+      padding: 50px 5%;
+      background-color: white;
+      text-align: center;
+    }
+    
+    .steps {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 40px;
+    }
+    
+    .step-card {
+      flex: 1;
+      min-width: 250px;
+      max-width: 300px;
+      padding: 30px 20px;
+      background: #f8fafc;
+      border-radius: 10px;
+      position: relative;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .step-number {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 40px;
+      background: #3498db;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    
+    .step-card i {
+      font-size: 2.5rem;
+      color: #3498db;
+      margin-bottom: 20px;
+    }
+    
+    /* Testimonials */
+    .testimonials {
+      padding: 50px 5%;
+      background: linear-gradient(to right, #3498db, #2c3e50);
+      color: white;
+      text-align: center;
+    }
+    
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+    
+    .testimonial-card {
+      background: rgba(255,255,255,0.1);
+      padding: 30px;
+      border-radius: 10px;
+      text-align: left;
+    }
+    
+    .testimonial-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .testimonial-header img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin-right: 15px;
+      background: #3498db;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .testimonial-text {
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+    
+    .testimonial-author {
+      font-weight: bold;
+    }
+    
+    /* Footer */
+    footer {
+      background: #2c3e50;
+      color: white;
+      padding: 40px 5% 20px;
+    }
+    
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .footer-column h3 {
+      position: relative;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .footer-column h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: #3498db;
+    }
+    
+    .footer-links {
+      list-style: none;
+    }
+    
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+    
+    .footer-links a {
+      color: #ecf0f1;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: #3498db;
+      padding-left: 5px;
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+    
+    .social-links a:hover {
+      background: #3498db;
+      transform: translateY(-5px);
+    }
+    
+    .copyright {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .hero h2 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+      
+      .user-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      nav {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .search-container button {
+        position: relative;
+        width: 100%;
+        margin-top: 10px;
+        border-radius: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <i class="fas fa-hands-helping"></i>
+      <h1>ConnectorHub</h1>
+    </div>
+    
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="business.html" class="active">Business</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    
+    <div class="user-actions">
+      <button class="btn btn-outline">Sign In</button>
+      <button class="btn btn-primary">Join Free</button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h2>Find the perfect service for your business</h2>
+    <p>Connect with skilled professionals for all your digital and physical needs</p>
+    <div class="search-container">
+      <input type="text" placeholder="What service are you looking for?">
+      <button>Search</button>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="categories">
+    <div class="section-title">
+      <h2>Popular Categories</h2>
+      <p>Find the services you need across different categories</p>
+    </div>
+    
+    <div class="categories-grid">
+      <div class="category-card">
+        <i class="fas fa-laptop-code"></i>
+        <h3>Web Development</h3>
+        <p>Build your online presence with expert developers</p>
+      </div>
+      
+      <div class="category-card">
+        <i class="fas fa-paint-brush"></i>
+        <h3>Graphic Design</h3>
+        <p>Logos, banners, and creative designs</p>
+      </div>
+      
+      <div class="category-card">
+        <i class="fas fa-mobile-alt"></i>
+        <h3>App Development</h3>
+        <p>Mobile applications for iOS and Android</p>
+      </div>
+      
+      <div class="category-card">
+        <i class="fas fa-chart-line"></i>
+        <h3>Digital Marketing</h3>
+        <p>Grow your business with marketing experts</p>
+      </div>
+      
+      <div class="category-card">
+        <i class="fas fa-pencil-alt"></i>
+        <h3>Content Writing</h3>
+        <p>Engaging content for your audience</p>
+      </div>
+      
+      <div class="category-card">
+        <i class="fas fa-camera"></i>
+        <h3>Photography</h3>
+        <p>Professional photos for your needs</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services">
+    <div class="section-title">
+      <h2>Popular Services</h2>
+      <p>Explore services trusted by thousands of businesses</p>
+    </div>
+    
+    <div class="filters">
+      <button class="filter-btn active">All Services</button>
+      <button class="filter-btn">Digital Tasks</button>
+      <button class="filter-btn">Physical Tasks</button>
+      <button class="filter-btn">Top Rated</button>
+      <button class="filter-btn">New Arrivals</button>
+    </div>
+    
+    <div class="services-grid">
+      <!-- Service Card 1 -->
+      <div class="service-card">
+        <div class="service-image">
+          <i class="fas fa-laptop"></i>
+        </div>
+        <div class="service-content">
+          <div class="service-header">
+            <div class="profile-pic">MT</div>
+            <div class="seller-info">
+              <h4>Muhammad Talha</h4>
+              <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <span>(24)</span>
+              </div>
+            </div>
+          </div>
+          <h3 class="service-title">Professional Website Development</h3>
+          <p class="service-desc">I will design and develop a responsive website for your business with modern technologies.</p>
+          <div class="service-meta">
+            <div class="price">Starting at $150</div>
+            <div class="delivery"><i class="fas fa-clock"></i> 7 days delivery</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Service Card 2 -->
+      <div class="service-card">
+        <div class="service-image">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <div class="service-content">
+          <div class="service-header">
+            <div class="profile-pic">SA</div>
+            <div class="seller-info">
+              <h4>Sarah Ahmed</h4>
+              <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="far fa-star"></i>
+                <span>(18)</span>
+              </div>
+            </div>
+          </div>
+          <h3 class="service-title">Mobile App UI/UX Design</h3>
+          <p class="service-desc">I will create beautiful and functional UI/UX designs for your mobile application.</p>
+          <div class="service-meta">
+            <div class="price">Starting at $120</div>
+            <div class="delivery"><i class="fas fa-clock"></i> 5 days delivery</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Service Card 3 -->
+      <div class="service-card">
+        <div class="service-image">
+          <i class="fas fa-bullhorn"></i>
+        </div>
+        <div class="service-content">
+          <div class="service-header">
+            <div class="profile-pic">RJ</div>
+            <div class="seller-info">
+              <h4>Robert Johnson</h4>
+              <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <span>(42)</span>
+              </div>
+            </div>
+          </div>
+          <h3 class="service-title">Social Media Marketing</h3>
+          <p class="service-desc">I will manage your social media accounts and create engaging content for your audience.</p>
+          <div class="service-meta">
+            <div class="price">Starting at $200</div>
+            <div class="delivery"><i class="fas fa-clock"></i> Ongoing</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Service Card 4 -->
+      <div class="service-card">
+        <div class="service-image">
+          <i class="fas fa-camera"></i>
+        </div>
+        <div class="service-content">
+          <div class="service-header">
+            <div class="profile-pic">ED</div>
+            <div class="seller-info">
+              <h4>Emma Davis</h4>
+              <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <span>(31)</span>
+              </div>
+            </div>
+          </div>
+          <h3 class="service-title">Professional Product Photography</h3>
+          <p class="service-desc">I will take high-quality product photos that will make your items stand out.</p>
+          <div class="service-meta">
+            <div class="price">Starting at $80</div>
+            <div class="delivery"><i class="fas fa-clock"></i> 3 days delivery</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Service Card 5 -->
+      <div class="service-card">
+        <div class="service-image">
+          <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="service-content">
+          <div class="service-header">
+            <div class="profile-pic">MJ</div>
+            <div class="seller-info">
+              <h4>Michael Johnson</h4>
+              <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="far fa-star"></i>
+                <span>(22)</span>
+              </div>
+            </div>
+          </div>
+          <h3 class="service-title">Professional Resume Writing</h3>
+          <p class="service-desc">I will create a professional resume that highlights your skills and experience.</p>
+          <div class="service-meta">
+            <div class="price">Starting at $75</div>
+            <div class="delivery"><i class="fas fa-clock"></i> 2 days delivery</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Service Card 6 -->
+      <div class="service-card">
+        <div class="service-image">
+          <i class="fas fa-video"></i>
+        </div>
+        <div class="service-content">
+          <div class="service-header">
+            <div class="profile-pic">AW</div>
+            <div class="seller-info">
+              <h4>Amanda Wilson</h4>
+              <div class="rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <span>(37)</span>
+              </div>
+            </div>
+          </div>
+          <h3 class="service-title">Video Editing Services</h3>
+          <p class="service-desc">I will edit your videos professionally for YouTube, social media, or business presentations.</p>
+          <div class="service-meta">
+            <div class="price">Starting at $100</div>
+            <div class="delivery"><i class="fas fa-clock"></i> 4 days delivery</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it Works -->
+  <section class="how-it-works">
+    <div class="section-title">
+      <h2>How ConnectorHub Works</h2>
+      <p>Simple steps to get your tasks done</p>
+    </div>
+    
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <i class="fas fa-search"></i>
+        <h3>Find a Service</h3>
+        <p>Browse through thousands of services and find the perfect match for your needs.</p>
+      </div>
+      
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <i class="fas fa-comments"></i>
+        <h3>Contact the Seller</h3>
+        <p>Discuss your requirements with the service provider and finalize the details.</p>
+      </div>
+      
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <i class="fas fa-tasks"></i>
+        <h3>Get the Work Done</h3>
+        <p>The seller completes the task while you monitor progress through our platform.</p>
+      </div>
+      
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <i class="fas fa-check-circle"></i>
+        <h3>Receive & Review</h3>
+        <p>Get the completed work and provide feedback to help the community.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <div class="section-title">
+      <h2>What Our Users Say</h2>
+      <p>Success stories from businesses and freelancers</p>
+    </div>
+    
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-header">
+          <div class="profile-pic">TM</div>
+          <div>
+            <h3>Thomas Miller</h3>
+            <div class="rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+          </div>
+        </div>
+        <p class="testimonial-text">"ConnectorHub helped me find a professional web developer for my startup. The platform is intuitive and the quality of work exceeded my expectations."</p>
+        <div class="testimonial-author">CEO, TechSolutions Inc.</div>
+      </div>
+      
+      <div class="testimonial-card">
+        <div class="testimonial-header">
+          <div class="profile-pic">SM</div>
+          <div>
+            <h3>Sophia Martinez</h3>
+            <div class="rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+          </div>
+        </div>
+        <p class="testimonial-text">"As a freelance graphic designer, ConnectorHub has provided me with consistent projects and clients. It's become my primary source of income."</p>
+        <div class="testimonial-author">Freelance Designer</div>
+      </div>
+      
+      <div class="testimonial-card">
+        <div class="testimonial-header">
+          <div class="profile-pic">RK</div>
+          <div>
+            <h3>Robert Kim</h3>
+            <div class="rating">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+          </div>
+        </div>
+        <p class="testimonial-text">"I needed a mobile app developed quickly. Through ConnectorHub, I found an excellent developer who delivered ahead of schedule. Highly recommended!"</p>
+        <div class="testimonial-author">Product Manager, InnovateCo</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-column">
+        <h3>About ConnectorHub</h3>
+        <p>Connecting businesses with skilled professionals for digital and physical tasks since 2025.</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-column">
+        <h3>Quick Links</h3>
+        <ul class="footer-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Business</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column">
+        <h3>Services</h3>
+        <ul class="footer-links">
+          <li><a href="#">Web Development</a></li>
+          <li><a href="#">Graphic Design</a></li>
+          <li><a href="#">Digital Marketing</a></li>
+          <li><a href="#">Content Writing</a></li>
+          <li><a href="#">Mobile App Development</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column">
+        <h3>Contact Us</h3>
+        <ul class="footer-links">
+          <li><i class="fas fa-envelope"></i> info@connectorhub.com</li>
+          <li><i class="fas fa-phone"></i> +1 (123) 456-7890</li>
+          <li><i class="fas fa-map-marker-alt"></i> 123 Business St, City, Country</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p>&copy; 2025 ConnectorHub. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Simple filter functionality
+    document.querySelectorAll('.filter-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        // Remove active class from all buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
+        // Add active class to clicked button
+        this.classList.add('active');
+        
+        // In a real implementation, this would filter the services
+        // For this demo, we'll just show an alert
+        alert(`Filtering services by: ${this.textContent}`);
+      });
+    });
+    
+    // Search functionality
+    document.querySelector('.search-container button').addEventListener('click', function() {
+      const searchTerm = document.querySelector('.search-container input').value;
+      if (searchTerm.trim() !== '') {
+        alert(`Searching for: ${searchTerm}`);
+      }
+    });
+  </script>
+</body>
+</html>

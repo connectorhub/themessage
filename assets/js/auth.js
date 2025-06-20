@@ -3,14 +3,17 @@ const firebaseConfig = {
   apiKey: "AIzaSyAAqMkxlTrgvPmJ5WdyeCwMWgcx2lW51WA",
   authDomain: "connectorhubsignup.firebaseapp.com",
   projectId: "connectorhubsignup",
-  storageBucket: "connectorhubsignup.firebasestorage.app",
+  storageBucket: "connectorhubsignup.appspot.com",
   messagingSenderId: "1069616706414",
   appId: "1:1069616706414:web:f0843d21127b358390077f",
   measurementId: "G-EEYDQT70JG"
 };
 
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
+// Initialize only if no existing app
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
 const auth = firebase.auth();
 const analytics = firebase.analytics();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
@@ -163,6 +166,10 @@ function getErrorMessage(error) {
       return 'Operation not allowed';
     case 'auth/too-many-requests':
       return 'Too many requests. Try again later';
+    case 'auth/popup-closed-by-user':
+      return 'Popup closed before completing authentication';
+    case 'auth/unauthorized-domain':
+      return 'This domain is not authorized for authentication';
     default:
       return 'An error occurred. Please try again';
   }

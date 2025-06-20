@@ -82,7 +82,7 @@
       margin-bottom: 20px;
     }
     
-    /* Auth Panel */
+    /* Authentication Panel */
     .auth-panel {
       width: 450px;
       background: rgba(0, 10, 30, 0.8);
@@ -431,16 +431,20 @@
   <script>
     // Firebase configuration - Replace with your actual Firebase config
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyAAqMkxlTrgvPmJ5WdyeCwMWgcx2lW51WA",
+      authDomain: "connectorhubsignup.firebaseapp.com",
+      projectId: "connectorhubsignup",
+      storageBucket: "connectorhubsignup.appspot.com",
+      messagingSenderId: "1069616706414",
+      appId: "1:1069616706414:web:f0843d21127b358390077f",
+      measurementId: "G-EEYDQT70JG"
     };
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    // Initialize only if no existing app
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
     const auth = firebase.auth();
 
     // DOM Elements
@@ -584,7 +588,15 @@
         })
         .catch((error) => {
           console.error('Google auth error:', error);
-          showMessage(loginMessage, 'Google authentication failed. Please try again.', 'error');
+          let errorMessage = 'Google authentication failed. Please try again.';
+          
+          if (error.code === 'auth/popup-closed-by-user') {
+            errorMessage = 'Popup closed before completing authentication.';
+          } else if (error.code === 'auth/unauthorized-domain') {
+            errorMessage = 'This domain is not authorized for authentication.';
+          }
+          
+          showMessage(loginMessage, errorMessage, 'error');
         });
     };
     
@@ -614,42 +626,5 @@
       }
     });
   </script>
-
-  <script>
-  // Check authentication status
-  document.addEventListener('DOMContentLoaded', () => {
-    // Initialize Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyAAqMkxlTrgvPmJ5WdyeCwMWgcx2lW51WA",
-      authDomain: "connectorhubsignup.firebaseapp.com",
-      projectId: "connectorhubsignup",
-      storageBucket: "connectorhubsignup.firebasestorage.app",
-      messagingSenderId: "1069616706414",
-      appId: "1:1069616706414:web:f0843d21127b358390077f",
-      measurementId: "G-EEYDQT70JG"
-    };
-    
-    firebase.initializeApp(firebaseConfig);
-    
-    // Check auth state
-    firebase.auth().onAuthStateChanged(user => {
-      if (!user) {
-        window.location.href = 'auth.html';
-      } else {
-        // User is logged in
-        console.log("User:", user);
-        // Update UI with user info if needed
-      }
-    });
-    
-    // Logout functionality
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      firebase.auth().signOut().then(() => {
-        window.location.href = 'auth.html';
-      });
-    });
-  });
-</script>
-  
 </body>
 </html>

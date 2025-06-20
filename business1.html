@@ -12,7 +12,6 @@
       --secondary: #2c3e50;
       --success: #27ae60;
       --danger: #e74c3c;
-      --warning: #f39c12;
       --light: #ecf0f1;
       --dark: #2c3e50;
     }
@@ -29,29 +28,26 @@
       color: #f0f0f0;
       line-height: 1.6;
       min-height: 100vh;
-      padding: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 20px;
     }
     
     .container {
       max-width: 1200px;
       width: 100%;
-      margin: 0 auto;
       display: flex;
       gap: 30px;
     }
     
-    /* Left Panel - Information */
-    .info-panel {
+    /* Left Panel - Branding */
+    .brand-panel {
       flex: 1;
-      background: rgba(0, 20, 40, 0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(52, 152, 219, 0.4);
     }
     
     .logo {
@@ -75,46 +71,15 @@
       color: transparent;
     }
     
-    .security-features {
-      margin-top: 40px;
+    .brand-text {
+      font-size: 1.2rem;
+      color: #bbb;
+      max-width: 500px;
+      line-height: 1.8;
     }
     
-    .feature {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 30px;
-      padding: 20px;
-      background: rgba(52, 152, 219, 0.1);
-      border-radius: 10px;
-      transition: all 0.3s ease;
-    }
-    
-    .feature:hover {
-      background: rgba(52, 152, 219, 0.2);
-      transform: translateY(-5px);
-    }
-    
-    .feature-icon {
-      min-width: 60px;
-      height: 60px;
-      background: rgba(30, 255, 188, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: #1effbc;
-    }
-    
-    .feature-content h3 {
-      font-size: 1.4rem;
-      margin-bottom: 10px;
-      color: var(--primary);
-    }
-    
-    .feature-content p {
-      color: #ccc;
-      line-height: 1.6;
+    .brand-text p {
+      margin-bottom: 20px;
     }
     
     /* Auth Panel */
@@ -300,19 +265,6 @@
       color: var(--primary);
     }
     
-    .security-note {
-      padding: 15px;
-      background: rgba(243, 156, 18, 0.1);
-      border-left: 4px solid var(--warning);
-      border-radius: 0 5px 5px 0;
-      margin-top: 30px;
-    }
-    
-    .security-note h4 {
-      color: var(--warning);
-      margin-bottom: 5px;
-    }
-    
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -323,13 +275,19 @@
       padding: 30px 0 10px;
       color: #ccc;
       font-size: 0.9rem;
-      border-top: 1px solid rgba(52, 152, 219, 0.2);
-      margin-top: 40px;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
     }
     
     @media (max-width: 992px) {
       .container {
         flex-direction: column;
+      }
+      
+      .brand-panel {
+        text-align: center;
+        align-items: center;
       }
       
       .auth-panel {
@@ -338,12 +296,16 @@
     }
     
     @media (max-width: 576px) {
-      .info-panel, .auth-panel {
+      .brand-panel, .auth-panel {
         padding: 25px;
       }
       
       .logo h1 {
         font-size: 2rem;
+      }
+      
+      .auth-header h2 {
+        font-size: 1.8rem;
       }
     }
   </style>
@@ -354,70 +316,24 @@
 </head>
 <body>
   <div class="container">
-    <!-- Information Panel -->
-    <div class="info-panel">
+    <!-- Brand Panel -->
+    <div class="brand-panel">
       <div class="logo">
         <i class="fas fa-hands-helping"></i>
         <h1>ConnectorHub</h1>
       </div>
       
-      <p>Welcome to ConnectorHub - Your secure marketplace for digital and physical services. We prioritize your security with enterprise-grade authentication.</p>
-      
-      <div class="security-features">
-        <h2 style="margin-bottom: 20px; color: #1effbc;">Security Features</h2>
-        
-        <div class="feature">
-          <div class="feature-icon">
-            <i class="fas fa-lock"></i>
-          </div>
-          <div class="feature-content">
-            <h3>Firebase Authentication</h3>
-            <p>Powered by Google's secure authentication system with industry-standard encryption and security protocols.</p>
-          </div>
-        </div>
-        
-        <div class="feature">
-          <div class="feature-icon">
-            <i class="fas fa-user-shield"></i>
-          </div>
-          <div class="feature-content">
-            <h3>Password Protection</h3>
-            <p>Passwords are hashed using bcrypt with unique salts before storage. We never store plain text passwords.</p>
-          </div>
-        </div>
-        
-        <div class="feature">
-          <div class="feature-icon">
-            <i class="fas fa-shield-alt"></i>
-          </div>
-          <div class="feature-content">
-            <h3>Secure Sessions</h3>
-            <p>Authentication tokens are securely stored in your browser and validated with each request.</p>
-          </div>
-        </div>
-        
-        <div class="feature">
-          <div class="feature-icon">
-            <i class="fas fa-check-circle"></i>
-          </div>
-          <div class="feature-content">
-            <h3>Free & Scalable</h3>
-            <p>Firebase provides a generous free tier that scales with your needs without compromising security.</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="security-note">
-        <h4>Security Best Practices</h4>
-        <p>Always use a unique password for your ConnectorHub account and enable two-factor authentication for added security.</p>
+      <div class="brand-text">
+        <p>Your trusted marketplace for digital and physical services. Connect with skilled professionals worldwide.</p>
+        <p>Create your account to start offering services or hiring experts for your projects.</p>
       </div>
     </div>
     
     <!-- Authentication Panel -->
     <div class="auth-panel">
       <div class="auth-header">
-        <h2>Secure Authentication</h2>
-        <p>Sign in or create an account to access ConnectorHub</p>
+        <h2>Create Your Account</h2>
+        <p>Join thousands of professionals on ConnectorHub</p>
       </div>
       
       <div class="tabs">
@@ -505,13 +421,12 @@
           <i class="fab fa-google"></i> Sign up with Google
         </button>
       </div>
-      
-      <div class="security-note">
-        <h4>How We Protect You</h4>
-        <p>ConnectorHub uses Firebase Authentication to securely store your credentials. We never have access to your password, and all data is encrypted in transit and at rest.</p>
-      </div>
     </div>
   </div>
+  
+  <footer>
+    <p>&copy; 2025 ConnectorHub Marketplace. All rights reserved.</p>
+  </footer>
   
   <script>
     // Firebase configuration - Replace with your actual Firebase config

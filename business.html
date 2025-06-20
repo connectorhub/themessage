@@ -32,6 +32,7 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
+      position: relative; /* Added for footer positioning */
     }
     
     .container {
@@ -39,6 +40,7 @@
       width: 100%;
       display: flex;
       gap: 30px;
+      margin-bottom: 60px; /* Added space for footer */
     }
     
     /* Left Panel - Branding */
@@ -82,7 +84,7 @@
       margin-bottom: 20px;
     }
     
-    /* Authentication Panel - REMOVED overflow:hidden */
+    /* Authentication Panel */
     .auth-panel {
       width: 450px;
       background: rgba(0, 10, 30, 0.8);
@@ -131,9 +133,6 @@
     
     .tab-content {
       display: none;
-      position: relative; /* Added for stacking context */
-      z-index: 1; /* Ensure form elements are above background */
-      padding-bottom: 10px; /* Extra space for button */
     }
     
     .tab-content.active {
@@ -182,7 +181,7 @@
       color: var(--primary);
     }
     
-    /* FIXED BUTTON STYLES */
+    /* Fixed Button Styles */
     .btn {
       width: 100%;
       padding: 16px;
@@ -197,8 +196,7 @@
       justify-content: center;
       gap: 10px;
       margin-top: 10px;
-      position: relative; /* Added for proper z-index */
-      z-index: 2; /* Ensure button is above other elements */
+      position: relative;
     }
     
     .btn-primary {
@@ -276,14 +274,18 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
+    /* Fixed Footer Positioning */
     footer {
       text-align: center;
-      padding: 30px 0 10px;
+      padding: 20px 0;
       color: #ccc;
       font-size: 0.9rem;
-      position: absolute;
+      position: fixed;
       bottom: 0;
-      width: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10;
     }
     
     @media (max-width: 992px) {
@@ -312,6 +314,10 @@
       
       .auth-header h2 {
         font-size: 1.8rem;
+      }
+      
+      footer {
+        padding: 15px 0;
       }
     }
   </style>

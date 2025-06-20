@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - ConnectorHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2c3e50;
+      --light: #ecf0f1;
+      --dark: #2c3e50;
+      --success: #27ae60;
+      --error: #e74c3c;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: #2c3e50;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background-color: white;
+      padding: 15px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo i {
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-right: 10px;
+    }
+    
+    .user-actions a {
+      margin-left: 15px;
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .user-actions a:hover {
+      color: var(--primary);
+    }
+    
+    .profile-container {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 30px;
+    }
+    
+    .profile-sidebar {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      height: fit-content;
+    }
+    
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background-color: #eee;
+      margin: 0 auto 20px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .profile-pic-edit {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: var(--primary);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .profile-name {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .profile-name h2 {
+      margin-bottom: 5px;
+    }
+    
+    .profile-name p {
+      color: #7f8c8d;
+    }
+    
+    .profile-menu {
+      list-style: none;
+    }
+    
+    .profile-menu li {
+      margin-bottom: 10px;
+    }
+    
+    .profile-menu a {
+      display: block;
+      padding: 10px 15px;
+      color: var(--secondary);
+      text-decoration: none;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+    
+    .profile-menu a:hover, .profile-menu a.active {
+      background-color: rgba(52, 152, 219, 0.1);
+      color: var(--primary);
+    }
+    
+    .profile-menu i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .profile-content {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .section-title {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn-outline:hover {
+      background: rgba(52, 152, 219, 0.1);
+    }
+    
+    .alert {
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    
+    .alert-success {
+      background: rgba(39, 174, 96, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+    
+    .alert-error {
+      background: rgba(231, 76, 60, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    @media (max-width: 992px) {
+      .profile-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .profile-sidebar {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <div class="logo">
+        <i class="fas fa-hands-helping"></i>
+        <h1>ConnectorHub</h1>
+      </div>
+      <div class="user-actions">
+        <a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </div>
+  </header>
+  
+  <div class="container">
+    <div class="profile-container">
+      <div class="profile-sidebar">
+        <div class="profile-pic">
+          <img id="profile-image" src="" alt="Profile Picture">
+          <div class="profile-pic-edit" id="edit-profile-pic">
+            <i class="fas fa-camera"></i>
+          </div>
+        </div>
+        <div class="profile-name">
+          <h2 id="display-name">Loading...</h2>
+          <p id="user-email">user@example.com</p>
+        </div>
+        <ul class="profile-menu">
+          <li><a href="#" class="active" id="profile-link"><i class="fas fa-user"></i> Profile</a></li>
+          <li><a href="#" id="settings-link"><i class="fas fa-cog"></i> Settings</a></li>
+          <li><a href="#" id="projects-link"><i class="fas fa-briefcase"></i> My Projects</a></li>
+          <li><a href="#" id="messages-link"><i class="fas fa-envelope"></i> Messages</a></li>
+        </ul>
+      </div>
+      
+      <div class="profile-content">
+        <div id="profile-section">
+          <h2 class="section-title">Profile Information</h2>
+          <div id="profile-message" class="alert hidden"></div>
+          
+          <form id="profile-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="full-name">Full Name</label>
+                <input type="text" id="full-name" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="whatsapp">Whatsapp Contact</label>
+                <input type="tel" id="whatsapp" class="form-control" placeholder="+923001234567" required>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="cnic">CNIC Number</label>
+                <input type="text" id="cnic" class="form-control" placeholder="4220112345678">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input type="text" id="address" class="form-control" placeholder="Street/Village">
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="province">Province/State</label>
+                <input type="text" id="province" class="form-control">
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="country">Country</label>
+                <input type="text" id="country" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="postal-code">Postal Code</label>
+                <input type="text" id="postal-code" class="form-control">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="business-role">Business Role</label>
+              <input type="text" id="business-role" class="form-control" placeholder="e.g. Web Developer, Graphic Designer">
+            </div>
+            
+            <div class="form-group">
+              <label for="availability">Availability for Task</label>
+              <select id="availability" class="form-control">
+                <option value="available">Available</option>
+                <option value="not-available">Not Available</option>
+                <option value="limited">Limited Availability</option>
+              </select>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="available-from">Available Hours From</label>
+                <input type="time" id="available-from" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="available-to">Available Hours To</label>
+                <input type="time" id="available-to" class="form-control">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="portfolio">Portfolio/Past Experience Links</label>
+              <textarea id="portfolio" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="languages">Languages</label>
+              <input type="text" id="languages" class="form-control" placeholder="English, Urdu, etc.">
+            </div>
+            
+            <div class="form-group">
+              <label for="social-links">Social Media Links</label>
+              <textarea id="social-links" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAAqMkxlTrgvPmJ5WdyeCwMWgcx2lW51WA",
+      authDomain: "connectorhubsignup.firebaseapp.com",
+      projectId: "connectorhubsignup",
+      storageBucket: "connectorhubsignup.appspot.com",
+      messagingSenderId: "1069616706414",
+      appId: "1:1069616706414:web:f0843d21127b358390077f",
+      measurementId: "G-EEYDQT70JG"
+    };
+
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    // DOM Elements
+    const logoutBtn = document.getElementById('logout');
+    const profileForm = document.getElementById('profile-form');
+    const profileMessage = document.getElementById('profile-message');
+    const displayName = document.getElementById('display-name');
+    const userEmail = document.getElementById('user-email');
+    const profileImage = document.getElementById('profile-image');
+    
+    // Google Sheets API configuration
+    const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL'; // Replace with your Apps Script URL
+    const sheetId = 'YOUR_GOOGLE_SHEET_ID'; // Replace with your Sheet ID
+    
+    // Check auth state
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        // User is not logged in, redirect to login page
+        window.location.href = 'business.html';
+      } else {
+        // User is logged in, load profile data
+        loadUserProfile(user);
+      }
+    });
+    
+    // Load user profile data
+    async function loadUserProfile(user) {
+      // Display basic info
+      displayName.textContent = user.displayName || 'No Name Set';
+      userEmail.textContent = user.email;
+      
+      // Set profile image
+      if (user.photoURL) {
+        profileImage.src = user.photoURL;
+      } else {
+        // Use placeholder image or initials
+        profileImage.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email)}&background=3498db&color=fff&size=150`;
+      }
+      
+      try {
+        // Check if user profile exists in Firestore
+        const docRef = db.collection('users').doc(user.uid);
+        const doc = await docRef.get();
+        
+        if (doc.exists) {
+          // Load data from Firestore
+          const data = doc.data();
+          populateForm(data);
+        } else {
+          // Check Google Sheets (fallback)
+          const sheetData = await checkGoogleSheets(user.email);
+          if (sheetData) {
+            populateForm(sheetData);
+            // Save to Firestore for future use
+            await docRef.set(sheetData);
+          }
+        }
+      } catch (error) {
+        console.error("Error loading profile:", error);
+        showMessage(profileMessage, "Error loading profile data", "error");
+      }
+    }
+    
+    // Check Google Sheets for user data
+    async function checkGoogleSheets(email) {
+      try {
+        const response = await fetch(`${scriptURL}?action=getUser&email=${encodeURIComponent(email)}`);
+        const data = await response.json();
+        return data.success ? data.user : null;
+      } catch (error) {
+        console.error("Error checking Google Sheets:", error);
+        return null;
+      }
+    }
+    
+    // Populate form with user data
+    function populateForm(data) {
+      document.getElementById('full-name').value = data.fullName || '';
+      document.getElementById('whatsapp').value = data.whatsapp || '';
+      document.getElementById('dob').value = data.dob || '';
+      document.getElementById('cnic').value = data.cnic || '';
+      document.getElementById('address').value = data.address || '';
+      document.getElementById('city').value = data.city || '';
+      document.getElementById('province').value = data.province || '';
+      document.getElementById('country').value = data.country || '';
+      document.getElementById('postal-code').value = data.postalCode || '';
+      document.getElementById('business-role').value = data.businessRole || '';
+      document.getElementById('availability').value = data.availability || 'available';
+      document.getElementById('available-from').value = data.availableFrom || '';
+      document.getElementById('available-to').value = data.availableTo || '';
+      document.getElementById('portfolio').value = data.portfolio || '';
+      document.getElementById('languages').value = data.languages || '';
+      document.getElementById('social-links').value = data.socialLinks || '';
+    }
+    
+    // Save profile data
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const user = auth.currentUser;
+      if (!user) return;
+      
+      const profileData = {
+        fullName: document.getElementById('full-name').value,
+        whatsapp: document.getElementById('whatsapp').value,
+        dob: document.getElementById('dob').value,
+        cnic: document.getElementById('cnic').value,
+        address: document.getElementById('address').value,
+        city: document.getElementById('city').value,
+        province: document.getElementById('province').value,
+        country: document.getElementById('country').value,
+        postalCode: document.getElementById('postal-code').value,
+        businessRole: document.getElementById('business-role').value,
+        availability: document.getElementById('availability').value,
+        availableFrom: document.getElementById('available-from').value,
+        availableTo: document.getElementById('available-to').value,
+        portfolio: document.getElementById('portfolio').value,
+        languages: document.getElementById('languages').value,
+        socialLinks: document.getElementById('social-links').value,
+        email: user.email,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      try {
+        // Save to Firestore
+        await db.collection('users').doc(user.uid).set(profileData, { merge: true });
+        
+        // Save to Google Sheets
+        await updateGoogleSheets(user.uid, profileData);
+        
+        // Update display name if changed
+        if (profileData.fullName !== user.displayName) {
+          await user.updateProfile({
+            displayName: profileData.fullName
+          });
+          displayName.textContent = profileData.fullName;
+        }
+        
+        showMessage(profileMessage, "Profile updated successfully!", "success");
+      } catch (error) {
+        console.error("Error saving profile:", error);
+        showMessage(profileMessage, "Error updating profile", "error");
+      }
+    });
+    
+    // Update Google Sheets
+    async function updateGoogleSheets(userId, data) {
+      try {
+        const response = await fetch(scriptURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'updateUser',
+            userId: userId,
+            userData: data
+          })
+        });
+        
+        const result = await response.json();
+        if (!result.success) {
+          throw new Error(result.message);
+        }
+      } catch (error) {
+        console.error("Error updating Google Sheets:", error);
+        throw error;
+      }
+    }
+    
+    // Logout
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      auth.signOut().then(() => {
+        window.location.href = 'business.html';
+      });
+    });
+    
+    // Helper function to show messages
+    function showMessage(element, text, type) {
+      element.textContent = text;
+      element.className = `alert alert-${type}`;
+      element.classList.remove('hidden');
+      
+      setTimeout(() => {
+        element.classList.add('hidden');
+      }, 5000);
+    }
+  </script>
+</body>
+</html>

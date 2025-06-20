@@ -32,7 +32,7 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
-      position: relative; /* Added for footer positioning */
+      position: relative;
     }
     
     .container {
@@ -40,10 +40,9 @@
       width: 100%;
       display: flex;
       gap: 30px;
-      margin-bottom: 60px; /* Added space for footer */
+      margin-bottom: 60px;
     }
     
-    /* Left Panel - Branding */
     .brand-panel {
       flex: 1;
       display: flex;
@@ -84,7 +83,6 @@
       margin-bottom: 20px;
     }
     
-    /* Authentication Panel */
     .auth-panel {
       width: 450px;
       background: rgba(0, 10, 30, 0.8);
@@ -181,7 +179,6 @@
       color: var(--primary);
     }
     
-    /* Fixed Button Styles */
     .btn {
       width: 100%;
       padding: 16px;
@@ -274,7 +271,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Fixed Footer Positioning */
     footer {
       text-align: center;
       padding: 20px 0;
@@ -372,7 +368,7 @@
           </div>
           
           <div style="text-align: right; margin-bottom: 20px;">
-            <a href="#" style="color: var(--primary); text-decoration: none;">Forgot Password?</a>
+            <a href="#" id="forgot-password" style="color: var(--primary); text-decoration: none;">Forgot Password?</a>
           </div>
           
           <button type="submit" class="btn btn-primary">
@@ -466,9 +462,43 @@
     const googleSignupBtn = document.getElementById('google-signup');
     const loginMessage = document.getElementById('login-message');
     const signupMessage = document.getElementById('signup-message');
+    const forgotPasswordLink = document.getElementById('forgot-password');
     const tabs = document.querySelectorAll('.tab');
     const tabContents = document.querySelectorAll('.tab-content');
     
+    // Forgot Password Functionality
+    forgotPasswordLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      
+      if (!email) {
+        const emailInput = prompt("Please enter your email address to reset your password:");
+        if (!emailInput) return; // User cancelled
+        
+        sendPasswordResetEmail(emailInput);
+      } else {
+        sendPasswordResetEmail(email);
+      }
+    });
+
+    function sendPasswordResetEmail(email) {
+      auth.sendPasswordResetEmail(email)
+        .then(() => {
+          showMessage(loginMessage, "Password reset email sent! Check your inbox.", "success");
+        })
+        .catch((error) => {
+          let errorMessage = "Failed to send reset email. Please try again.";
+          
+          if (error.code === "auth/user-not-found") {
+            errorMessage = "No account found with this email.";
+          } else if (error.code === "auth/invalid-email") {
+            errorMessage = "Invalid email address.";
+          }
+          
+          showMessage(loginMessage, errorMessage, "error");
+        });
+    }
+
     // Tab switching
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {

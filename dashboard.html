@@ -727,6 +727,11 @@
           // Populate both profile view and settings form
           populateProfileView(profileData);
           populateForm(profileData);
+          
+          // Set profile image if available
+          if (profileData.profileImage) {
+            profileImage.src = profileData.profileImage;
+          }
         }
       } catch (error) {
         console.error("Error loading profile:", error);
@@ -737,28 +742,55 @@
     // Check Google Sheets for user data
     async function checkGoogleSheets(email) {
       try {
-        const response = await fetch(`${scriptURL}?action=getUser&email=${encodeURIComponent(email)}`);
+        const url = `${scriptURL}?action=getUser&email=${encodeURIComponent(email)}`;
+        const response = await fetch(url);
         const data = await response.json();
         
-        if (data.success) {
-          // Map the sheet columns to your form fields
+        if (data.success && data.user) {
+          // Parse address components
+          const addressParts = (data.user["Area/Street/Village, City, Province/State, Country, Postal code"] || '')
+            .split(',').map(part => part.trim());
+            
+          // Format date of birth
+          const formatDate = (dateStr) => {
+            if (!dateStr) return '';
+            try {
+              const date = new Date(dateStr);
+              return date.toISOString().split('T')[0];
+            } catch {
+              return dateStr;
+            }
+          };
+          
+          // Format time
+          const formatTime = (timeStr) => {
+            if (!timeStr) return '';
+            try {
+              const date = new Date(timeStr);
+              return date.toTimeString().slice(0, 5);
+            } catch {
+              return timeStr;
+            }
+          };
+          
           return {
             fullName: data.user["Full Name"] || '',
             whatsapp: data.user["Whatsapp Contact with country code (+92..)"] || '',
-            dob: data.user["Date of Birth"] || '',
-            cnic: data.user["CNIC Number (without signs - /) Verified in a Video"] || '',
+            dob: formatDate(data.user["Date of Birth"]),
+            cnic: data.user["CNIC Number (without signs - /) Verified in a Video"]?.toString() || '',
             address: data.user["Area/Street/Village, City, Province/State, Country, Postal code"] || '',
-            city: data.user["City"] || '',
-            province: data.user["Province/State"] || '',
-            country: data.user["Country"] || '',
-            postalCode: data.user["Postal Code"] || '',
+            city: addressParts[1] || '',
+            province: addressParts[2] || '',
+            country: addressParts[3] || '',
+            postalCode: addressParts[4] || '',
             businessRole: data.user["Business Role"] || '',
             availability: data.user["Availability for Task"] || 'available',
-            availableFrom: data.user["Usual Availability Hours From"] || '',
-            availableTo: data.user["Usual Availability Hours to"] || '',
+            availableFrom: formatTime(data.user["Usual Availability Hours From"]),
+            availableTo: formatTime(data.user["Usual Availability Hours to"]),
             portfolio: data.user["Portfolio/Past Experience (links in others)"] || '',
             languages: data.user["Languages"] || '',
             socialLinks: data.user["Any Social Media Links for Verification"] || '',
+            profileImage: data.user["Profile Picture"] || '',
             email: data.user["Email Address"] || email
           };
         } else {
@@ -782,25 +814,11 @@
       document.getElementById('view-country').textContent = data.country || 'Not provided';
       document.getElementById('view-postal-code').textContent = data.postalCode || 'Not provided';
       document.getElementById('view-business-role').textContent = data.businessRole || 'Not provided';
-      document.getElementById('view-availability').textContent = formatAvailability(data.availability);
-      document.getElementById('view-available-hours').textContent = formatAvailableHours(data.availableFrom, data.availableTo);
+      document.getElementById('view-availability').textContent = data.availability || 'Not provided';
+      document.getElementById('view-available-hours').textContent = `${data.availableFrom || '--:--'} to ${data.availableTo || '--:--'}`;
       document.getElementById('view-portfolio').textContent = data.portfolio || 'Not provided';
       document.getElementById('view-languages').textContent = data.languages || 'Not provided';
       document.getElementById('view-social-links').textContent = data.socialLinks || 'Not provided';
-    }
-    
-    function formatAvailability(availability) {
-      switch(availability) {
-        case 'available': return 'Available';
-        case 'not-available': return 'Not Available';
-        case 'limited': return 'Limited Availability';
-        default: return availability || 'Not specified';
-      }
-    }
-    
-    function formatAvailableHours(from, to) {
-      if (!from && !to) return 'Not specified';
-      return `${from || '--:--'} to ${to || '--:--'}`;
     }
     
     // Populate form with user data
@@ -890,7 +908,7 @@
           "Whatsapp Contact with country code (+92..)": data.whatsapp,
           "Date of Birth": data.dob,
           "CNIC Number (without signs - /) Verified in a Video": data.cnic,
-          "Area/Street/Village, City, Province/State, Country, Postal code": data.address,
+          "Area/Street/Village, City, Province/State, Country, Postal code": `${data.address}, ${data.city}, ${data.province}, ${data.country}, ${data.postalCode}`,
           "City": data.city,
           "Province/State": data.province,
           "Country": data.country,

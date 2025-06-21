@@ -14,6 +14,7 @@
       --dark: #2c3e50;
       --success: #27ae60;
       --error: #e74c3c;
+      --gray: #7f8c8d;
     }
     
     * {
@@ -26,6 +27,7 @@
     body {
       background-color: #f5f7fa;
       color: #2c3e50;
+      line-height: 1.6;
     }
     
     .container {
@@ -39,6 +41,9 @@
       padding: 15px 0;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       margin-bottom: 30px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
     
     .header-content {
@@ -54,8 +59,17 @@
     
     .logo i {
       color: var(--primary);
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       margin-right: 10px;
+    }
+    
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary), #1effbc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
     
     .user-actions a {
@@ -63,6 +77,9 @@
       color: var(--secondary);
       text-decoration: none;
       font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
     
     .user-actions a:hover {
@@ -81,6 +98,8 @@
       padding: 30px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.05);
       height: fit-content;
+      position: sticky;
+      top: 90px;
     }
     
     .profile-pic {
@@ -91,6 +110,7 @@
       margin: 0 auto 20px;
       overflow: hidden;
       position: relative;
+      border: 3px solid var(--primary);
     }
     
     .profile-pic img {
@@ -112,6 +132,11 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .profile-pic-edit:hover {
+      transform: scale(1.1);
     }
     
     .profile-name {
@@ -121,10 +146,13 @@
     
     .profile-name h2 {
       margin-bottom: 5px;
+      font-size: 1.5rem;
+      color: var(--dark);
     }
     
     .profile-name p {
-      color: #7f8c8d;
+      color: var(--gray);
+      font-size: 1rem;
     }
     
     .profile-menu {
@@ -136,23 +164,26 @@
     }
     
     .profile-menu a {
-      display: block;
-      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
       color: var(--secondary);
       text-decoration: none;
-      border-radius: 5px;
+      border-radius: 8px;
       transition: all 0.3s;
+      font-weight: 500;
     }
     
     .profile-menu a:hover, .profile-menu a.active {
       background-color: rgba(52, 152, 219, 0.1);
       color: var(--primary);
+      transform: translateX(5px);
     }
     
     .profile-menu i {
-      margin-right: 10px;
-      width: 20px;
+      width: 25px;
       text-align: center;
+      font-size: 1.1rem;
     }
     
     .profile-content {
@@ -160,12 +191,39 @@
       border-radius: 10px;
       padding: 30px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      min-height: 600px;
     }
     
     .section-title {
       margin-bottom: 30px;
       padding-bottom: 15px;
       border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .section-title h2 {
+      font-size: 1.8rem;
+      color: var(--dark);
+    }
+    
+    .info-group {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .info-label {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 5px;
+      display: block;
+    }
+    
+    .info-value {
+      color: var(--dark);
+      font-size: 1.1rem;
     }
     
     .form-group {
@@ -176,6 +234,7 @@
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
+      color: var(--primary);
     }
     
     .form-control {
@@ -184,6 +243,15 @@
       border: 1px solid #ddd;
       border-radius: 5px;
       font-size: 1rem;
+      background: #f9f9f9;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+      outline: none;
     }
     
     .form-row {
@@ -197,24 +265,30 @@
       border: none;
       border-radius: 5px;
       font-size: 1rem;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
     
     .btn-primary {
-      background: var(--primary);
+      background: linear-gradient(to right, var(--primary), #1effbc);
       color: white;
     }
     
     .btn-primary:hover {
-      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
     }
     
     .btn-outline {
       background: transparent;
-      border: 1px solid var(--primary);
+      border: 2px solid var(--primary);
       color: var(--primary);
+      font-weight: 600;
     }
     
     .btn-outline:hover {
@@ -243,13 +317,55 @@
       display: none;
     }
     
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
     @media (max-width: 992px) {
       .profile-container {
         grid-template-columns: 1fr;
       }
       
       .profile-sidebar {
-        text-align: center;
+        position: relative;
+        top: 0;
+      }
+      
+      .form-row, .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .user-actions {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      
+      .profile-content {
+        padding: 20px;
       }
     }
   </style>
@@ -281,17 +397,108 @@
           <p id="user-email">user@example.com</p>
         </div>
         <ul class="profile-menu">
-          <li><a href="#" class="active" id="profile-link"><i class="fas fa-user"></i> Profile</a></li>
-          <li><a href="#" id="settings-link"><i class="fas fa-cog"></i> Settings</a></li>
+          <li><a href="#" class="active" id="profile-link" data-tab="profile"><i class="fas fa-user"></i> Profile</a></li>
+          <li><a href="#" id="settings-link" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
           <li><a href="#" id="projects-link"><i class="fas fa-briefcase"></i> My Projects</a></li>
           <li><a href="#" id="messages-link"><i class="fas fa-envelope"></i> Messages</a></li>
         </ul>
       </div>
       
       <div class="profile-content">
-        <div id="profile-section">
-          <h2 class="section-title">Profile Information</h2>
+        <!-- Profile View (Read-only) -->
+        <div id="profile-section" class="tab-content active">
+          <div class="section-title">
+            <h2>Profile Information</h2>
+          </div>
           <div id="profile-message" class="alert hidden"></div>
+          
+          <div class="info-grid">
+            <div class="info-group">
+              <span class="info-label">Full Name</span>
+              <div class="info-value" id="view-full-name"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Whatsapp Contact</span>
+              <div class="info-value" id="view-whatsapp"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Date of Birth</span>
+              <div class="info-value" id="view-dob"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">CNIC Number</span>
+              <div class="info-value" id="view-cnic"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Address</span>
+              <div class="info-value" id="view-address"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">City</span>
+              <div class="info-value" id="view-city"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Province/State</span>
+              <div class="info-value" id="view-province"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Country</span>
+              <div class="info-value" id="view-country"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Postal Code</span>
+              <div class="info-value" id="view-postal-code"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Business Role</span>
+              <div class="info-value" id="view-business-role"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Availability</span>
+              <div class="info-value" id="view-availability"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Available Hours</span>
+              <div class="info-value" id="view-available-hours"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Portfolio/Experience</span>
+              <div class="info-value" id="view-portfolio"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Languages</span>
+              <div class="info-value" id="view-languages"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Social Media Links</span>
+              <div class="info-value" id="view-social-links"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Settings View (Editable) -->
+        <div id="settings-section" class="tab-content">
+          <div class="section-title">
+            <h2>Edit Profile</h2>
+            <button class="btn btn-outline" id="back-to-profile">
+              <i class="fas fa-arrow-left"></i> Back to Profile
+            </button>
+          </div>
+          <div id="settings-message" class="alert hidden"></div>
           
           <form id="profile-form">
             <div class="form-row">
@@ -383,7 +590,9 @@
               <textarea id="social-links" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
             </div>
             
-            <button type="submit" class="btn btn-primary">Update Profile</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Update Profile
+            </button>
           </form>
         </div>
       </div>
@@ -419,11 +628,17 @@
     const logoutBtn = document.getElementById('logout');
     const profileForm = document.getElementById('profile-form');
     const profileMessage = document.getElementById('profile-message');
+    const settingsMessage = document.getElementById('settings-message');
     const displayName = document.getElementById('display-name');
     const userEmail = document.getElementById('user-email');
     const profileImage = document.getElementById('profile-image');
+    const backToProfileBtn = document.getElementById('back-to-profile');
+    const profileLink = document.getElementById('profile-link');
+    const settingsLink = document.getElementById('settings-link');
+    const profileSection = document.getElementById('profile-section');
+    const settingsSection = document.getElementById('settings-section');
     
-    // Google Sheets API configuration - UPDATE THIS WITH YOUR DEPLOYED SCRIPT URL
+    // Google Sheets API configuration
     const scriptURL = 'https://script.google.com/macros/s/AKfycby87aYx3x5eUVOvuCPM97PAZ8M1k8iqL2GC4tHMXk5meg75-oQ6A0S_H5reTed_aOGu8w/exec';
     
     // Check auth state
@@ -436,6 +651,43 @@
         loadUserProfile(user);
       }
     });
+    
+    // Tab switching
+    profileLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchTab('profile');
+    });
+    
+    settingsLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchTab('settings');
+    });
+    
+    backToProfileBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchTab('profile');
+    });
+    
+    function switchTab(tabName) {
+      // Update active tab in menu
+      document.querySelectorAll('.profile-menu a').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Hide all tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Show selected tab
+      if (tabName === 'profile') {
+        profileLink.classList.add('active');
+        profileSection.classList.add('active');
+      } else if (tabName === 'settings') {
+        settingsLink.classList.add('active');
+        settingsSection.classList.add('active');
+      }
+    }
     
     // Load user profile data
     async function loadUserProfile(user) {
@@ -457,22 +709,28 @@
         const docRef = db.collection('users').doc(user.uid);
         const doc = await docRef.get();
         
+        let profileData = null;
+        
         if (doc.exists) {
           // Load data from Firestore
-          const data = doc.data();
-          populateForm(data);
+          profileData = doc.data();
         } else {
           // Check Google Sheets (fallback)
-          const sheetData = await checkGoogleSheets(user.email);
-          if (sheetData) {
-            populateForm(sheetData);
+          profileData = await checkGoogleSheets(user.email);
+          if (profileData) {
             // Save to Firestore for future use
-            await docRef.set(sheetData);
+            await docRef.set(profileData);
           }
+        }
+        
+        if (profileData) {
+          // Populate both profile view and settings form
+          populateProfileView(profileData);
+          populateForm(profileData);
         }
       } catch (error) {
         console.error("Error loading profile:", error);
-        showMessage(profileMessage, "Error loading profile data", "error");
+        showMessage(profileMessage, "Error loading profile data: " + error.message, "error");
       }
     }
     
@@ -490,6 +748,10 @@
             dob: data.user["Date of Birth"] || '',
             cnic: data.user["CNIC Number (without signs - /) Verified in a Video"] || '',
             address: data.user["Area/Street/Village, City, Province/State, Country, Postal code"] || '',
+            city: data.user["City"] || '',
+            province: data.user["Province/State"] || '',
+            country: data.user["Country"] || '',
+            postalCode: data.user["Postal Code"] || '',
             businessRole: data.user["Business Role"] || '',
             availability: data.user["Availability for Task"] || 'available',
             availableFrom: data.user["Usual Availability Hours From"] || '',
@@ -499,12 +761,46 @@
             socialLinks: data.user["Any Social Media Links for Verification"] || '',
             email: data.user["Email Address"] || email
           };
+        } else {
+          throw new Error(data.message || 'User not found in Google Sheets');
         }
-        return null;
       } catch (error) {
         console.error("Error checking Google Sheets:", error);
-        return null;
+        throw error;
       }
+    }
+    
+    // Populate profile view with user data
+    function populateProfileView(data) {
+      document.getElementById('view-full-name').textContent = data.fullName || 'Not provided';
+      document.getElementById('view-whatsapp').textContent = data.whatsapp || 'Not provided';
+      document.getElementById('view-dob').textContent = data.dob || 'Not provided';
+      document.getElementById('view-cnic').textContent = data.cnic || 'Not provided';
+      document.getElementById('view-address').textContent = data.address || 'Not provided';
+      document.getElementById('view-city').textContent = data.city || 'Not provided';
+      document.getElementById('view-province').textContent = data.province || 'Not provided';
+      document.getElementById('view-country').textContent = data.country || 'Not provided';
+      document.getElementById('view-postal-code').textContent = data.postalCode || 'Not provided';
+      document.getElementById('view-business-role').textContent = data.businessRole || 'Not provided';
+      document.getElementById('view-availability').textContent = formatAvailability(data.availability);
+      document.getElementById('view-available-hours').textContent = formatAvailableHours(data.availableFrom, data.availableTo);
+      document.getElementById('view-portfolio').textContent = data.portfolio || 'Not provided';
+      document.getElementById('view-languages').textContent = data.languages || 'Not provided';
+      document.getElementById('view-social-links').textContent = data.socialLinks || 'Not provided';
+    }
+    
+    function formatAvailability(availability) {
+      switch(availability) {
+        case 'available': return 'Available';
+        case 'not-available': return 'Not Available';
+        case 'limited': return 'Limited Availability';
+        default: return availability || 'Not specified';
+      }
+    }
+    
+    function formatAvailableHours(from, to) {
+      if (!from && !to) return 'Not specified';
+      return `${from || '--:--'} to ${to || '--:--'}`;
     }
     
     // Populate form with user data
@@ -570,10 +866,17 @@
           displayName.textContent = profileData.fullName;
         }
         
-        showMessage(profileMessage, "Profile updated successfully!", "success");
+        // Update profile view
+        populateProfileView(profileData);
+        
+        // Show success message and switch back to profile view
+        showMessage(settingsMessage, "Profile updated successfully!", "success");
+        setTimeout(() => {
+          switchTab('profile');
+        }, 1500);
       } catch (error) {
         console.error("Error saving profile:", error);
-        showMessage(profileMessage, "Error updating profile", "error");
+        showMessage(settingsMessage, "Error updating profile: " + error.message, "error");
       }
     });
     
@@ -588,6 +891,10 @@
           "Date of Birth": data.dob,
           "CNIC Number (without signs - /) Verified in a Video": data.cnic,
           "Area/Street/Village, City, Province/State, Country, Postal code": data.address,
+          "City": data.city,
+          "Province/State": data.province,
+          "Country": data.country,
+          "Postal Code": data.postalCode,
           "Business Role": data.businessRole,
           "Availability for Task": data.availability,
           "Usual Availability Hours From": data.availableFrom,

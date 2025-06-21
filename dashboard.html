@@ -423,9 +423,8 @@
     const userEmail = document.getElementById('user-email');
     const profileImage = document.getElementById('profile-image');
     
-    // Google Sheets API configuration
-    const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL'; // Replace with your Apps Script URL
-    const sheetId = 'YOUR_GOOGLE_SHEET_ID'; // Replace with your Sheet ID
+    // Google Sheets API configuration - UPDATE THIS WITH YOUR DEPLOYED SCRIPT URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby87aYx3x5eUVOvuCPM97PAZ8M1k8iqL2GC4tHMXk5meg75-oQ6A0S_H5reTed_aOGu8w/exec';
     
     // Check auth state
     auth.onAuthStateChanged(user => {
@@ -449,7 +448,8 @@
         profileImage.src = user.photoURL;
       } else {
         // Use placeholder image or initials
-        profileImage.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email)}&background=3498db&color=fff&size=150`;
+        const initials = (user.displayName || 'UU').split(' ').map(n => n[0]).join('');
+        profileImage.src = `https://ui-avatars.com/api/?name=${initials}&background=3498db&color=fff&size=150`;
       }
       
       try {
@@ -481,7 +481,26 @@
       try {
         const response = await fetch(`${scriptURL}?action=getUser&email=${encodeURIComponent(email)}`);
         const data = await response.json();
-        return data.success ? data.user : null;
+        
+        if (data.success) {
+          // Map the sheet columns to your form fields
+          return {
+            fullName: data.user["Full Name"] || '',
+            whatsapp: data.user["Whatsapp Contact with country code (+92..)"] || '',
+            dob: data.user["Date of Birth"] || '',
+            cnic: data.user["CNIC Number (without signs - /) Verified in a Video"] || '',
+            address: data.user["Area/Street/Village, City, Province/State, Country, Postal code"] || '',
+            businessRole: data.user["Business Role"] || '',
+            availability: data.user["Availability for Task"] || 'available',
+            availableFrom: data.user["Usual Availability Hours From"] || '',
+            availableTo: data.user["Usual Availability Hours to"] || '',
+            portfolio: data.user["Portfolio/Past Experience (links in others)"] || '',
+            languages: data.user["Languages"] || '',
+            socialLinks: data.user["Any Social Media Links for Verification"] || '',
+            email: data.user["Email Address"] || email
+          };
+        }
+        return null;
       } catch (error) {
         console.error("Error checking Google Sheets:", error);
         return null;
@@ -541,7 +560,7 @@
         await db.collection('users').doc(user.uid).set(profileData, { merge: true });
         
         // Save to Google Sheets
-        await updateGoogleSheets(user.uid, profileData);
+        await updateGoogleSheets(profileData);
         
         // Update display name if changed
         if (profileData.fullName !== user.displayName) {
@@ -559,17 +578,33 @@
     });
     
     // Update Google Sheets
-    async function updateGoogleSheets(userId, data) {
+    async function updateGoogleSheets(data) {
       try {
+        // Map your form fields to the sheet columns
+        const sheetData = {
+          "Email Address": data.email,
+          "Full Name": data.fullName,
+          "Whatsapp Contact with country code (+92..)": data.whatsapp,
+          "Date of Birth": data.dob,
+          "CNIC Number (without signs - /) Verified in a Video": data.cnic,
+          "Area/Street/Village, City, Province/State, Country, Postal code": data.address,
+          "Business Role": data.businessRole,
+          "Availability for Task": data.availability,
+          "Usual Availability Hours From": data.availableFrom,
+          "Usual Availability Hours to": data.availableTo,
+          "Portfolio/Past Experience (links in others)": data.portfolio,
+          "Languages": data.languages,
+          "Any Social Media Links for Verification": data.socialLinks
+        };
+        
         const response = await fetch(scriptURL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            action: 'updateUser',
-            userId: userId,
-            userData: data
+            email: data.email,
+            userData: sheetData
           })
         });
         

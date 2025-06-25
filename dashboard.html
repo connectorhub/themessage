@@ -1,983 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Profile - ConnectorHub</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
   <style>
-    :root {
-      --primary: #3498db;
-      --primary-dark: #2980b9;
-      --secondary: #2c3e50;
-      --light: #ecf0f1;
-      --dark: #2c3e50;
-      --success: #27ae60;
-      --error: #e74c3c;
-      --gray: #7f8c8d;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
     body {
-      background-color: #f5f7fa;
-      color: #2c3e50;
-      line-height: 1.6;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f7fa;
+      padding: 30px;
     }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #222;
+    }
+    .profile {
+      background: white;
       padding: 20px;
+      max-width: 700px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    
-    header {
-      background-color: white;
-      padding: 15px 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    .field {
+      margin-bottom: 15px;
     }
-    
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .label {
+      font-weight: bold;
+      color: #333;
     }
-    
-    .logo {
-      display: flex;
-      align-items: center;
+    .value {
+      color: #555;
     }
-    
-    .logo i {
-      color: var(--primary);
-      font-size: 1.8rem;
-      margin-right: 10px;
-    }
-    
-    .logo h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: linear-gradient(to right, var(--primary), #1effbc);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    .user-actions a {
-      margin-left: 15px;
-      color: var(--secondary);
-      text-decoration: none;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    
-    .user-actions a:hover {
-      color: var(--primary);
-    }
-    
-    .profile-container {
-      display: grid;
-      grid-template-columns: 300px 1fr;
-      gap: 30px;
-    }
-    
-    .profile-sidebar {
-      background: white;
+    img {
+      max-width: 200px;
       border-radius: 10px;
-      padding: 30px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      height: fit-content;
-      position: sticky;
-      top: 90px;
+      margin-top: 10px;
     }
-    
-    .profile-pic {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      background-color: #eee;
-      margin: 0 auto 20px;
-      overflow: hidden;
-      position: relative;
-      border: 3px solid var(--primary);
-    }
-    
-    .profile-pic img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .profile-pic-edit {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      background: var(--primary);
-      color: white;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .profile-pic-edit:hover {
-      transform: scale(1.1);
-    }
-    
-    .profile-name {
+    .logout {
+      margin-top: 20px;
       text-align: center;
-      margin-bottom: 30px;
     }
-    
-    .profile-name h2 {
-      margin-bottom: 5px;
-      font-size: 1.5rem;
-      color: var(--dark);
-    }
-    
-    .profile-name p {
-      color: var(--gray);
-      font-size: 1rem;
-    }
-    
-    .profile-menu {
-      list-style: none;
-    }
-    
-    .profile-menu li {
-      margin-bottom: 10px;
-    }
-    
-    .profile-menu a {
-      display: flex;
-      align-items: center;
-      padding: 12px 15px;
-      color: var(--secondary);
-      text-decoration: none;
-      border-radius: 8px;
-      transition: all 0.3s;
-      font-weight: 500;
-    }
-    
-    .profile-menu a:hover, .profile-menu a.active {
-      background-color: rgba(52, 152, 219, 0.1);
-      color: var(--primary);
-      transform: translateX(5px);
-    }
-    
-    .profile-menu i {
-      width: 25px;
-      text-align: center;
-      font-size: 1.1rem;
-    }
-    
-    .profile-content {
-      background: white;
-      border-radius: 10px;
-      padding: 30px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      min-height: 600px;
-    }
-    
-    .section-title {
-      margin-bottom: 30px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .section-title h2 {
-      font-size: 1.8rem;
-      color: var(--dark);
-    }
-    
-    .info-group {
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    
-    .info-label {
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 5px;
-      display: block;
-    }
-    
-    .info-value {
-      color: var(--dark);
-      font-size: 1.1rem;
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: var(--primary);
-    }
-    
-    .form-control {
-      width: 100%;
-      padding: 12px 15px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 1rem;
-      background: #f9f9f9;
-      transition: all 0.3s;
-    }
-    
-    .form-control:focus {
-      border-color: var(--primary);
-      background: white;
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-      outline: none;
-    }
-    
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
-    
-    .btn {
-      padding: 12px 25px;
-      border: none;
-      border-radius: 5px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    
-    .btn-primary {
-      background: linear-gradient(to right, var(--primary), #1effbc);
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-    }
-    
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-      font-weight: 600;
-    }
-    
-    .btn-outline:hover {
-      background: rgba(52, 152, 219, 0.1);
-    }
-    
-    .alert {
-      padding: 15px;
-      border-radius: 5px;
-      margin-bottom: 20px;
-    }
-    
-    .alert-success {
-      background: rgba(39, 174, 96, 0.1);
-      border: 1px solid var(--success);
-      color: var(--success);
-    }
-    
-    .alert-error {
-      background: rgba(231, 76, 60, 0.1);
-      border: 1px solid var(--error);
-      color: var(--error);
-    }
-    
-    .hidden {
-      display: none;
-    }
-    
-    .tab-content {
-      display: none;
-    }
-    
-    .tab-content.active {
-      display: block;
-      animation: fadeIn 0.5s ease;
-    }
-    
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @media (max-width: 992px) {
-      .profile-container {
-        grid-template-columns: 1fr;
-      }
-      
-      .profile-sidebar {
-        position: relative;
-        top: 0;
-      }
-      
-      .form-row, .info-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    @media (max-width: 576px) {
-      .header-content {
-        flex-direction: column;
-        gap: 15px;
-      }
-      
-      .user-actions {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-      }
-      
-      .profile-content {
-        padding: 20px;
-      }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container header-content">
-      <div class="logo">
-        <i class="fas fa-hands-helping"></i>
-        <h1>ConnectorHub</h1>
-      </div>
-      <div class="user-actions">
-        <a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-      </div>
-    </div>
-  </header>
-  
-  <div class="container">
-    <div class="profile-container">
-      <div class="profile-sidebar">
-        <div class="profile-pic">
-          <img id="profile-image" src="" alt="Profile Picture">
-          <div class="profile-pic-edit" id="edit-profile-pic">
-            <i class="fas fa-camera"></i>
-          </div>
-        </div>
-        <div class="profile-name">
-          <h2 id="display-name">Loading...</h2>
-          <p id="user-email">user@example.com</p>
-        </div>
-        <ul class="profile-menu">
-          <li><a href="#" class="active" id="profile-link" data-tab="profile"><i class="fas fa-user"></i> Profile</a></li>
-          <li><a href="#" id="settings-link" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
-          <li><a href="#" id="projects-link"><i class="fas fa-briefcase"></i> My Projects</a></li>
-          <li><a href="#" id="messages-link"><i class="fas fa-envelope"></i> Messages</a></li>
-        </ul>
-      </div>
-      
-      <div class="profile-content">
-        <!-- Profile View (Read-only) -->
-        <div id="profile-section" class="tab-content active">
-          <div class="section-title">
-            <h2>Profile Information</h2>
-          </div>
-          <div id="profile-message" class="alert hidden"></div>
-          
-          <div class="info-grid">
-            <div class="info-group">
-              <span class="info-label">Full Name</span>
-              <div class="info-value" id="view-full-name"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Whatsapp Contact</span>
-              <div class="info-value" id="view-whatsapp"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Date of Birth</span>
-              <div class="info-value" id="view-dob"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">CNIC Number</span>
-              <div class="info-value" id="view-cnic"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Address</span>
-              <div class="info-value" id="view-address"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">City</span>
-              <div class="info-value" id="view-city"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Province/State</span>
-              <div class="info-value" id="view-province"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Country</span>
-              <div class="info-value" id="view-country"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Postal Code</span>
-              <div class="info-value" id="view-postal-code"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Business Role</span>
-              <div class="info-value" id="view-business-role"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Availability</span>
-              <div class="info-value" id="view-availability"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Available Hours</span>
-              <div class="info-value" id="view-available-hours"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Portfolio/Experience</span>
-              <div class="info-value" id="view-portfolio"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Languages</span>
-              <div class="info-value" id="view-languages"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Social Media Links</span>
-              <div class="info-value" id="view-social-links"></div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Settings View (Editable) -->
-        <div id="settings-section" class="tab-content">
-          <div class="section-title">
-            <h2>Edit Profile</h2>
-            <button class="btn btn-outline" id="back-to-profile">
-              <i class="fas fa-arrow-left"></i> Back to Profile
-            </button>
-          </div>
-          <div id="settings-message" class="alert hidden"></div>
-          
-          <form id="profile-form">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="full-name">Full Name</label>
-                <input type="text" id="full-name" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label for="whatsapp">Whatsapp Contact</label>
-                <input type="tel" id="whatsapp" class="form-control" placeholder="+923001234567" required>
-              </div>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label for="dob">Date of Birth</label>
-                <input type="date" id="dob" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="cnic">CNIC Number</label>
-                <input type="text" id="cnic" class="form-control" placeholder="4220112345678">
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="address">Address</label>
-              <input type="text" id="address" class="form-control" placeholder="Street/Village">
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label for="city">City</label>
-                <input type="text" id="city" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="province">Province/State</label>
-                <input type="text" id="province" class="form-control">
-              </div>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label for="country">Country</label>
-                <input type="text" id="country" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="postal-code">Postal Code</label>
-                <input type="text" id="postal-code" class="form-control">
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="business-role">Business Role</label>
-              <input type="text" id="business-role" class="form-control" placeholder="e.g. Web Developer, Graphic Designer">
-            </div>
-            
-            <div class="form-group">
-              <label for="availability">Availability for Task</label>
-              <select id="availability" class="form-control">
-                <option value="available">Available</option>
-                <option value="not-available">Not Available</option>
-                <option value="limited">Limited Availability</option>
-              </select>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label for="available-from">Available Hours From</label>
-                <input type="time" id="available-from" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="available-to">Available Hours To</label>
-                <input type="time" id="available-to" class="form-control">
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="portfolio">Portfolio/Past Experience Links</label>
-              <textarea id="portfolio" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
-            </div>
-            
-            <div class="form-group">
-              <label for="languages">Languages</label>
-              <input type="text" id="languages" class="form-control" placeholder="English, Urdu, etc.">
-            </div>
-            
-            <div class="form-group">
-              <label for="social-links">Social Media Links</label>
-              <textarea id="social-links" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
-            </div>
-            
-            <button type="submit" class="btn btn-primary">
-              <i class="fas fa-save"></i> Update Profile
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+
+  <h1>Welcome to Your Dashboard</h1>
+
+  <div id="profile" class="profile" style="display:none;"></div>
+
+  <div class="logout" id="logoutBox" style="display:none;">
+    <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-  
   <script>
-    // Firebase configuration
     const firebaseConfig = {
-      apiKey: "AIzaSyAAqMkxlTrgvPmJ5WdyeCwMWgcx2lW51WA",
-      authDomain: "connectorhubsignup.firebaseapp.com",
-      projectId: "connectorhubsignup",
-      storageBucket: "connectorhubsignup.appspot.com",
-      messagingSenderId: "1069616706414",
-      appId: "1:1069616706414:web:f0843d21127b358390077f",
-      measurementId: "G-EEYDQT70JG"
+      apiKey: "AIzaSyB2vhC1RxjD6Scfh9EAbg3yG-xxv7ZDZJU",
+      authDomain: "connectorhub360.firebaseapp.com",
+      projectId: "connectorhub360",
+      storageBucket: "connectorhub360.appspot.com",
+      messagingSenderId: "841109582244",
+      appId: "1:841109582244:web:1234567890abcdef123456"
     };
 
-    // Initialize Firebase
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    
+    firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    const db = firebase.firestore();
-    
-    // DOM Elements
-    const logoutBtn = document.getElementById('logout');
-    const profileForm = document.getElementById('profile-form');
-    const profileMessage = document.getElementById('profile-message');
-    const settingsMessage = document.getElementById('settings-message');
-    const displayName = document.getElementById('display-name');
-    const userEmail = document.getElementById('user-email');
-    const profileImage = document.getElementById('profile-image');
-    const backToProfileBtn = document.getElementById('back-to-profile');
-    const profileLink = document.getElementById('profile-link');
-    const settingsLink = document.getElementById('settings-link');
-    const profileSection = document.getElementById('profile-section');
-    const settingsSection = document.getElementById('settings-section');
-    
-    // Google Sheets API configuration
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby87aYx3x5eUVOvuCPM97PAZ8M1k8iqL2GC4tHMXk5meg75-oQ6A0S_H5reTed_aOGu8w/exec';
-    
-    // Check auth state
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        // User is not logged in, redirect to login page
-        window.location.href = 'business.html';
+
+    auth.onAuthStateChanged(async user => {
+      if (user) {
+        const email = user.email;
+        document.getElementById("logoutBox").style.display = "block";
+        try {
+          const data = await checkGoogleSheets(email);
+          showProfile(data);
+        } catch (err) {
+          document.getElementById("profile").innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+          document.getElementById("profile").style.display = "block";
+        }
       } else {
-        // User is logged in, load profile data
-        loadUserProfile(user);
+        // Not logged in
+        window.location.href = "login.html"; // Adjust as needed
       }
     });
-    
-    // Tab switching
-    profileLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      switchTab('profile');
-    });
-    
-    settingsLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      switchTab('settings');
-    });
-    
-    backToProfileBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      switchTab('profile');
-    });
-    
-    function switchTab(tabName) {
-      // Update active tab in menu
-      document.querySelectorAll('.profile-menu a').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      
-      // Hide all tab content
-      document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.remove('active');
-      });
-      
-      // Show selected tab
-      if (tabName === 'profile') {
-        profileLink.classList.add('active');
-        profileSection.classList.add('active');
-      } else if (tabName === 'settings') {
-        settingsLink.classList.add('active');
-        settingsSection.classList.add('active');
-      }
-    }
-    
-    // Load user profile data
-    async function loadUserProfile(user) {
-      // Display basic info
-      displayName.textContent = user.displayName || 'No Name Set';
-      userEmail.textContent = user.email;
-      
-      // Set profile image
-      if (user.photoURL) {
-        profileImage.src = user.photoURL;
-      } else {
-        // Use placeholder image or initials
-        const initials = (user.displayName || 'UU').split(' ').map(n => n[0]).join('');
-        profileImage.src = `https://ui-avatars.com/api/?name=${initials}&background=3498db&color=fff&size=150`;
-      }
-      
-      try {
-        // Check if user profile exists in Firestore
-        const docRef = db.collection('users').doc(user.uid);
-        const doc = await docRef.get();
-        
-        let profileData = null;
-        
-        if (doc.exists) {
-          // Load data from Firestore
-          profileData = doc.data();
-        } else {
-          // Check Google Sheets (fallback)
-          profileData = await checkGoogleSheets(user.email);
-          if (profileData) {
-            // Save to Firestore for future use
-            await docRef.set(profileData);
-          }
-        }
-        
-        if (profileData) {
-          // Populate both profile view and settings form
-          populateProfileView(profileData);
-          populateForm(profileData);
-          
-          // Set profile image if available
-          if (profileData.profileImage) {
-            profileImage.src = profileData.profileImage;
-          }
-        } else {
-          console.log("No profile data found");
-          showMessage(profileMessage, "No profile data found. Please update your profile.", "error");
-        }
-      } catch (error) {
-        console.error("Error loading profile:", error);
-        showMessage(profileMessage, "Error loading profile data: " + error.message, "error");
-      }
-    }
-    
-    // Check Google Sheets for user data
-    async function checkGoogleSheets(email) {
-      try {
-        const url = `${scriptURL}?action=getUser&email=${encodeURIComponent(email)}`;
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        if (data.success && data.user) {
-          // Parse address components
-          const addressParts = (data.user["Area/Street/Village, City, Province/State, Country, Postal code"] || '')
-            .split(',').map(part => part.trim());
-            
-          // Format date of birth
-          const formatDate = (dateStr) => {
-            if (!dateStr) return '';
-            try {
-              const date = new Date(dateStr);
-              return date.toISOString().split('T')[0];
-            } catch {
-              return dateStr;
-            }
-          };
-          
-          // Format time
-          const formatTime = (timeStr) => {
-            if (!timeStr) return '';
-            try {
-              const date = new Date(timeStr);
-              return date.toTimeString().slice(0, 5);
-            } catch {
-              return timeStr;
-            }
-          };
-          
-          // Handle profile image
-          let profileImage = data.user["Profile Picture"] || '';
-          if (profileImage && profileImage.includes("drive.google.com")) {
-            const fileIdMatch = profileImage.match(/[-\w]{25,}/);
-            if (fileIdMatch) {
-              const fileId = fileIdMatch[0];
-              profileImage = `https://drive.google.com/uc?export=view&id=${fileId}`;
-            }
-          }
-          
-          return {
-            fullName: data.user["Full Name"] || '',
-            whatsapp: data.user["Whatsapp Contact with country code (+92..)"] || '',
-            dob: formatDate(data.user["Date of Birth"]),
-            cnic: data.user["CNIC Number (without signs - /) Verified in a Video"]?.toString() || '',
-            address: data.user["Area/Street/Village, City, Province/State, Country, Postal code"] || '',
-            city: addressParts[1] || '',
-            province: addressParts[2] || '',
-            country: addressParts[3] || '',
-            postalCode: addressParts[4] || '',
-            businessRole: data.user["Business Role"] || '',
-            availability: data.user["Availability for Task"] || 'available',
-            availableFrom: formatTime(data.user["Usual Availability Hours From"]),
-            availableTo: formatTime(data.user["Usual Availability Hours to"]),
-            portfolio: data.user["Portfolio/Past Experience (links in others)"] || '',
-            languages: data.user["Languages"] || '',
-            socialLinks: data.user["Any Social Media Links for Verification"] || '',
-            profileImage: profileImage,
-            email: data.user["Email Address"] || email
-          };
-        } else {
-          throw new Error(data.message || 'User not found in Google Sheets');
-        }
-      } catch (error) {
-        console.error("Error checking Google Sheets:", error);
-        throw error;
-      }
-    }
-    
-    // Populate profile view with user data
-    function populateProfileView(data) {
-      document.getElementById('view-full-name').textContent = data.fullName || 'Not provided';
-      document.getElementById('view-whatsapp').textContent = data.whatsapp || 'Not provided';
-      document.getElementById('view-dob').textContent = data.dob || 'Not provided';
-      document.getElementById('view-cnic').textContent = data.cnic || 'Not provided';
-      document.getElementById('view-address').textContent = data.address || 'Not provided';
-      document.getElementById('view-city').textContent = data.city || 'Not provided';
-      document.getElementById('view-province').textContent = data.province || 'Not provided';
-      document.getElementById('view-country').textContent = data.country || 'Not provided';
-      document.getElementById('view-postal-code').textContent = data.postalCode || 'Not provided';
-      document.getElementById('view-business-role').textContent = data.businessRole || 'Not provided';
-      document.getElementById('view-availability').textContent = data.availability || 'Not provided';
-      document.getElementById('view-available-hours').textContent = `${data.availableFrom || '--:--'} to ${data.availableTo || '--:--'}`;
-      document.getElementById('view-portfolio').textContent = data.portfolio || 'Not provided';
-      document.getElementById('view-languages').textContent = data.languages || 'Not provided';
-      document.getElementById('view-social-links').textContent = data.socialLinks || 'Not provided';
-    }
-    
-    // Populate form with user data
-    function populateForm(data) {
-      document.getElementById('full-name').value = data.fullName || '';
-      document.getElementById('whatsapp').value = data.whatsapp || '';
-      document.getElementById('dob').value = data.dob || '';
-      document.getElementById('cnic').value = data.cnic || '';
-      document.getElementById('address').value = data.address || '';
-      document.getElementById('city').value = data.city || '';
-      document.getElementById('province').value = data.province || '';
-      document.getElementById('country').value = data.country || '';
-      document.getElementById('postal-code').value = data.postalCode || '';
-      document.getElementById('business-role').value = data.businessRole || '';
-      document.getElementById('availability').value = data.availability || 'available';
-      document.getElementById('available-from').value = data.availableFrom || '';
-      document.getElementById('available-to').value = data.availableTo || '';
-      document.getElementById('portfolio').value = data.portfolio || '';
-      document.getElementById('languages').value = data.languages || '';
-      document.getElementById('social-links').value = data.socialLinks || '';
-    }
-    
-    // Save profile data
-    profileForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const user = auth.currentUser;
-      if (!user) return;
-      
-      const profileData = {
-        fullName: document.getElementById('full-name').value,
-        whatsapp: document.getElementById('whatsapp').value,
-        dob: document.getElementById('dob').value,
-        cnic: document.getElementById('cnic').value,
-        address: document.getElementById('address').value,
-        city: document.getElementById('city').value,
-        province: document.getElementById('province').value,
-        country: document.getElementById('country').value,
-        postalCode: document.getElementById('postal-code').value,
-        businessRole: document.getElementById('business-role').value,
-        availability: document.getElementById('availability').value,
-        availableFrom: document.getElementById('available-from').value,
-        availableTo: document.getElementById('available-to').value,
-        portfolio: document.getElementById('portfolio').value,
-        languages: document.getElementById('languages').value,
-        socialLinks: document.getElementById('social-links').value,
-        email: user.email,
-        lastUpdated: new Date().toISOString()
-      };
-      
-      try {
-        // Save to Firestore
-        await db.collection('users').doc(user.uid).set(profileData, { merge: true });
-        
-        // Save to Google Sheets
-        await updateGoogleSheets(profileData);
-        
-        // Update display name if changed
-        if (profileData.fullName !== user.displayName) {
-          await user.updateProfile({
-            displayName: profileData.fullName
-          });
-          displayName.textContent = profileData.fullName;
-        }
-        
-        // Update profile view
-        populateProfileView(profileData);
-        
-        // Show success message and switch back to profile view
-        showMessage(settingsMessage, "Profile updated successfully!", "success");
-        setTimeout(() => {
-          switchTab('profile');
-        }, 1500);
-      } catch (error) {
-        console.error("Error saving profile:", error);
-        showMessage(settingsMessage, "Error updating profile: " + error.message, "error");
-      }
-    });
-    
-    // Update Google Sheets
-    async function updateGoogleSheets(data) {
-      try {
-        // Map your form fields to the sheet columns
-        const sheetData = {
-          "Email Address": data.email,
-          "Full Name": data.fullName,
-          "Whatsapp Contact with country code (+92..)": data.whatsapp,
-          "Date of Birth": data.dob,
-          "CNIC Number (without signs - /) Verified in a Video": data.cnic,
-          "Area/Street/Village, City, Province/State, Country, Postal code": `${data.address}, ${data.city}, ${data.province}, ${data.country}, ${data.postalCode}`,
-          "City": data.city,
-          "Province/State": data.province,
-          "Country": data.country,
-          "Postal Code": data.postalCode,
-          "Business Role": data.businessRole,
-          "Availability for Task": data.availability,
-          "Usual Availability Hours From": data.availableFrom,
-          "Usual Availability Hours to": data.availableTo,
-          "Portfolio/Past Experience (links in others)": data.portfolio,
-          "Languages": data.languages,
-          "Any Social Media Links for Verification": data.socialLinks
-        };
-        
-        const response = await fetch(scriptURL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: data.email,
-            userData: sheetData
-          })
-        });
-        
-        const result = await response.json();
-        if (!result.success) {
-          throw new Error(result.message);
-        }
-      } catch (error) {
-        console.error("Error updating Google Sheets:", error);
-        throw error;
-      }
-    }
-    
-    // Logout
-    logoutBtn.addEventListener('click', (e) => {
-      e.preventDefault();
+
+    function logout() {
       auth.signOut().then(() => {
-        window.location.href = 'business.html';
+        window.location.href = "login.html";
       });
-    });
-    
-    // Helper function to show messages
-    function showMessage(element, text, type) {
-      element.textContent = text;
-      element.className = `alert alert-${type}`;
-      element.classList.remove('hidden');
-      
-      setTimeout(() => {
-        element.classList.add('hidden');
-      }, 5000);
+    }
+
+    async function checkGoogleSheets(email) {
+      const apiUrl = "https://script.google.com/macros/s/AKfycbylMFC8x75QQej-TXTKPmJgZRW8I9ITUB4Y_0JgeC3peJwcM3GrksG9fXGTcqmoB20a/exec";
+      const res = await fetch(`${apiUrl}?email=${encodeURIComponent(email)}`);
+      const data = await res.json();
+      if (!data.found) throw new Error("Your email is not registered.");
+
+      const addressParts = (data["Area/Street/Village, City, Province/State, Country, Postal code"] || "")
+        .split(',').map(p => p.trim());
+
+      return {
+        fullName: data["Full Name"] || '',
+        whatsapp: data["Whatsapp Contact with country code (+92..)"] || '',
+        dob: formatDate(data["Date of Birth"]),
+        cnic: data["CNIC Number (without signs - /) Verified in a Video"]?.toString() || '',
+        address: data["Area/Street/Village, City, Province/State, Country, Postal code"] || '',
+        city: addressParts[1] || '',
+        province: addressParts[2] || '',
+        country: addressParts[3] || '',
+        postalCode: addressParts[4] || '',
+        businessRole: data["Business Role"] || '',
+        availability: data["Availability for Task"] || 'available',
+        availableFrom: formatTime(data["Usual Availability Hours From"]),
+        availableTo: formatTime(data["Usual Availability Hours to"]),
+        portfolio: data["Portfolio/Past Experience (links in others)"] || '',
+        languages: data["Languages"] || '',
+        socialLinks: data["Any Social Media Links for Verification"] || '',
+        profileImage: formatDriveImage(data["Profile Picture"]),
+        email: data["Email Address"] || email
+      };
+    }
+
+    function showProfile(data) {
+      const profile = document.getElementById("profile");
+      profile.style.display = "block";
+
+      profile.innerHTML = `
+        <div class="field"><span class="label">Full Name:</span> <span class="value">${data.fullName}</span></div>
+        <div class="field"><span class="label">Email:</span> <span class="value">${data.email}</span></div>
+        <div class="field"><span class="label">WhatsApp:</span> <span class="value">${data.whatsapp}</span></div>
+        <div class="field"><span class="label">Date of Birth:</span> <span class="value">${data.dob}</span></div>
+        <div class="field"><span class="label">CNIC:</span> <span class="value">${data.cnic}</span></div>
+        <div class="field"><span class="label">Address:</span> <span class="value">${data.address}</span></div>
+        <div class="field"><span class="label">Business Role:</span> <span class="value">${data.businessRole}</span></div>
+        <div class="field"><span class="label">Availability:</span> <span class="value">${data.availability}</span></div>
+        <div class="field"><span class="label">Available From:</span> <span class="value">${data.availableFrom}</span></div>
+        <div class="field"><span class="label">Available To:</span> <span class="value">${data.availableTo}</span></div>
+        <div class="field"><span class="label">Languages:</span> <span class="value">${data.languages}</span></div>
+        <div class="field"><span class="label">Portfolio:</span> <span class="value">${linkify(data.portfolio)}</span></div>
+        <div class="field"><span class="label">Social Links:</span> <span class="value">${linkify(data.socialLinks)}</span></div>
+        ${data.profileImage ? `<div class="field"><span class="label">Profile Picture:</span><br><img src="${data.profileImage}" alt="Profile" /></div>` : ''}
+      `;
+    }
+
+    function formatDate(dateStr) {
+      try {
+        const d = new Date(dateStr);
+        return !isNaN(d.getTime()) ? d.toLocaleDateString('en-GB') : dateStr;
+      } catch {
+        return dateStr;
+      }
+    }
+
+    function formatTime(timeStr) {
+      try {
+        const t = new Date(timeStr);
+        return !isNaN(t.getTime()) ? t.toTimeString().slice(0, 5) : timeStr;
+      } catch {
+        return timeStr;
+      }
+    }
+
+    function formatDriveImage(link) {
+      if (!link) return "";
+      const match = link.match(/[-\w]{25,}/);
+      return match ? `https://drive.google.com/uc?export=view&id=${match[0]}` : link;
+    }
+
+    function linkify(text) {
+      if (!text) return "";
+      return text.replace(/(https?:\/\/[^\s,]+)/g, `<a href="$1" target="_blank">$1</a>`);
     }
   </script>
 </body>

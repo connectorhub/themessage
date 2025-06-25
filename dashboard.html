@@ -3,6 +3,685 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Authentication - ConnectorHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2c3e50;
+      --success: #27ae60;
+      --danger: #e74c3c;
+      --light: #ecf0f1;
+      --dark: #2c3e50;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #1a2a6c, #1a5276, #1a2a6c);
+      color: #f0f0f0;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+    }
+    
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      display: flex;
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+    
+    .brand-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .logo i {
+      font-size: 3rem;
+      color: var(--primary);
+    }
+    
+    .logo h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary), #1effbc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .brand-text {
+      font-size: 1.2rem;
+      color: #bbb;
+      max-width: 500px;
+      line-height: 1.8;
+    }
+    
+    .brand-text p {
+      margin-bottom: 20px;
+    }
+    
+    .auth-panel {
+      width: 450px;
+      background: rgba(0, 10, 30, 0.8);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(52, 152, 219, 0.4);
+    }
+    
+    .auth-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .auth-header h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    
+    .auth-header p {
+      color: #bbb;
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 25px;
+      border-bottom: 1px solid rgba(52, 152, 219, 0.3);
+    }
+    
+    .tab {
+      flex: 1;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+    }
+    
+    .tab.active {
+      color: #1effbc;
+      border-bottom: 3px solid #1effbc;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .form-group {
+      margin-bottom: 25px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 14px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(52, 152, 219, 0.3);
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: #1effbc;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    
+    .password-container {
+      position: relative;
+    }
+    
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--primary);
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+      position: relative;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(to right, var(--primary), #1effbc);
+      color: #0a1929;
+    }
+    
+    .btn-google {
+      background: #4285F4;
+      color: white;
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(30, 255, 188, 0.4);
+    }
+    
+    .btn:active {
+      transform: translateY(1px);
+    }
+    
+    .divider {
+      text-align: center;
+      margin: 25px 0;
+      position: relative;
+    }
+    
+    .divider::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(52, 152, 219, 0.3);
+      z-index: 1;
+    }
+    
+    .divider span {
+      background: rgba(0, 10, 30, 0.8);
+      padding: 0 15px;
+      position: relative;
+      z-index: 2;
+      color: var(--primary);
+    }
+    
+    .message {
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: center;
+      display: none;
+    }
+    
+    .success {
+      background: rgba(39, 174, 96, 0.2);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+    
+    .error {
+      background: rgba(231, 76, 60, 0.2);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+    }
+    
+    .info {
+      background: rgba(52, 152, 219, 0.2);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      color: #ccc;
+      font-size: 0.9rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10;
+    }
+    
+    @media (max-width: 992px) {
+      .container {
+        flex-direction: column;
+      }
+      
+      .brand-panel {
+        text-align: center;
+        align-items: center;
+      }
+      
+      .auth-panel {
+        width: 100%;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .brand-panel, .auth-panel {
+        padding: 25px;
+      }
+      
+      .logo h1 {
+        font-size: 2rem;
+      }
+      
+      .auth-header h2 {
+        font-size: 1.8rem;
+      }
+      
+      footer {
+        padding: 15px 0;
+      }
+    }
+  </style>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Brand Panel -->
+    <div class="brand-panel">
+      <div class="logo">
+        <i class="fas fa-hands-helping"></i>
+        <h1>ConnectorHub</h1>
+      </div>
+      
+      <div class="brand-text">
+        <p>Your trusted marketplace for digital and physical services. Connect with skilled professionals worldwide.</p>
+        <p>Create your account to start offering services or hiring experts for your projects.</p>
+      </div>
+    </div>
+    
+    <!-- Authentication Panel -->
+    <div class="auth-panel">
+      <div class="auth-header">
+        <h2>Create Your Account</h2>
+        <p>Join thousands of professionals on ConnectorHub</p>
+      </div>
+      
+      <div class="tabs">
+        <div class="tab active" data-tab="login">Login</div>
+        <div class="tab" data-tab="signup">Sign Up</div>
+      </div>
+      
+      <!-- Login Form -->
+      <div id="login-tab" class="tab-content active">
+        <div id="login-message" class="message"></div>
+        
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" class="form-control" placeholder="Enter your email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <div class="password-container">
+              <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
+              <i class="fas fa-eye toggle-password" id="toggle-login-password"></i>
+            </div>
+          </div>
+          
+          <div style="text-align: right; margin-bottom: 20px;">
+            <a href="#" id="forgot-password" style="color: var(--primary); text-decoration: none;">Forgot Password?</a>
+          </div>
+          
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Login to Account
+          </button>
+        </form>
+        
+        <div class="divider">
+          <span>or continue with</span>
+        </div>
+        
+        <button class="btn btn-google" id="google-login">
+          <i class="fab fa-google"></i> Sign in with Google
+        </button>
+      </div>
+      
+      <!-- Signup Form -->
+      <div id="signup-tab" class="tab-content">
+        <div id="signup-message" class="message"></div>
+        
+        <form id="signupForm">
+          <div class="form-group">
+            <label for="signup-name">Full Name</label>
+            <input type="text" id="signup-name" class="form-control" placeholder="Enter your full name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="signup-email">Email Address</label>
+            <input type="email" id="signup-email" class="form-control" placeholder="Enter your email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <div class="password-container">
+              <input type="password" id="signup-password" class="form-control" placeholder="Create a strong password" required>
+              <i class="fas fa-eye toggle-password" id="toggle-signup-password"></i>
+            </div>
+            <div style="margin-top: 8px; font-size: 0.85rem; color: var(--primary);">
+              <i class="fas fa-info-circle"></i> Use 8+ characters with uppercase, numbers & symbols
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="signup-confirm">Confirm Password</label>
+            <input type="password" id="signup-confirm" class="form-control" placeholder="Confirm your password" required>
+          </div>
+          
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> Create Secure Account
+          </button>
+        </form>
+        
+        <div class="divider">
+          <span>or sign up with</span>
+        </div>
+        
+        <button class="btn btn-google" id="google-signup">
+          <i class="fab fa-google"></i> Sign up with Google
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    <p>&copy; 2025 ConnectorHub Marketplace. All rights reserved.</p>
+  </footer>
+  
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAAqMkxlTrgvPmJ5WdyeCwMWgcx2lW51WA",
+      authDomain: "connectorhubsignup.firebaseapp.com",
+      projectId: "connectorhubsignup",
+      storageBucket: "connectorhubsignup.appspot.com",
+      messagingSenderId: "1069616706414",
+      appId: "1:1069616706414:web:f0843d21127b358390077f",
+      measurementId: "G-EEYDQT70JG"
+    };
+
+    // Initialize only if no existing app
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
+    const auth = firebase.auth();
+
+    // DOM Elements
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const googleLoginBtn = document.getElementById('google-login');
+    const googleSignupBtn = document.getElementById('google-signup');
+    const loginMessage = document.getElementById('login-message');
+    const signupMessage = document.getElementById('signup-message');
+    const forgotPasswordLink = document.getElementById('forgot-password');
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Forgot Password Functionality
+    forgotPasswordLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      
+      if (!email) {
+        const emailInput = prompt("Please enter your email address to reset your password:");
+        if (!emailInput) return; // User cancelled
+        
+        sendPasswordResetEmail(emailInput);
+      } else {
+        sendPasswordResetEmail(email);
+      }
+    });
+
+    function sendPasswordResetEmail(email) {
+      auth.sendPasswordResetEmail(email)
+        .then(() => {
+          showMessage(loginMessage, "Password reset email sent! Check your inbox.", "success");
+        })
+        .catch((error) => {
+          let errorMessage = "Failed to send reset email. Please try again.";
+          
+          if (error.code === "auth/user-not-found") {
+            errorMessage = "No account found with this email.";
+          } else if (error.code === "auth/invalid-email") {
+            errorMessage = "Invalid email address.";
+          }
+          
+          showMessage(loginMessage, errorMessage, "error");
+        });
+    }
+
+    // Tab switching
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs and contents
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        
+        // Show corresponding content
+        const tabName = tab.getAttribute('data-tab');
+        document.getElementById(`${tabName}-tab`).classList.add('active');
+      });
+    });
+    
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+      icon.addEventListener('click', function() {
+        const input = this.previousElementSibling;
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+      });
+    });
+    
+    // Signup with email/password
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('signup-name').value;
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const confirmPassword = document.getElementById('signup-confirm').value;
+      
+      // Validate passwords match
+      if (password !== confirmPassword) {
+        showMessage(signupMessage, 'Passwords do not match', 'error');
+        return;
+      }
+      
+      // Password strength check
+      if (password.length < 8) {
+        showMessage(signupMessage, 'Password must be at least 8 characters', 'error');
+        return;
+      }
+      
+      try {
+        // Create user with Firebase
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+        
+        // Update user profile with name
+        await user.updateProfile({
+          displayName: name
+        });
+        
+        showMessage(signupMessage, `Account created successfully! Welcome to ConnectorHub, ${name}.`, 'success');
+        signupForm.reset();
+        
+        // Redirect to dashboard after 2 seconds
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 2000);
+        
+      } catch (error) {
+        console.error('Signup error:', error);
+        let message = 'An error occurred. Please try again.';
+        
+        if (error.code === 'auth/email-already-in-use') {
+          message = 'This email is already registered.';
+        } else if (error.code === 'auth/weak-password') {
+          message = 'Password should be at least 6 characters.';
+        } else if (error.code === 'auth/invalid-email') {
+          message = 'Please enter a valid email address.';
+        }
+        
+        showMessage(signupMessage, message, 'error');
+      }
+    });
+    
+    // Login with email/password
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      
+      try {
+        // Sign in user with Firebase
+        await auth.signInWithEmailAndPassword(email, password);
+        showMessage(loginMessage, 'Login successful! Redirecting...', 'success');
+        
+        // Redirect to dashboard after 1 second
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1000);
+        
+      } catch (error) {
+        console.error('Login error:', error);
+        let message = 'An error occurred. Please try again.';
+        
+        if (error.code === 'auth/user-not-found') {
+          message = 'No account found with this email.';
+        } else if (error.code === 'auth/wrong-password') {
+          message = 'Incorrect password. Please try again.';
+        } else if (error.code === 'auth/invalid-email') {
+          message = 'Please enter a valid email address.';
+        }
+        
+        showMessage(loginMessage, message, 'error');
+      }
+    });
+    
+    // Google authentication
+    const googleAuth = () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      
+      auth.signInWithPopup(provider)
+        .then((result) => {
+          // User signed in
+          showMessage(loginMessage, 'Login successful! Redirecting...', 'success');
+          
+          // Redirect to dashboard after 1 second
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 1000);
+        })
+        .catch((error) => {
+          console.error('Google auth error:', error);
+          let errorMessage = 'Google authentication failed. Please try again.';
+          
+          if (error.code === 'auth/popup-closed-by-user') {
+            errorMessage = 'Popup closed before completing authentication.';
+          } else if (error.code === 'auth/unauthorized-domain') {
+            errorMessage = 'This domain is not authorized for authentication.';
+          }
+          
+          showMessage(loginMessage, errorMessage, 'error');
+        });
+    };
+    
+    googleLoginBtn.addEventListener('click', googleAuth);
+    googleSignupBtn.addEventListener('click', googleAuth);
+    
+    // Show message function
+    function showMessage(element, text, type) {
+      element.textContent = text;
+      element.className = `message ${type}`;
+      element.style.display = 'block';
+      
+      // Clear message after 5 seconds
+      setTimeout(() => {
+        element.style.display = 'none';
+      }, 5000);
+    }
+    
+    // Monitor auth state
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        // User is signed in, redirect to dashboard
+        window.location.href = 'dashboard.html';
+      } else {
+        // User is signed out
+        console.log('User is signed out');
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+dashboard.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Profile - ConnectorHub</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -16,49 +695,357 @@
       --error: #e74c3c;
       --gray: #7f8c8d;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f5f7fa; color: #2c3e50; line-height: 1.6; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
     header {
-      background-color: white; padding: 15px 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px;
-      position: sticky; top: 0; z-index: 100;
+      background-color: white;
+      padding: 15px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .header-content { display: flex; justify-content: space-between; align-items: center; }
-    .logo { display: flex; align-items: center; }
-    .logo i { color: var(--primary); font-size: 1.8rem; margin-right: 10px; }
-    .logo h1 { font-size: 1.8rem; font-weight: 700; background: linear-gradient(to right, var(--primary), #1effbc); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .user-actions a { margin-left: 15px; color: var(--secondary); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 5px; }
-    .user-actions a:hover { color: var(--primary); }
-    .profile-container { display: grid; grid-template-columns: 300px 1fr; gap: 30px; }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo i {
+      color: var(--primary);
+      font-size: 1.8rem;
+      margin-right: 10px;
+    }
+    
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary), #1effbc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .user-actions a {
+      margin-left: 15px;
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .user-actions a:hover {
+      color: var(--primary);
+    }
+    
+    .profile-container {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 30px;
+    }
+    
     .profile-sidebar {
-      background: white; border-radius: 10px; padding: 30px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05); height: fit-content; position: sticky; top: 90px;
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      height: fit-content;
+      position: sticky;
+      top: 90px;
     }
-    .profile-pic { width: 150px; height: 150px; border-radius: 50%; background-color: #eee; margin: 0 auto 20px; overflow: hidden; position: relative; border: 3px solid var(--primary); display: flex; align-items: center; justify-content: center; }
-    .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
-    .profile-name { text-align: center; margin-bottom: 30px; }
-    .profile-name h2 { margin-bottom: 5px; font-size: 1.5rem; color: var(--dark); }
-    .profile-name p { color: var(--gray); font-size: 1rem; }
-    .profile-content { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); min-height: 600px; }
-    .section-title { margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-    .section-title h2 { font-size: 1.8rem; color: var(--dark); }
-    .alert { padding: 15px; border-radius: 5px; margin-bottom: 20px; }
-    .alert-success { background: rgba(39, 174, 96, 0.1); border: 1px solid var(--success); color: var(--success); }
-    .alert-error { background: rgba(231, 76, 60, 0.1); border: 1px solid var(--error); color: var(--error); }
-    .hidden { display: none; }
-    .field { margin-bottom: 20px; }
-    .label { font-weight: 600; color: var(--primary); margin-bottom: 5px; display: block; }
-    .value { color: var(--dark); font-size: 1.1rem; }
+    
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background-color: #eee;
+      margin: 0 auto 20px;
+      overflow: hidden;
+      position: relative;
+      border: 3px solid var(--primary);
+    }
+    
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .profile-pic-edit {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: var(--primary);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .profile-pic-edit:hover {
+      transform: scale(1.1);
+    }
+    
+    .profile-name {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .profile-name h2 {
+      margin-bottom: 5px;
+      font-size: 1.5rem;
+      color: var(--dark);
+    }
+    
+    .profile-name p {
+      color: var(--gray);
+      font-size: 1rem;
+    }
+    
+    .profile-menu {
+      list-style: none;
+    }
+    
+    .profile-menu li {
+      margin-bottom: 10px;
+    }
+    
+    .profile-menu a {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      color: var(--secondary);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+    
+    .profile-menu a:hover, .profile-menu a.active {
+      background-color: rgba(52, 152, 219, 0.1);
+      color: var(--primary);
+      transform: translateX(5px);
+    }
+    
+    .profile-menu i {
+      width: 25px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+    
+    .profile-content {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      min-height: 600px;
+    }
+    
+    .section-title {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .section-title h2 {
+      font-size: 1.8rem;
+      color: var(--dark);
+    }
+    
+    .info-group {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .info-label {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 5px;
+      display: block;
+    }
+    
+    .info-value {
+      color: var(--dark);
+      font-size: 1.1rem;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--primary);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      background: #f9f9f9;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+      outline: none;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(to right, var(--primary), #1effbc);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .btn-outline:hover {
+      background: rgba(52, 152, 219, 0.1);
+    }
+    
+    .alert {
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    
+    .alert-success {
+      background: rgba(39, 174, 96, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+    
+    .alert-error {
+      background: rgba(231, 76, 60, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
     @media (max-width: 992px) {
-      .profile-container { grid-template-columns: 1fr; }
-      .profile-sidebar { position: relative; top: 0; }
+      .profile-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .profile-sidebar {
+        position: relative;
+        top: 0;
+      }
+      
+      .form-row, .info-grid {
+        grid-template-columns: 1fr;
+      }
     }
+    
     @media (max-width: 576px) {
-      .header-content { flex-direction: column; gap: 15px; }
-      .user-actions { width: 100%; display: flex; justify-content: center; }
-      .profile-content { padding: 20px; }
-      .profile-sidebar { padding: 20px; }
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .user-actions {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      
+      .profile-content {
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -74,33 +1061,230 @@
       </div>
     </div>
   </header>
+  
   <div class="container">
     <div class="profile-container">
       <div class="profile-sidebar">
-        <div class="profile-pic" id="profile-pic-box">
+        <div class="profile-pic">
           <img id="profile-image" src="" alt="Profile Picture">
+          <div class="profile-pic-edit" id="edit-profile-pic">
+            <i class="fas fa-camera"></i>
+          </div>
         </div>
         <div class="profile-name">
           <h2 id="display-name">Loading...</h2>
           <p id="user-email">user@example.com</p>
         </div>
+        <ul class="profile-menu">
+          <li><a href="#" class="active" id="profile-link" data-tab="profile"><i class="fas fa-user"></i> Profile</a></li>
+          <li><a href="#" id="settings-link" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
+          <li><a href="#" id="projects-link"><i class="fas fa-briefcase"></i> My Projects</a></li>
+          <li><a href="#" id="messages-link"><i class="fas fa-envelope"></i> Messages</a></li>
+        </ul>
       </div>
+      
       <div class="profile-content">
-        <div class="section-title">
-          <h2>Profile Information</h2>
+        <!-- Profile View (Read-only) -->
+        <div id="profile-section" class="tab-content active">
+          <div class="section-title">
+            <h2>Profile Information</h2>
+          </div>
+          <div id="profile-message" class="alert hidden"></div>
+          
+          <div class="info-grid">
+            <div class="info-group">
+              <span class="info-label">Full Name</span>
+              <div class="info-value" id="view-full-name"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Whatsapp Contact</span>
+              <div class="info-value" id="view-whatsapp"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Date of Birth</span>
+              <div class="info-value" id="view-dob"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">CNIC Number</span>
+              <div class="info-value" id="view-cnic"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Address</span>
+              <div class="info-value" id="view-address"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">City</span>
+              <div class="info-value" id="view-city"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Province/State</span>
+              <div class="info-value" id="view-province"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Country</span>
+              <div class="info-value" id="view-country"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Postal Code</span>
+              <div class="info-value" id="view-postal-code"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Business Role</span>
+              <div class="info-value" id="view-business-role"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Availability</span>
+              <div class="info-value" id="view-availability"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Available Hours</span>
+              <div class="info-value" id="view-available-hours"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Portfolio/Experience</span>
+              <div class="info-value" id="view-portfolio"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Languages</span>
+              <div class="info-value" id="view-languages"></div>
+            </div>
+            
+            <div class="info-group">
+              <span class="info-label">Social Media Links</span>
+              <div class="info-value" id="view-social-links"></div>
+            </div>
+          </div>
         </div>
-        <div id="profile-message" class="alert hidden"></div>
-        <div id="profile-info">
-          <!-- Profile fields will appear here -->
+        
+        <!-- Settings View (Editable) -->
+        <div id="settings-section" class="tab-content">
+          <div class="section-title">
+            <h2>Edit Profile</h2>
+            <button class="btn btn-outline" id="back-to-profile">
+              <i class="fas fa-arrow-left"></i> Back to Profile
+            </button>
+          </div>
+          <div id="settings-message" class="alert hidden"></div>
+          
+          <form id="profile-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="full-name">Full Name</label>
+                <input type="text" id="full-name" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="whatsapp">Whatsapp Contact</label>
+                <input type="tel" id="whatsapp" class="form-control" placeholder="+923001234567" required>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="cnic">CNIC Number</label>
+                <input type="text" id="cnic" class="form-control" placeholder="4220112345678">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input type="text" id="address" class="form-control" placeholder="Street/Village">
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="province">Province/State</label>
+                <input type="text" id="province" class="form-control">
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="country">Country</label>
+                <input type="text" id="country" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="postal-code">Postal Code</label>
+                <input type="text" id="postal-code" class="form-control">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="business-role">Business Role</label>
+              <input type="text" id="business-role" class="form-control" placeholder="e.g. Web Developer, Graphic Designer">
+            </div>
+            
+            <div class="form-group">
+              <label for="availability">Availability for Task</label>
+              <select id="availability" class="form-control">
+                <option value="available">Available</option>
+                <option value="not-available">Not Available</option>
+                <option value="limited">Limited Availability</option>
+              </select>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="available-from">Available Hours From</label>
+                <input type="time" id="available-from" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="available-to">Available Hours To</label>
+                <input type="time" id="available-to" class="form-control">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="portfolio">Portfolio/Past Experience Links</label>
+              <textarea id="portfolio" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="languages">Languages</label>
+              <input type="text" id="languages" class="form-control" placeholder="English, Urdu, etc.">
+            </div>
+            
+            <div class="form-group">
+              <label for="social-links">Social Media Links</label>
+              <textarea id="social-links" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Update Profile
+            </button>
+          </form>
         </div>
       </div>
     </div>
   </div>
+
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  
   <script>
-    // Firebase config (use your own project's values)
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAAqMkxlTrgvPmJ5WdyeCwMWgcx2lW51WA",
       authDomain: "connectorhubsignup.firebaseapp.com",
@@ -110,103 +1294,353 @@
       appId: "1:1069616706414:web:f0843d21127b358390077f",
       measurementId: "G-EEYDQT70JG"
     };
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
     const auth = firebase.auth();
-
-    // Your deployed Apps Script web app URL:
-    const API_URL = "https://script.google.com/macros/s/AKfycbw8oQWVfFE2UbvF88MRuHgtxuQp-cQile3GsWfouUFBqYowhLuVxR8J-HB-2o0f90IG/exec";
-
-    // DOM
+    const db = firebase.firestore();
+    
+    // DOM Elements
+    const logoutBtn = document.getElementById('logout');
+    const profileForm = document.getElementById('profile-form');
+    const profileMessage = document.getElementById('profile-message');
+    const settingsMessage = document.getElementById('settings-message');
     const displayName = document.getElementById('display-name');
     const userEmail = document.getElementById('user-email');
     const profileImage = document.getElementById('profile-image');
-    const profileInfo = document.getElementById('profile-info');
-    const logoutBtn = document.getElementById('logout');
+    const backToProfileBtn = document.getElementById('back-to-profile');
+    const profileLink = document.getElementById('profile-link');
+    const settingsLink = document.getElementById('settings-link');
+    const profileSection = document.getElementById('profile-section');
+    const settingsSection = document.getElementById('settings-section');
+    
+    // Google Sheets API configuration
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwJhU9vRLC4lQdONJlEx2-VOVM7cHHCFNkSmTRA8u-eRjwsBlLT-8aACUfQG7ajsWfCQw/exec";
 
-    // Auth state
+    
+    // Check auth state
     auth.onAuthStateChanged(user => {
       if (!user) {
+        // User is not logged in, redirect to login page
         window.location.href = 'business.html';
       } else {
-        displayName.textContent = user.displayName || 'No Name Set';
-        userEmail.textContent = user.email;
-        loadProfileFromSheet(user.email);
+        // User is logged in, load profile data
+        loadUserProfile(user);
       }
     });
-
-    // Fetch and render profile
-    async function loadProfileFromSheet(email) {
-      profileInfo.innerHTML = "Loading profile data from Google Sheet...";
-      try {
-        const res = await fetch(`${API_URL}?email=${encodeURIComponent(email)}`);
-        const data = await res.json();
-
-        if (!data.found) {
-          profileInfo.innerHTML = "<p><strong>Email not found in Google Sheet.</strong></p>";
-          profileImage.src = "https://ui-avatars.com/api/?name=No+Image&background=eee&color=888&size=150";
-          return;
-        }
-
-        // Set profile image (from google drive link if present)
-        if (data["Profile Picture"] && data["Profile Picture"].includes("drive.google.com")) {
-          const fileIdMatch = data["Profile Picture"].match(/[-\w]{25,}/);
-          if (fileIdMatch) {
-            const fileId = fileIdMatch[0];
-            profileImage.src = `https://drive.google.com/uc?export=view&id=${fileId}`;
-          }
-        } else {
-          // fallback: show avatar with initials
-          let initials = (data["Full Name"] || email || "User").split(' ').map(n => n[0]).join('');
-          profileImage.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=3498db&color=fff&size=150`;
-        }
-
-        // Display all fields (except Profile Picture)
-        let html = "";
-        for (const key in data) {
-          if (key === "found" || key === "Profile Picture" || key === "Timestamp") continue;
-          let value = data[key];
-
-          // Format date fields
-          if (key.toLowerCase().includes("date")) {
-            const d = new Date(value);
-            value = !isNaN(d.getTime()) ? d.toLocaleDateString('en-GB') : value;
-          }
-
-          // Format time fields
-          if (key.toLowerCase().includes("from") || key.toLowerCase().includes("to")) {
-            // Try to parse as time, fallback to original
-            const t = value && value.match && value.match(/^([01]\d|2[0-3]):([0-5]\d)/) ? value : null;
-            value = t ? value : value;
-          }
-
-          // Hyperlink URLs
-          if (typeof value === "string" && value.includes("http")) {
-            const parts = value.split(/, ?/);
-            value = parts.map(v =>
-              v.startsWith("http") ? `<a href="${v}" target="_blank">${v}</a>` : v
-            ).join(", ");
-          }
-
-          html += `
-            <div class="field">
-              <div class="label">${key}:</div>
-              <div class="value">${value || '<span style="color:#aaa;">Not provided</span>'}</div>
-            </div>`;
-        }
-        profileInfo.innerHTML = html;
-      } catch (err) {
-        profileInfo.innerHTML = "<p>Error fetching profile. Please try again.</p>";
-        profileImage.src = "https://ui-avatars.com/api/?name=Error&background=eee&color=888&size=150";
+    
+    // Tab switching
+    profileLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchTab('profile');
+    });
+    
+    settingsLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchTab('settings');
+    });
+    
+    backToProfileBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchTab('profile');
+    });
+    
+    function switchTab(tabName) {
+      // Update active tab in menu
+      document.querySelectorAll('.profile-menu a').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Hide all tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Show selected tab
+      if (tabName === 'profile') {
+        profileLink.classList.add('active');
+        profileSection.classList.add('active');
+      } else if (tabName === 'settings') {
+        settingsLink.classList.add('active');
+        settingsSection.classList.add('active');
       }
     }
-
+    
+    // Load user profile data
+    async function loadUserProfile(user) {
+      // Display basic info
+      displayName.textContent = user.displayName || 'No Name Set';
+      userEmail.textContent = user.email;
+      
+      // Set profile image
+      if (user.photoURL) {
+        profileImage.src = user.photoURL;
+      } else {
+        // Use placeholder image or initials
+        const initials = (user.displayName || 'UU').split(' ').map(n => n[0]).join('');
+        profileImage.src = `https://ui-avatars.com/api/?name=${initials}&background=3498db&color=fff&size=150`;
+      }
+      
+      try {
+        // Check if user profile exists in Firestore
+        const docRef = db.collection('users').doc(user.uid);
+        const doc = await docRef.get();
+        
+        let profileData = null;
+        
+        if (doc.exists) {
+          // Load data from Firestore
+          profileData = doc.data();
+        } else {
+          // Check Google Sheets (fallback)
+          profileData = await checkGoogleSheets(user.email);
+          if (profileData) {
+            // Save to Firestore for future use
+            await docRef.set(profileData);
+          }
+        }
+        
+        if (profileData) {
+          // Populate both profile view and settings form
+          populateProfileView(profileData);
+          populateForm(profileData);
+          
+          // Set profile image if available
+          if (profileData.profileImage) {
+            profileImage.src = profileData.profileImage;
+          }
+        }
+      } catch (error) {
+        console.error("Error loading profile:", error);
+        showMessage(profileMessage, "Error loading profile data: " + error.message, "error");
+      }
+    }
+    
+    // Check Google Sheets for user data
+    async function checkGoogleSheets(email) {
+      try {
+        const url = `${scriptURL}?action=getUser&email=${encodeURIComponent(email)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.success && data.user) {
+          // Parse address components
+          const addressParts = (data.user["Area/Street/Village, City, Province/State, Country, Postal code"] || '')
+            .split(',').map(part => part.trim());
+            
+          // Format date of birth
+          const formatDate = (dateStr) => {
+            if (!dateStr) return '';
+            try {
+              const date = new Date(dateStr);
+              return date.toISOString().split('T')[0];
+            } catch {
+              return dateStr;
+            }
+          };
+          
+          // Format time
+          const formatTime = (timeStr) => {
+            if (!timeStr) return '';
+            try {
+              const date = new Date(timeStr);
+              return date.toTimeString().slice(0, 5);
+            } catch {
+              return timeStr;
+            }
+          };
+          
+          return {
+            fullName: data.user["Full Name"] || '',
+            whatsapp: data.user["Whatsapp Contact with country code (+92..)"] || '',
+            dob: formatDate(data.user["Date of Birth"]),
+            cnic: data.user["CNIC Number (without signs - /) Verified in a Video"]?.toString() || '',
+            address: data.user["Area/Street/Village, City, Province/State, Country, Postal code"] || '',
+            city: addressParts[1] || '',
+            province: addressParts[2] || '',
+            country: addressParts[3] || '',
+            postalCode: addressParts[4] || '',
+            businessRole: data.user["Business Role"] || '',
+            availability: data.user["Availability for Task"] || 'available',
+            availableFrom: formatTime(data.user["Usual Availability Hours From"]),
+            availableTo: formatTime(data.user["Usual Availability Hours to"]),
+            portfolio: data.user["Portfolio/Past Experience (links in others)"] || '',
+            languages: data.user["Languages"] || '',
+            socialLinks: data.user["Any Social Media Links for Verification"] || '',
+            profileImage: data.user["Profile Picture"] || '',
+            email: data.user["Email Address"] || email
+          };
+        } else {
+          throw new Error(data.message || 'User not found in Google Sheets');
+        }
+      } catch (error) {
+        console.error("Error checking Google Sheets:", error);
+        throw error;
+      }
+    }
+    
+    // Populate profile view with user data
+    function populateProfileView(data) {
+      document.getElementById('view-full-name').textContent = data.fullName || 'Not provided';
+      document.getElementById('view-whatsapp').textContent = data.whatsapp || 'Not provided';
+      document.getElementById('view-dob').textContent = data.dob || 'Not provided';
+      document.getElementById('view-cnic').textContent = data.cnic || 'Not provided';
+      document.getElementById('view-address').textContent = data.address || 'Not provided';
+      document.getElementById('view-city').textContent = data.city || 'Not provided';
+      document.getElementById('view-province').textContent = data.province || 'Not provided';
+      document.getElementById('view-country').textContent = data.country || 'Not provided';
+      document.getElementById('view-postal-code').textContent = data.postalCode || 'Not provided';
+      document.getElementById('view-business-role').textContent = data.businessRole || 'Not provided';
+      document.getElementById('view-availability').textContent = data.availability || 'Not provided';
+      document.getElementById('view-available-hours').textContent = `${data.availableFrom || '--:--'} to ${data.availableTo || '--:--'}`;
+      document.getElementById('view-portfolio').textContent = data.portfolio || 'Not provided';
+      document.getElementById('view-languages').textContent = data.languages || 'Not provided';
+      document.getElementById('view-social-links').textContent = data.socialLinks || 'Not provided';
+    }
+    
+    // Populate form with user data
+    function populateForm(data) {
+      document.getElementById('full-name').value = data.fullName || '';
+      document.getElementById('whatsapp').value = data.whatsapp || '';
+      document.getElementById('dob').value = data.dob || '';
+      document.getElementById('cnic').value = data.cnic || '';
+      document.getElementById('address').value = data.address || '';
+      document.getElementById('city').value = data.city || '';
+      document.getElementById('province').value = data.province || '';
+      document.getElementById('country').value = data.country || '';
+      document.getElementById('postal-code').value = data.postalCode || '';
+      document.getElementById('business-role').value = data.businessRole || '';
+      document.getElementById('availability').value = data.availability || 'available';
+      document.getElementById('available-from').value = data.availableFrom || '';
+      document.getElementById('available-to').value = data.availableTo || '';
+      document.getElementById('portfolio').value = data.portfolio || '';
+      document.getElementById('languages').value = data.languages || '';
+      document.getElementById('social-links').value = data.socialLinks || '';
+    }
+    
+    // Save profile data
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const user = auth.currentUser;
+      if (!user) return;
+      
+      const profileData = {
+        fullName: document.getElementById('full-name').value,
+        whatsapp: document.getElementById('whatsapp').value,
+        dob: document.getElementById('dob').value,
+        cnic: document.getElementById('cnic').value,
+        address: document.getElementById('address').value,
+        city: document.getElementById('city').value,
+        province: document.getElementById('province').value,
+        country: document.getElementById('country').value,
+        postalCode: document.getElementById('postal-code').value,
+        businessRole: document.getElementById('business-role').value,
+        availability: document.getElementById('availability').value,
+        availableFrom: document.getElementById('available-from').value,
+        availableTo: document.getElementById('available-to').value,
+        portfolio: document.getElementById('portfolio').value,
+        languages: document.getElementById('languages').value,
+        socialLinks: document.getElementById('social-links').value,
+        email: user.email,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      try {
+        // Save to Firestore
+        await db.collection('users').doc(user.uid).set(profileData, { merge: true });
+        
+        // Save to Google Sheets
+        await updateGoogleSheets(profileData);
+        
+        // Update display name if changed
+        if (profileData.fullName !== user.displayName) {
+          await user.updateProfile({
+            displayName: profileData.fullName
+          });
+          displayName.textContent = profileData.fullName;
+        }
+        
+        // Update profile view
+        populateProfileView(profileData);
+        
+        // Show success message and switch back to profile view
+        showMessage(settingsMessage, "Profile updated successfully!", "success");
+        setTimeout(() => {
+          switchTab('profile');
+        }, 1500);
+      } catch (error) {
+        console.error("Error saving profile:", error);
+        showMessage(settingsMessage, "Error updating profile: " + error.message, "error");
+      }
+    });
+    
+    // Update Google Sheets
+    async function updateGoogleSheets(data) {
+      try {
+        // Map your form fields to the sheet columns
+        const sheetData = {
+          "Email Address": data.email,
+          "Full Name": data.fullName,
+          "Whatsapp Contact with country code (+92..)": data.whatsapp,
+          "Date of Birth": data.dob,
+          "CNIC Number (without signs - /) Verified in a Video": data.cnic,
+          "Area/Street/Village, City, Province/State, Country, Postal code": `${data.address}, ${data.city}, ${data.province}, ${data.country}, ${data.postalCode}`,
+          "City": data.city,
+          "Province/State": data.province,
+          "Country": data.country,
+          "Postal Code": data.postalCode,
+          "Business Role": data.businessRole,
+          "Availability for Task": data.availability,
+          "Usual Availability Hours From": data.availableFrom,
+          "Usual Availability Hours to": data.availableTo,
+          "Portfolio/Past Experience (links in others)": data.portfolio,
+          "Languages": data.languages,
+          "Any Social Media Links for Verification": data.socialLinks
+        };
+        
+        const response = await fetch(scriptURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: data.email,
+            userData: sheetData
+          })
+        });
+        
+        const result = await response.json();
+        if (!result.success) {
+          throw new Error(result.message);
+        }
+      } catch (error) {
+        console.error("Error updating Google Sheets:", error);
+        throw error;
+      }
+    }
+    
     // Logout
-    logoutBtn.addEventListener('click', e => {
+    logoutBtn.addEventListener('click', (e) => {
       e.preventDefault();
       auth.signOut().then(() => {
         window.location.href = 'business.html';
       });
     });
+    
+    // Helper function to show messages
+    function showMessage(element, text, type) {
+      element.textContent = text;
+      element.className = `alert alert-${type}`;
+      element.classList.remove('hidden');
+      
+      setTimeout(() => {
+        element.classList.add('hidden');
+      }, 5000);
+    }
   </script>
 </body>
 </html>

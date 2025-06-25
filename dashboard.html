@@ -599,10 +599,9 @@
     </div>
   </div>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDK (Removed Firestore) -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
   
   <script>
     // Firebase configuration
@@ -622,7 +621,7 @@
     }
     
     const auth = firebase.auth();
-    const db = firebase.firestore();
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwJhU9vRLC4lQdONJlEx2-VOVM7cHHCFNkSmTRA8u-eRjwsBlLT-8aACUfQG7ajsWfCQw/exec";
     
     // DOM Elements
     const logoutBtn = document.getElementById('logout');
@@ -638,17 +637,11 @@
     const profileSection = document.getElementById('profile-section');
     const settingsSection = document.getElementById('settings-section');
     
-    // Google Sheets API configuration
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwJhU9vRLC4lQdONJlEx2-VOVM7cHHCFNkSmTRA8u-eRjwsBlLT-8aACUfQG7ajsWfCQw/exec";
-
-    
     // Check auth state
     auth.onAuthStateChanged(user => {
       if (!user) {
-        // User is not logged in, redirect to login page
         window.location.href = 'business.html';
       } else {
-        // User is logged in, load profile data
         loadUserProfile(user);
       }
     });
@@ -670,17 +663,14 @@
     });
     
     function switchTab(tabName) {
-      // Update active tab in menu
       document.querySelectorAll('.profile-menu a').forEach(tab => {
         tab.classList.remove('active');
       });
       
-      // Hide all tab content
       document.querySelectorAll('.tab-content').forEach(content => {
         content.classList.remove('active');
       });
       
-      // Show selected tab
       if (tabName === 'profile') {
         profileLink.classList.add('active');
         profileSection.classList.add('active');
@@ -690,117 +680,85 @@
       }
     }
     
-    // Load user profile data
+    // Load user profile data from Google Sheets
     async function loadUserProfile(user) {
-      // Display basic info
       displayName.textContent = user.displayName || 'No Name Set';
       userEmail.textContent = user.email;
       
-      // Set profile image
       if (user.photoURL) {
         profileImage.src = user.photoURL;
       } else {
-        // Use placeholder image or initials
         const initials = (user.displayName || 'UU').split(' ').map(n => n[0]).join('');
         profileImage.src = `https://ui-avatars.com/api/?name=${initials}&background=3498db&color=fff&size=150`;
       }
       
       try {
-        // Check if user profile exists in Firestore
-        const docRef = db.collection('users').doc(user.uid);
-        const doc = await docRef.get();
-        
-        let profileData = null;
-        
-        if (doc.exists) {
-          // Load data from Firestore
-          profileData = doc.data();
-        } else {
-          // Check Google Sheets (fallback)
-          profileData = await checkGoogleSheets(user.email);
-          if (profileData) {
-            // Save to Firestore for future use
-            await docRef.set(profileData);
-          }
-        }
-        
-        if (profileData) {
-          // Populate both profile view and settings form
-          populateProfileView(profileData);
-          populateForm(profileData);
-          
-          // Set profile image if available
-          if (profileData.profileImage) {
-            profileImage.src = profileData.profileImage;
-          }
-        }
-      } catch (error) {
-        console.error("Error loading profile:", error);
-        showMessage(profileMessage, "Error loading profile data: " + error.message, "error");
-      }
-    }
-    
-    // Check Google Sheets for user data
-    async function checkGoogleSheets(email) {
-      try {
-        const url = `${scriptURL}?action=getUser&email=${encodeURIComponent(email)}`;
+        const url = `${scriptURL}?email=${encodeURIComponent(user.email)}`;
         const response = await fetch(url);
         const data = await response.json();
         
         if (data.success && data.user) {
-          // Parse address components
-          const addressParts = (data.user["Area/Street/Village, City, Province/State, Country, Postal code"] || '')
-            .split(',').map(part => part.trim());
-            
-          // Format date of birth
-          const formatDate = (dateStr) => {
-            if (!dateStr) return '';
-            try {
-              const date = new Date(dateStr);
-              return date.toISOString().split('T')[0];
-            } catch {
-              return dateStr;
-            }
-          };
+          const profileData = processSheetData(data.user);
+          populateProfileView(profileData);
+          populateForm(profileData);
           
-          // Format time
-          const formatTime = (timeStr) => {
-            if (!timeStr) return '';
-            try {
-              const date = new Date(timeStr);
-              return date.toTimeString().slice(0, 5);
-            } catch {
-              return timeStr;
-            }
-          };
-          
-          return {
-            fullName: data.user["Full Name"] || '',
-            whatsapp: data.user["Whatsapp Contact with country code (+92..)"] || '',
-            dob: formatDate(data.user["Date of Birth"]),
-            cnic: data.user["CNIC Number (without signs - /) Verified in a Video"]?.toString() || '',
-            address: data.user["Area/Street/Village, City, Province/State, Country, Postal code"] || '',
-            city: addressParts[1] || '',
-            province: addressParts[2] || '',
-            country: addressParts[3] || '',
-            postalCode: addressParts[4] || '',
-            businessRole: data.user["Business Role"] || '',
-            availability: data.user["Availability for Task"] || 'available',
-            availableFrom: formatTime(data.user["Usual Availability Hours From"]),
-            availableTo: formatTime(data.user["Usual Availability Hours to"]),
-            portfolio: data.user["Portfolio/Past Experience (links in others)"] || '',
-            languages: data.user["Languages"] || '',
-            socialLinks: data.user["Any Social Media Links for Verification"] || '',
-            profileImage: data.user["Profile Picture"] || '',
-            email: data.user["Email Address"] || email
-          };
+          if (profileData.profileImage) {
+            profileImage.src = profileData.profileImage;
+          }
         } else {
-          throw new Error(data.message || 'User not found in Google Sheets');
+          showMessage(profileMessage, "User not found in Google Sheets", "error");
         }
       } catch (error) {
-        console.error("Error checking Google Sheets:", error);
-        throw error;
+        console.error("Error loading profile:", error);
+        showMessage(profileMessage, "Error loading profile data", "error");
       }
+    }
+    
+    // Process sheet data into our format
+    function processSheetData(sheetData) {
+      const addressParts = (sheetData["Area/Street/Village, City, Province/State, Country, Postal code"] || '')
+        .split(',').map(part => part.trim());
+      
+      const formatDate = (dateStr) => {
+        if (!dateStr) return '';
+        try {
+          const date = new Date(dateStr);
+          return date.toISOString().split('T')[0];
+        } catch {
+          return dateStr;
+        }
+      };
+      
+      const formatTime = (timeStr) => {
+        if (!timeStr) return '';
+        try {
+          const date = new Date(timeStr);
+          return date.toTimeString().slice(0, 5);
+        } catch {
+          return timeStr;
+        }
+      };
+      
+      return {
+        fullName: sheetData["Full Name"] || '',
+        whatsapp: sheetData["Whatsapp Contact with country code (+92..)"] || '',
+        dob: formatDate(sheetData["Date of Birth"]),
+        cnic: sheetData["CNIC Number (without signs - /) Verified in a Video"]?.toString() || '',
+        address: sheetData["Area/Street/Village, City, Province/State, Country, Postal code"] || '',
+        city: addressParts[1] || '',
+        province: addressParts[2] || '',
+        country: addressParts[3] || '',
+        postalCode: addressParts[4] || '',
+        businessRole: sheetData["Business Role"] || '',
+        availability: sheetData["Availability for Task"] || 'available',
+        availableFrom: formatTime(sheetData["Usual Availability Hours From"]),
+        availableTo: formatTime(sheetData["Usual Availability Hours to"]),
+        portfolio: sheetData["Portfolio/Past Experience (links in others)"] || '',
+        languages: sheetData["Languages"] || '',
+        socialLinks: sheetData["Any Social Media Links for Verification"] || '',
+        profileImage: sheetData["Profile Picture"] || '',
+        email: sheetData["Email Address"] || user.email
+      };
     }
     
     // Populate profile view with user data
@@ -866,15 +824,11 @@
         portfolio: document.getElementById('portfolio').value,
         languages: document.getElementById('languages').value,
         socialLinks: document.getElementById('social-links').value,
-        email: user.email,
-        lastUpdated: new Date().toISOString()
+        email: user.email
       };
       
       try {
-        // Save to Firestore
-        await db.collection('users').doc(user.uid).set(profileData, { merge: true });
-        
-        // Save to Google Sheets
+        // Update Google Sheets
         await updateGoogleSheets(profileData);
         
         // Update display name if changed
@@ -888,7 +842,6 @@
         // Update profile view
         populateProfileView(profileData);
         
-        // Show success message and switch back to profile view
         showMessage(settingsMessage, "Profile updated successfully!", "success");
         setTimeout(() => {
           switchTab('profile');
@@ -902,7 +855,6 @@
     // Update Google Sheets
     async function updateGoogleSheets(data) {
       try {
-        // Map your form fields to the sheet columns
         const sheetData = {
           "Email Address": data.email,
           "Full Name": data.fullName,
@@ -910,10 +862,6 @@
           "Date of Birth": data.dob,
           "CNIC Number (without signs - /) Verified in a Video": data.cnic,
           "Area/Street/Village, City, Province/State, Country, Postal code": `${data.address}, ${data.city}, ${data.province}, ${data.country}, ${data.postalCode}`,
-          "City": data.city,
-          "Province/State": data.province,
-          "Country": data.country,
-          "Postal Code": data.postalCode,
           "Business Role": data.businessRole,
           "Availability for Task": data.availability,
           "Usual Availability Hours From": data.availableFrom,

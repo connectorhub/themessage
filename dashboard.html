@@ -732,6 +732,9 @@
           if (profileData.profileImage) {
             profileImage.src = profileData.profileImage;
           }
+        } else {
+          console.log("No profile data found");
+          showMessage(profileMessage, "No profile data found. Please update your profile.", "error");
         }
       } catch (error) {
         console.error("Error loading profile:", error);
@@ -744,6 +747,11 @@
       try {
         const url = `${scriptURL}?action=getUser&email=${encodeURIComponent(email)}`;
         const response = await fetch(url);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
         
         if (data.success && data.user) {
@@ -773,6 +781,16 @@
             }
           };
           
+          // Handle profile image
+          let profileImage = data.user["Profile Picture"] || '';
+          if (profileImage && profileImage.includes("drive.google.com")) {
+            const fileIdMatch = profileImage.match(/[-\w]{25,}/);
+            if (fileIdMatch) {
+              const fileId = fileIdMatch[0];
+              profileImage = `https://drive.google.com/uc?export=view&id=${fileId}`;
+            }
+          }
+          
           return {
             fullName: data.user["Full Name"] || '',
             whatsapp: data.user["Whatsapp Contact with country code (+92..)"] || '',
@@ -790,7 +808,7 @@
             portfolio: data.user["Portfolio/Past Experience (links in others)"] || '',
             languages: data.user["Languages"] || '',
             socialLinks: data.user["Any Social Media Links for Verification"] || '',
-            profileImage: data.user["Profile Picture"] || '',
+            profileImage: profileImage,
             email: data.user["Email Address"] || email
           };
         } else {

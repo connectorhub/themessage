@@ -6,39 +6,40 @@
     body {
       font-family: 'Segoe UI', sans-serif;
       padding: 30px;
-      background-color: #f5f7fa;
-    }
-    h2 {
-      color: #222;
+      background-color: #f1f5f9;
     }
     input, button {
       padding: 10px;
       font-size: 16px;
       margin-top: 10px;
     }
+    h2 {
+      margin-bottom: 20px;
+    }
     #profile {
       margin-top: 30px;
-      padding: 20px;
       background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
     }
     .field {
       margin-bottom: 15px;
     }
     .label {
       font-weight: bold;
-      color: #333;
+      color: #222;
     }
     .value {
-      color: #555;
+      color: #444;
     }
-    img.profile-pic {
-      width: 200px;
-      height: 200px;
+    .profile-pic {
+      width: 220px;
+      height: 220px;
       object-fit: cover;
       border-radius: 20px;
-      border: 2px solid #ccc;
+      border: 2px solid #aaa;
       margin-top: 10px;
     }
     a {
@@ -97,17 +98,17 @@
           if (key === "found") continue;
           let value = data[key];
 
-          // Format date
+          // Format date fields
           if (key.toLowerCase().includes("date")) {
             value = formatDate(value);
           }
 
-          // Format time-only fields
+          // Format time fields
           if (key.toLowerCase().includes("from") || key.toLowerCase().includes("to")) {
             value = formatTimeOnly(value);
           }
 
-          // Make URLs clickable
+          // Hyperlink URLs
           if (typeof value === "string" && value.includes("http")) {
             const parts = value.split(/, ?/);
             value = parts.map(v =>
@@ -115,27 +116,33 @@
             ).join(", ");
           }
 
-          // Display profile picture
+          // Handle profile picture
           if (key.toLowerCase().includes("profile picture") && value.includes("drive.google.com")) {
             const fileIdMatch = value.match(/[-\w]{25,}/);
-            const fileId = fileIdMatch ? fileIdMatch[0] : "";
-            const imgUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-            html += `
-              <div class="field">
-                <div class="label">${key}:</div>
-                <img src="${imgUrl}" alt="Profile Picture" class="profile-pic" />
-              </div>`;
-            continue;
+            if (fileIdMatch) {
+              const fileId = fileIdMatch[0];
+              const imgUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+              html += `
+                <div class="field">
+                  <div class="label">${key}:</div>
+                  <img src="${imgUrl}" class="profile-pic" alt="Profile Picture" />
+                </div>`;
+              continue;
+            }
           }
 
-          html += `<div class="field"><div class="label">${key}:</div><div class="value">${value}</div></div>`;
+          // General display
+          html += `<div class="field">
+            <div class="label">${key}:</div>
+            <div class="value">${value}</div>
+          </div>`;
         }
 
         profileBox.innerHTML = html;
 
       } catch (err) {
         console.error(err);
-        profileBox.innerHTML = "<p>Error fetching profile.</p>";
+        profileBox.innerHTML = "<p>Error fetching profile. Please try again.</p>";
       }
     }
   </script>

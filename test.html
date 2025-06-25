@@ -1,42 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>User Profile Finder</title>
+  <title>Signup Profile Lookup</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       padding: 30px;
-      background: #f7f7f7;
+      background-color: #f5f7fa;
+    }
+    h2 {
+      color: #222;
     }
     input, button {
       padding: 10px;
       font-size: 16px;
+      margin-top: 10px;
     }
     #profile {
       margin-top: 30px;
       padding: 20px;
-      background: #fff;
+      background: white;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
     .field {
-      margin-bottom: 12px;
+      margin-bottom: 15px;
     }
     .label {
       font-weight: bold;
       color: #333;
     }
+    .value {
+      color: #555;
+    }
+    img {
+      max-width: 200px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+    a {
+      color: #007BFF;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
-  <h2>Find Your Profile by Email</h2>
-  <input type="email" id="emailInput" placeholder="Enter email" style="width: 300px;" />
+
+  <h2>Find Your Signup Profile</h2>
+  <input type="email" id="emailInput" placeholder="Enter your email" size="40" />
   <button onclick="getProfile()">Get Profile</button>
 
   <div id="profile"></div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwsqwkEe_QaF12gz9pTtYhj07FsKW20vGuEaEt27vOAgGEKQcT_-jB5s5j9swF3gYob/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbylMFC8x75QQej-TXTKPmJgZRW8I9ITUB4Y_0JgeC3peJwcM3GrksG9fXGTcqmoB20a/exec";
+
+    function formatDate(dateStr) {
+      try {
+        const d = new Date(dateStr);
+        if (!isNaN(d.getTime())) {
+          return d.toLocaleDateString('en-GB');
+        }
+      } catch {}
+      return dateStr;
+    }
 
     async function getProfile() {
       const email = document.getElementById("emailInput").value.trim();
@@ -44,7 +71,7 @@
       profileBox.innerHTML = "";
 
       if (!email) {
-        profileBox.innerHTML = "<p>Please enter an email.</p>";
+        profileBox.innerHTML = "<p>Please enter a valid email.</p>";
         return;
       }
 
@@ -58,18 +85,41 @@
         }
 
         let html = "";
+
         for (const key in data) {
           if (key === "found") continue;
-          if (key === "Profile Picture" && data[key]) {
-            html += `<div class="field"><div class="label">${key}:</div><img src="${data[key]}" alt="Profile Picture" width="200" /></div>`;
-          } else if (key.toLowerCase().includes("link")) {
-            html += `<div class="field"><div class="label">${key}:</div><a href="${data[key]}" target="_blank">${data[key]}</a></div>`;
-          } else {
-            html += `<div class="field"><div class="label">${key}:</div>${data[key]}</div>`;
+          let value = data[key];
+
+          // Handle profile picture
+          if (key === "Profile Picture") {
+            if (value.includes("drive.google.com")) {
+              const fileId = value.split("id=")[1] || "";
+              const imgUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+              html += `<div class="field"><div class="label">${key}:</div><img src="${imgUrl}" alt="Profile Picture" /></div>`;
+            } else {
+              html += `<div class="field"><div class="label">${key}:</div><img src="${value}" alt="Profile Picture" /></div>`;
+            }
+            continue;
           }
+
+          // Format date fields
+          if (key.toLowerCase().includes("date") || key.toLowerCase().includes("time")) {
+            value = formatDate(value);
+          }
+
+          // Make links clickable
+          if (typeof value === "string" && value.includes("http")) {
+            const parts = value.split(", ");
+            value = parts.map(v =>
+              v.startsWith("http") ? `<a href="${v}" target="_blank">${v}</a>` : v
+            ).join(", ");
+          }
+
+          html += `<div class="field"><div class="label">${key}:</div><div class="value">${value}</div></div>`;
         }
 
         profileBox.innerHTML = html;
+
       } catch (err) {
         console.error(err);
         profileBox.innerHTML = "<p>Error fetching profile.</p>";

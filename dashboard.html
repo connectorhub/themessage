@@ -3,685 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Secure Authentication - ConnectorHub</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --primary: #3498db;
-      --primary-dark: #2980b9;
-      --secondary: #2c3e50;
-      --success: #27ae60;
-      --danger: #e74c3c;
-      --light: #ecf0f1;
-      --dark: #2c3e50;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    body {
-      background: linear-gradient(135deg, #1a2a6c, #1a5276, #1a2a6c);
-      color: #f0f0f0;
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      position: relative;
-    }
-    
-    .container {
-      max-width: 1200px;
-      width: 100%;
-      display: flex;
-      gap: 30px;
-      margin-bottom: 60px;
-    }
-    
-    .brand-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 40px;
-    }
-    
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-    
-    .logo i {
-      font-size: 3rem;
-      color: var(--primary);
-    }
-    
-    .logo h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      background: linear-gradient(to right, var(--primary), #1effbc);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    .brand-text {
-      font-size: 1.2rem;
-      color: #bbb;
-      max-width: 500px;
-      line-height: 1.8;
-    }
-    
-    .brand-text p {
-      margin-bottom: 20px;
-    }
-    
-    .auth-panel {
-      width: 450px;
-      background: rgba(0, 10, 30, 0.8);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(52, 152, 219, 0.4);
-    }
-    
-    .auth-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    
-    .auth-header h2 {
-      font-size: 2rem;
-      margin-bottom: 10px;
-      color: #fff;
-    }
-    
-    .auth-header p {
-      color: #bbb;
-    }
-    
-    .tabs {
-      display: flex;
-      margin-bottom: 25px;
-      border-bottom: 1px solid rgba(52, 152, 219, 0.3);
-    }
-    
-    .tab {
-      flex: 1;
-      padding: 15px;
-      text-align: center;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      border-bottom: 3px solid transparent;
-    }
-    
-    .tab.active {
-      color: #1effbc;
-      border-bottom: 3px solid #1effbc;
-    }
-    
-    .tab-content {
-      display: none;
-    }
-    
-    .tab-content.active {
-      display: block;
-      animation: fadeIn 0.5s ease;
-    }
-    
-    .form-group {
-      margin-bottom: 25px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--primary);
-    }
-    
-    .form-control {
-      width: 100%;
-      padding: 14px 20px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 2px solid rgba(52, 152, 219, 0.3);
-      border-radius: 10px;
-      color: white;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-    
-    .form-control:focus {
-      outline: none;
-      border-color: #1effbc;
-      background: rgba(255, 255, 255, 0.12);
-    }
-    
-    .password-container {
-      position: relative;
-    }
-    
-    .toggle-password {
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      color: var(--primary);
-    }
-    
-    .btn {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
-      position: relative;
-    }
-    
-    .btn-primary {
-      background: linear-gradient(to right, var(--primary), #1effbc);
-      color: #0a1929;
-    }
-    
-    .btn-google {
-      background: #4285F4;
-      color: white;
-    }
-    
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(30, 255, 188, 0.4);
-    }
-    
-    .btn:active {
-      transform: translateY(1px);
-    }
-    
-    .divider {
-      text-align: center;
-      margin: 25px 0;
-      position: relative;
-    }
-    
-    .divider::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: rgba(52, 152, 219, 0.3);
-      z-index: 1;
-    }
-    
-    .divider span {
-      background: rgba(0, 10, 30, 0.8);
-      padding: 0 15px;
-      position: relative;
-      z-index: 2;
-      color: var(--primary);
-    }
-    
-    .message {
-      padding: 15px;
-      border-radius: 10px;
-      margin: 20px 0;
-      text-align: center;
-      display: none;
-    }
-    
-    .success {
-      background: rgba(39, 174, 96, 0.2);
-      border: 1px solid var(--success);
-      color: var(--success);
-    }
-    
-    .error {
-      background: rgba(231, 76, 60, 0.2);
-      border: 1px solid var(--danger);
-      color: var(--danger);
-    }
-    
-    .info {
-      background: rgba(52, 152, 219, 0.2);
-      border: 1px solid var(--primary);
-      color: var(--primary);
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    footer {
-      text-align: center;
-      padding: 20px 0;
-      color: #ccc;
-      font-size: 0.9rem;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 10;
-    }
-    
-    @media (max-width: 992px) {
-      .container {
-        flex-direction: column;
-      }
-      
-      .brand-panel {
-        text-align: center;
-        align-items: center;
-      }
-      
-      .auth-panel {
-        width: 100%;
-      }
-    }
-    
-    @media (max-width: 576px) {
-      .brand-panel, .auth-panel {
-        padding: 25px;
-      }
-      
-      .logo h1 {
-        font-size: 2rem;
-      }
-      
-      .auth-header h2 {
-        font-size: 1.8rem;
-      }
-      
-      footer {
-        padding: 15px 0;
-      }
-    }
-  </style>
-  
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-</head>
-<body>
-  <div class="container">
-    <!-- Brand Panel -->
-    <div class="brand-panel">
-      <div class="logo">
-        <i class="fas fa-hands-helping"></i>
-        <h1>ConnectorHub</h1>
-      </div>
-      
-      <div class="brand-text">
-        <p>Your trusted marketplace for digital and physical services. Connect with skilled professionals worldwide.</p>
-        <p>Create your account to start offering services or hiring experts for your projects.</p>
-      </div>
-    </div>
-    
-    <!-- Authentication Panel -->
-    <div class="auth-panel">
-      <div class="auth-header">
-        <h2>Create Your Account</h2>
-        <p>Join thousands of professionals on ConnectorHub</p>
-      </div>
-      
-      <div class="tabs">
-        <div class="tab active" data-tab="login">Login</div>
-        <div class="tab" data-tab="signup">Sign Up</div>
-      </div>
-      
-      <!-- Login Form -->
-      <div id="login-tab" class="tab-content active">
-        <div id="login-message" class="message"></div>
-        
-        <form id="loginForm">
-          <div class="form-group">
-            <label for="login-email">Email Address</label>
-            <input type="email" id="login-email" class="form-control" placeholder="Enter your email" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="login-password">Password</label>
-            <div class="password-container">
-              <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
-              <i class="fas fa-eye toggle-password" id="toggle-login-password"></i>
-            </div>
-          </div>
-          
-          <div style="text-align: right; margin-bottom: 20px;">
-            <a href="#" id="forgot-password" style="color: var(--primary); text-decoration: none;">Forgot Password?</a>
-          </div>
-          
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-sign-in-alt"></i> Login to Account
-          </button>
-        </form>
-        
-        <div class="divider">
-          <span>or continue with</span>
-        </div>
-        
-        <button class="btn btn-google" id="google-login">
-          <i class="fab fa-google"></i> Sign in with Google
-        </button>
-      </div>
-      
-      <!-- Signup Form -->
-      <div id="signup-tab" class="tab-content">
-        <div id="signup-message" class="message"></div>
-        
-        <form id="signupForm">
-          <div class="form-group">
-            <label for="signup-name">Full Name</label>
-            <input type="text" id="signup-name" class="form-control" placeholder="Enter your full name" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="signup-email">Email Address</label>
-            <input type="email" id="signup-email" class="form-control" placeholder="Enter your email" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="signup-password">Password</label>
-            <div class="password-container">
-              <input type="password" id="signup-password" class="form-control" placeholder="Create a strong password" required>
-              <i class="fas fa-eye toggle-password" id="toggle-signup-password"></i>
-            </div>
-            <div style="margin-top: 8px; font-size: 0.85rem; color: var(--primary);">
-              <i class="fas fa-info-circle"></i> Use 8+ characters with uppercase, numbers & symbols
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="signup-confirm">Confirm Password</label>
-            <input type="password" id="signup-confirm" class="form-control" placeholder="Confirm your password" required>
-          </div>
-          
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-user-plus"></i> Create Secure Account
-          </button>
-        </form>
-        
-        <div class="divider">
-          <span>or sign up with</span>
-        </div>
-        
-        <button class="btn btn-google" id="google-signup">
-          <i class="fab fa-google"></i> Sign up with Google
-        </button>
-      </div>
-    </div>
-  </div>
-  
-  <footer>
-    <p>&copy; 2025 ConnectorHub Marketplace. All rights reserved.</p>
-  </footer>
-  
-  <script>
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyAAqMkxlTrgvPmJ5WdyeCwMWgcx2lW51WA",
-      authDomain: "connectorhubsignup.firebaseapp.com",
-      projectId: "connectorhubsignup",
-      storageBucket: "connectorhubsignup.appspot.com",
-      messagingSenderId: "1069616706414",
-      appId: "1:1069616706414:web:f0843d21127b358390077f",
-      measurementId: "G-EEYDQT70JG"
-    };
-
-    // Initialize only if no existing app
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    
-    const auth = firebase.auth();
-
-    // DOM Elements
-    const loginForm = document.getElementById('loginForm');
-    const signupForm = document.getElementById('signupForm');
-    const googleLoginBtn = document.getElementById('google-login');
-    const googleSignupBtn = document.getElementById('google-signup');
-    const loginMessage = document.getElementById('login-message');
-    const signupMessage = document.getElementById('signup-message');
-    const forgotPasswordLink = document.getElementById('forgot-password');
-    const tabs = document.querySelectorAll('.tab');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    // Forgot Password Functionality
-    forgotPasswordLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      const email = document.getElementById('login-email').value;
-      
-      if (!email) {
-        const emailInput = prompt("Please enter your email address to reset your password:");
-        if (!emailInput) return; // User cancelled
-        
-        sendPasswordResetEmail(emailInput);
-      } else {
-        sendPasswordResetEmail(email);
-      }
-    });
-
-    function sendPasswordResetEmail(email) {
-      auth.sendPasswordResetEmail(email)
-        .then(() => {
-          showMessage(loginMessage, "Password reset email sent! Check your inbox.", "success");
-        })
-        .catch((error) => {
-          let errorMessage = "Failed to send reset email. Please try again.";
-          
-          if (error.code === "auth/user-not-found") {
-            errorMessage = "No account found with this email.";
-          } else if (error.code === "auth/invalid-email") {
-            errorMessage = "Invalid email address.";
-          }
-          
-          showMessage(loginMessage, errorMessage, "error");
-        });
-    }
-
-    // Tab switching
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        // Remove active class from all tabs and contents
-        tabs.forEach(t => t.classList.remove('active'));
-        tabContents.forEach(c => c.classList.remove('active'));
-        
-        // Add active class to clicked tab
-        tab.classList.add('active');
-        
-        // Show corresponding content
-        const tabName = tab.getAttribute('data-tab');
-        document.getElementById(`${tabName}-tab`).classList.add('active');
-      });
-    });
-    
-    // Toggle password visibility
-    document.querySelectorAll('.toggle-password').forEach(icon => {
-      icon.addEventListener('click', function() {
-        const input = this.previousElementSibling;
-        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-        input.setAttribute('type', type);
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
-      });
-    });
-    
-    // Signup with email/password
-    signupForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const name = document.getElementById('signup-name').value;
-      const email = document.getElementById('signup-email').value;
-      const password = document.getElementById('signup-password').value;
-      const confirmPassword = document.getElementById('signup-confirm').value;
-      
-      // Validate passwords match
-      if (password !== confirmPassword) {
-        showMessage(signupMessage, 'Passwords do not match', 'error');
-        return;
-      }
-      
-      // Password strength check
-      if (password.length < 8) {
-        showMessage(signupMessage, 'Password must be at least 8 characters', 'error');
-        return;
-      }
-      
-      try {
-        // Create user with Firebase
-        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-        const user = userCredential.user;
-        
-        // Update user profile with name
-        await user.updateProfile({
-          displayName: name
-        });
-        
-        showMessage(signupMessage, `Account created successfully! Welcome to ConnectorHub, ${name}.`, 'success');
-        signupForm.reset();
-        
-        // Redirect to dashboard after 2 seconds
-        setTimeout(() => {
-          window.location.href = 'dashboard.html';
-        }, 2000);
-        
-      } catch (error) {
-        console.error('Signup error:', error);
-        let message = 'An error occurred. Please try again.';
-        
-        if (error.code === 'auth/email-already-in-use') {
-          message = 'This email is already registered.';
-        } else if (error.code === 'auth/weak-password') {
-          message = 'Password should be at least 6 characters.';
-        } else if (error.code === 'auth/invalid-email') {
-          message = 'Please enter a valid email address.';
-        }
-        
-        showMessage(signupMessage, message, 'error');
-      }
-    });
-    
-    // Login with email/password
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
-      
-      try {
-        // Sign in user with Firebase
-        await auth.signInWithEmailAndPassword(email, password);
-        showMessage(loginMessage, 'Login successful! Redirecting...', 'success');
-        
-        // Redirect to dashboard after 1 second
-        setTimeout(() => {
-          window.location.href = 'dashboard.html';
-        }, 1000);
-        
-      } catch (error) {
-        console.error('Login error:', error);
-        let message = 'An error occurred. Please try again.';
-        
-        if (error.code === 'auth/user-not-found') {
-          message = 'No account found with this email.';
-        } else if (error.code === 'auth/wrong-password') {
-          message = 'Incorrect password. Please try again.';
-        } else if (error.code === 'auth/invalid-email') {
-          message = 'Please enter a valid email address.';
-        }
-        
-        showMessage(loginMessage, message, 'error');
-      }
-    });
-    
-    // Google authentication
-    const googleAuth = () => {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      
-      auth.signInWithPopup(provider)
-        .then((result) => {
-          // User signed in
-          showMessage(loginMessage, 'Login successful! Redirecting...', 'success');
-          
-          // Redirect to dashboard after 1 second
-          setTimeout(() => {
-            window.location.href = 'dashboard.html';
-          }, 1000);
-        })
-        .catch((error) => {
-          console.error('Google auth error:', error);
-          let errorMessage = 'Google authentication failed. Please try again.';
-          
-          if (error.code === 'auth/popup-closed-by-user') {
-            errorMessage = 'Popup closed before completing authentication.';
-          } else if (error.code === 'auth/unauthorized-domain') {
-            errorMessage = 'This domain is not authorized for authentication.';
-          }
-          
-          showMessage(loginMessage, errorMessage, 'error');
-        });
-    };
-    
-    googleLoginBtn.addEventListener('click', googleAuth);
-    googleSignupBtn.addEventListener('click', googleAuth);
-    
-    // Show message function
-    function showMessage(element, text, type) {
-      element.textContent = text;
-      element.className = `message ${type}`;
-      element.style.display = 'block';
-      
-      // Clear message after 5 seconds
-      setTimeout(() => {
-        element.style.display = 'none';
-      }, 5000);
-    }
-    
-    // Monitor auth state
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        // User is signed in, redirect to dashboard
-        window.location.href = 'dashboard.html';
-      } else {
-        // User is signed out
-        console.log('User is signed out');
-      }
-    });
-  </script>
-</body>
-</html>
-
-
-
-
-
-dashboard.html
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Profile - ConnectorHub</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -1644,3 +965,85 @@ dashboard.html
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+all above has done perfectly. now i am showing you another project as reference
+
+this is google sheet
+
+https://docs.google.com/spreadsheets/d/1oxV95ocvZsKhcLlHzcHJRGprqgdvGmpaVr-fmeJHyOU/edit?gid=1126373105#gid=1126373105
+
+having data like this in From Responses 1, or will be updated for if user will add more responses
+
+
+Timestamp	Email Address	Full Name	Whatsapp Contact with country code (+92..)	Date of Birth	CNIC Number (without signs - /) Verified in a Video	Area/Street/Village, City, Province/State, Country, Postal code	Business Role	Availability for Task	Usual Availability Hours From	Usual Availability Hours to	Portfolio/Past Experience (links in others)	Languages	Any Social Media Links for Verification	Profile Picture						
+6/20/2025 11:11:51	mtamnf255@gmail.com	Muhammad Talha Akram	+923026784343	5/19/1998	3660171740891	House 168 Block B Chak No 255 EB, Burewala, Punjab, Pakistan, 61010	Offering Services, Hiring	Physical Tasks, Digital Tasks	8:00:00 AM	10:00:00 PM	Linkedin, https://www.linkedin.com/in/muhammad-talha-akram-4869461a3/	English, Urdu, Punjabi 	https://www.facebook.com/talhaakram255/	https://drive.google.com/open?id=17d6wYpmx_fp6qfLUrO1eUZuLdMe74Sns						
+
+
+
+this below is the app script
+
+function doGet(e) {
+  const email = e.parameter?.email?.trim().toLowerCase();
+  if (!email) {
+    return createCorsResponse({ error: "Missing email parameter" });
+  }
+
+  const sheet = SpreadsheetApp.openById("1oxV95ocvZsKhcLlHzcHJRGprqgdvGmpaVr-fmeJHyOU")
+    .getSheetByName("Form Responses 1");
+
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+
+  let result = { found: false };
+
+  for (let i = 1; i < data.length; i++) {
+    const rowEmail = String(data[i][1]).trim().toLowerCase(); // Column B
+    if (rowEmail === email) {
+      result.found = true;
+      for (let j = 0; j < headers.length; j++) {
+        const key = headers[j]?.trim() || `Column${j+1}`;
+        result[key] = data[i][j];
+      }
+      break;
+    }
+  }
+
+  return createCorsResponse(result);
+}
+
+function createCorsResponse(data) {
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON)
+    .setHeader("Access-Control-Allow-Origin", "*");
+}
+
+function makeImagePublic(imageUrl) {
+  try {
+    const fileId = imageUrl.match(/[-\w]{25,}/)[0];
+    const file = DriveApp.getFileById(fileId);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (e) {
+    Logger.log("Failed to set sharing for image: " + imageUrl);
+  }
+}
+
+function onFormSubmit(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Form Responses 1");
+  const lastRow = sheet.getLastRow();
+  const profilePicUrl = sheet.getRange(lastRow, sheet.getLastColumn()).getValue();
+
+  if (profilePicUrl && profilePicUrl.toString().includes("drive.google.com")) {
+    makeImagePublic(profilePicUrl);
+  }
+}

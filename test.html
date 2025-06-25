@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Signup Profile Lookup</title>
+  <title>Find Your Signup Profile</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -33,9 +33,12 @@
     .value {
       color: #555;
     }
-    img {
-      max-width: 200px;
-      border-radius: 10px;
+    img.profile-pic {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 20px;
+      border: 2px solid #ccc;
       margin-top: 10px;
     }
     a {
@@ -56,13 +59,17 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbylMFC8x75QQej-TXTKPmJgZRW8I9ITUB4Y_0JgeC3peJwcM3GrksG9fXGTcqmoB20a/exec";
 
     function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      return !isNaN(d.getTime()) ? d.toLocaleDateString('en-GB') : dateStr;
+    }
+
+    function formatTimeOnly(value) {
       try {
-        const d = new Date(dateStr);
-        if (!isNaN(d.getTime())) {
-          return d.toLocaleDateString('en-GB');
-        }
-      } catch {}
-      return dateStr;
+        const d = new Date(value);
+        return !isNaN(d.getTime()) ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : value;
+      } catch {
+        return value;
+      }
     }
 
     async function getProfile() {
@@ -90,29 +97,35 @@
           if (key === "found") continue;
           let value = data[key];
 
-          // Handle profile picture
-          if (key === "Profile Picture") {
-            if (value.includes("drive.google.com")) {
-              const fileId = value.split("id=")[1] || "";
-              const imgUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-              html += `<div class="field"><div class="label">${key}:</div><img src="${imgUrl}" alt="Profile Picture" /></div>`;
-            } else {
-              html += `<div class="field"><div class="label">${key}:</div><img src="${value}" alt="Profile Picture" /></div>`;
-            }
-            continue;
-          }
-
-          // Format date fields
-          if (key.toLowerCase().includes("date") || key.toLowerCase().includes("time")) {
+          // Format date
+          if (key.toLowerCase().includes("date")) {
             value = formatDate(value);
           }
 
-          // Make links clickable
+          // Format time-only fields
+          if (key.toLowerCase().includes("from") || key.toLowerCase().includes("to")) {
+            value = formatTimeOnly(value);
+          }
+
+          // Make URLs clickable
           if (typeof value === "string" && value.includes("http")) {
-            const parts = value.split(", ");
+            const parts = value.split(/, ?/);
             value = parts.map(v =>
               v.startsWith("http") ? `<a href="${v}" target="_blank">${v}</a>` : v
             ).join(", ");
+          }
+
+          // Display profile picture
+          if (key.toLowerCase().includes("profile picture") && value.includes("drive.google.com")) {
+            const fileIdMatch = value.match(/[-\w]{25,}/);
+            const fileId = fileIdMatch ? fileIdMatch[0] : "";
+            const imgUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+            html += `
+              <div class="field">
+                <div class="label">${key}:</div>
+                <img src="${imgUrl}" alt="Profile Picture" class="profile-pic" />
+              </div>`;
+            continue;
           }
 
           html += `<div class="field"><div class="label">${key}:</div><div class="value">${value}</div></div>`;
@@ -126,5 +139,6 @@
       }
     }
   </script>
+
 </body>
 </html>

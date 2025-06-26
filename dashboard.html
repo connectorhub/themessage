@@ -332,15 +332,6 @@
       gap: 20px;
     }
     
-    .profile-pic-large {
-      width: 220px;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 20px;
-      border: 2px solid #aaa;
-      margin-top: 10px;
-    }
-    
     .link-value a {
       color: #007BFF;
       text-decoration: none;
@@ -643,7 +634,7 @@
       displayName.textContent = user.displayName || 'No Name Set';
       userEmail.textContent = user.email;
       
-      // Set default profile image
+      // Set profile image from Google account
       if (user.photoURL) {
         profileImage.src = user.photoURL;
       } else {
@@ -652,7 +643,7 @@
       }
       
       try {
-        // Use the same API endpoint as test.html
+        // Fetch profile data from Google Sheets
         const response = await fetch(`${API_URL}?email=${encodeURIComponent(user.email)}`);
         const data = await response.json();
         
@@ -676,20 +667,6 @@
     // Display profile data in the profile view
     function displayProfileData(data) {
       let html = '';
-      
-      // Check if profile picture exists
-      if (data["Profile Picture"] && data["Profile Picture"].includes("drive.google.com")) {
-        const fileIdMatch = data["Profile Picture"].match(/[-\w]{25,}/);
-        if (fileIdMatch) {
-          const fileId = fileIdMatch[0];
-          const imgUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-          html += `
-            <div class="field" style="grid-column: 1 / -1; text-align: center;">
-              <img src="${imgUrl}" class="profile-pic-large" alt="Profile Picture" />
-            </div>`;
-          profileImage.src = imgUrl; // Also update sidebar profile image
-        }
-      }
       
       // Create a mapping of field names to display names
       const fieldMap = {

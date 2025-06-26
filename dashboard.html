@@ -444,11 +444,7 @@
               </div>
             </div>
             
-            <div class="form-row">
-              <div class="form-group">
-                <label for="dob">Date of Birth</label>
-                <input type="date" id="dob" class="form-control">
-              </div>
+
               <div class="form-group">
                 <label for="cnic">CNIC Number</label>
                 <input type="text" id="cnic" class="form-control" placeholder="4220112345678">
@@ -672,7 +668,7 @@
       const fieldMap = {
         "Full Name": "Full Name",
         "Whatsapp Contact with country code (+92..)": "Whatsapp Contact",
-        "Date of Birth": "Date of Birth",
+
         "CNIC Number (without signs - /) Verified in a Video": "CNIC Number",
         "Area/Street/Village, City, Province/State, Country, Postal code": "Address",
         "Business Role": "Business Role",
@@ -713,23 +709,23 @@
         if (key === "Area/Street/Village, City, Province/State, Country, Postal code") {
           const addressParts = value.split(',').map(part => part.trim());
           html += `
-            <div class="info-group">
+            date
               <span class="info-label">Street/Village:</span>
               <div class="info-value">${addressParts[0] || 'NA'}</div>
             </div>
-            <div class="info-group">
+            date
               <span class="info-label">City:</span>
               <div class="info-value">${addressParts[1] || 'NA'}</div>
             </div>
-            <div class="info-group">
+            date
               <span class="info-label">Province/State:</span>
               <div class="info-value">${addressParts[2] || 'NA'}</div>
             </div>
-            <div class="info-group">
+            date
               <span class="info-label">Country:</span>
               <div class="info-value">${addressParts[3] || 'NA'}</div>
             </div>
-            <div class="info-group">
+            date
               <span class="info-label">Postal Code:</span>
               <div class="info-value">${addressParts[4] || 'NA'}</div>
             </div>`;
@@ -737,7 +733,7 @@
         }
         
         // General field display
-        html += `<div class="info-group">
+        html += `date
           <span class="info-label">${displayName}:</span>
           <div class="info-value">${value || 'NA'}</div>
         </div>`;
@@ -747,7 +743,7 @@
       if (data["Usual Availability Hours From"] && data["Usual Availability Hours to"]) {
         const fromTime = formatTimeOnly(data["Usual Availability Hours From"]);
         const toTime = formatTimeOnly(data["Usual Availability Hours to"]);
-        html += `<div class="info-group">
+        html += `date
           <span class="info-label">Available Hours:</span>
           <div class="info-value">${fromTime} to ${toTime}</div>
         </div>`;
@@ -768,7 +764,7 @@
       
       document.getElementById('full-name').value = data["Full Name"] || '';
       document.getElementById('whatsapp').value = data["Whatsapp Contact with country code (+92..)"] || '';
-      document.getElementById('dob').value = data["Date of Birth"] || '';
+
       document.getElementById('cnic').value = data["CNIC Number (without signs - /) Verified in a Video"] || '';
       document.getElementById('address').value = addressParts[0] || '';
       document.getElementById('city').value = addressParts[1] || '';
@@ -843,7 +839,7 @@
           "Email Address": data.email,
           "Full Name": data.fullName,
           "Whatsapp Contact with country code (+92..)": data.whatsapp,
-          "Date of Birth": data.dob,
+
           "CNIC Number (without signs - /) Verified in a Video": data.cnic,
           "Area/Street/Village, City, Province/State, Country, Postal code": 
             `${data.address}, ${data.city}, ${data.province}, ${data.country}, ${data.postalCode}`,

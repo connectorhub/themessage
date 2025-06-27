@@ -212,6 +212,7 @@
       margin-bottom: 20px;
       padding-bottom: 15px;
       border-bottom: 1px solid #f0f0f0;
+      position: relative;
     }
     
     .info-label {
@@ -224,6 +225,9 @@
     .info-value {
       color: var(--dark);
       font-size: 1.1rem;
+      padding: 8px;
+      border-radius: 4px;
+      background-color: #f8f9fa;
     }
     
     .form-group {
@@ -356,6 +360,15 @@
       align-items: center;
     }
     
+    .edit-icon {
+      position: absolute;
+      right: 0;
+      top: 0;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 5px;
+    }
+    
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -435,8 +448,10 @@
       <div class="profile-content">
         <!-- Profile View (Read-only) -->
         <div id="profile-section" class="tab-content active">
-          <div class="section-title">
-            <h2>Profile Information</h2>
+          <div class="profile-header">
+            <div class="section-title">
+              <h2>Profile Information</h2>
+            </div>
             <button class="btn btn-outline" id="edit-profile-btn">
               <i class="fas fa-edit"></i> Edit Profile
             </button>
@@ -450,8 +465,10 @@
         
         <!-- Settings View (Editable) -->
         <div id="settings-section" class="tab-content">
-          <div class="section-title">
-            <h2>Edit Profile</h2>
+          <div class="profile-header">
+            <div class="section-title">
+              <h2>Edit Profile</h2>
+            </div>
             <button class="btn btn-outline" id="back-to-profile">
               <i class="fas fa-arrow-left"></i> Back to Profile
             </button>
@@ -845,6 +862,7 @@
         if (!result.success) {
           throw new Error(result.message);
         }
+        return result;
       } catch (error) {
         console.error("Error updating Google Sheets:", error);
         throw error;

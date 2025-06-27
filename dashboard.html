@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -339,6 +337,25 @@
       text-decoration: none;
     }
     
+    .editable {
+      background-color: #f8f9fa;
+      padding: 10px;
+      border-radius: 5px;
+      border-left: 3px solid var(--primary);
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -373,6 +390,10 @@
       
       .profile-content {
         padding: 20px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
       }
     }
   </style>
@@ -416,6 +437,9 @@
         <div id="profile-section" class="tab-content active">
           <div class="section-title">
             <h2>Profile Information</h2>
+            <button class="btn btn-outline" id="edit-profile-btn">
+              <i class="fas fa-edit"></i> Edit Profile
+            </button>
           </div>
           <div id="profile-message" class="alert hidden"></div>
           
@@ -498,9 +522,14 @@
               <textarea id="social-links" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
             </div>
             
-            <button type="submit" class="btn btn-primary">
-              <i class="fas fa-save"></i> Update Profile
-            </button>
+            <div class="action-buttons">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Changes
+              </button>
+              <button type="button" class="btn btn-outline" id="cancel-edit">
+                <i class="fas fa-times"></i> Cancel
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -545,6 +574,8 @@
     const profileSection = document.getElementById('profile-section');
     const settingsSection = document.getElementById('settings-section');
     const profileDataContainer = document.getElementById('profile-data-container');
+    const editProfileBtn = document.getElementById('edit-profile-btn');
+    const cancelEditBtn = document.getElementById('cancel-edit');
     
     // Check auth state
     auth.onAuthStateChanged(user => {
@@ -567,6 +598,18 @@
     });
     
     backToProfileBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchTab('profile');
+    });
+    
+    // Edit button handler
+    editProfileBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchTab('settings');
+    });
+    
+    // Cancel edit button handler
+    cancelEditBtn.addEventListener('click', (e) => {
       e.preventDefault();
       switchTab('profile');
     });
@@ -620,19 +663,19 @@
       
       try {
         // Fetch profile data from Google Sheets
-        const response = await fetch(`${API_URL}?email=${encodeURIComponent(user.email)}`);
+        const response = await fetch(`${API_URL}?email=${encodeURIComponent(user.email)}&action=getUser`);
         const data = await response.json();
         
-        if (!data.found) {
-          showMessage(profileMessage, "User profile not found in our records", "error");
+        if (!data.success) {
+          showMessage(profileMessage, data.message || "User profile not found in our records", "error");
           return;
         }
         
         // Process and display the profile data
-        displayProfileData(data);
+        displayProfileData(data.user);
         
-        // Populate form fields if needed
-        populateFormFields(data);
+        // Populate form fields for editing
+        populateFormFields(data.user);
         
       } catch (error) {
         console.error("Error loading profile:", error);
@@ -641,7 +684,7 @@
     }
     
     // Display profile data in the profile view
-    function displayProfileData(data) {
+    function displayProfileData(userData) {
       let html = '';
       
       // Define the display order of fields
@@ -662,9 +705,9 @@
       
       // Generate HTML for each field in specified order
       displayOrder.forEach(item => {
-        if (!data[item.key]) return;
+        if (!userData[item.key]) return;
         
-        let value = data[item.key];
+        let value = userData[item.key];
         
         // Format date fields
         if (item.key.toLowerCase().includes("date")) {
@@ -673,8 +716,8 @@
         
         // Handle time range specially
         if (item.isTimeRange) {
-          const fromTime = formatTimeOnly(data["Usual Availability Hours From"]);
-          const toTime = formatTimeOnly(data["Usual Availability Hours to"]);
+          const fromTime = formatTimeOnly(userData["Usual Availability Hours From"]);
+          const toTime = formatTimeOnly(userData["Usual Availability Hours to"]);
           if (fromTime && toTime) {
             html += `<div class="info-group">
               <span class="info-label">Available Hours:</span>
@@ -703,21 +746,21 @@
     }
     
     // Populate form fields with data
-    function populateFormFields(data) {
-      if (!data) return;
+    function populateFormFields(userData) {
+      if (!userData) return;
       
-      document.getElementById('full-name').value = data["Full Name"] || '';
-      document.getElementById('whatsapp').value = data["Whatsapp Contact with country code (+92..)"] || '';
-      document.getElementById('dob').value = data["Date of Birth"] || '';
-      document.getElementById('cnic').value = data["CNIC Number (without signs - /) Verified in a Video"] || '';
-      document.getElementById('address').value = data["Area/Street/Village, City, Province/State, Country, Postal code"] || '';
-      document.getElementById('business-role').value = data["Business Role"] || '';
-      document.getElementById('availability').value = data["Availability for Task"] || '';
-      document.getElementById('available-from').value = data["Usual Availability Hours From"] || '';
-      document.getElementById('available-to').value = data["Usual Availability Hours to"] || '';
-      document.getElementById('portfolio').value = data["Portfolio/Past Experience (links in others)"] || '';
-      document.getElementById('languages').value = data["Languages"] || '';
-      document.getElementById('social-links').value = data["Any Social Media Links for Verification"] || '';
+      document.getElementById('full-name').value = userData["Full Name"] || '';
+      document.getElementById('whatsapp').value = userData["Whatsapp Contact with country code (+92..)"] || '';
+      document.getElementById('dob').value = userData["Date of Birth"] || '';
+      document.getElementById('cnic').value = userData["CNIC Number (without signs - /) Verified in a Video"] || '';
+      document.getElementById('address').value = userData["Area/Street/Village, City, Province/State, Country, Postal code"] || '';
+      document.getElementById('business-role').value = userData["Business Role"] || '';
+      document.getElementById('availability').value = userData["Availability for Task"] || '';
+      document.getElementById('available-from').value = userData["Usual Availability Hours From"] || '';
+      document.getElementById('available-to').value = userData["Usual Availability Hours to"] || '';
+      document.getElementById('portfolio').value = userData["Portfolio/Past Experience (links in others)"] || '';
+      document.getElementById('languages').value = userData["Languages"] || '';
+      document.getElementById('social-links').value = userData["Any Social Media Links for Verification"] || '';
     }
     
     // Save profile data

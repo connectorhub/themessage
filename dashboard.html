@@ -6,13 +6,504 @@
   <title>My Profile - ConnectorHub</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Your existing CSS styles remain exactly the same */
-    /* ... */
+    :root {
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2c3e50;
+      --light: #ecf0f1;
+      --dark: #2c3e50;
+      --success: #27ae60;
+      --error: #e74c3c;
+      --gray: #7f8c8d;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background-color: white;
+      padding: 15px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo i {
+      color: var(--primary);
+      font-size: 1.8rem;
+      margin-right: 10px;
+    }
+    
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary), #1effbc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .user-actions a {
+      margin-left: 15px;
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .user-actions a:hover {
+      color: var(--primary);
+    }
+    
+    .profile-container {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 30px;
+    }
+    
+    .profile-sidebar {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      height: fit-content;
+      position: sticky;
+      top: 90px;
+    }
+    
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background-color: #eee;
+      margin: 0 auto 20px;
+      overflow: hidden;
+      position: relative;
+      border: 3px solid var(--primary);
+    }
+    
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .profile-pic-edit {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: var(--primary);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .profile-pic-edit:hover {
+      transform: scale(1.1);
+    }
+    
+    .profile-name {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .profile-name h2 {
+      margin-bottom: 5px;
+      font-size: 1.5rem;
+      color: var(--dark);
+    }
+    
+    .profile-name p {
+      color: var(--gray);
+      font-size: 1rem;
+    }
+    
+    .profile-menu {
+      list-style: none;
+    }
+    
+    .profile-menu li {
+      margin-bottom: 10px;
+    }
+    
+    .profile-menu a {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      color: var(--secondary);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+    
+    .profile-menu a:hover, .profile-menu a.active {
+      background-color: rgba(52, 152, 219, 0.1);
+      color: var(--primary);
+      transform: translateX(5px);
+    }
+    
+    .profile-menu i {
+      width: 25px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+    
+    .profile-content {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      min-height: 600px;
+    }
+    
+    .section-title {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .section-title h2 {
+      font-size: 1.8rem;
+      color: var(--dark);
+    }
+    
+    .info-group {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .info-label {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 5px;
+      display: block;
+    }
+    
+    .info-value {
+      color: var(--dark);
+      font-size: 1.1rem;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--primary);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      background: #f9f9f9;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+      outline: none;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(to right, var(--primary), #1effbc);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .btn-outline:hover {
+      background: rgba(52, 152, 219, 0.1);
+    }
+    
+    .alert {
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    
+    .alert-success {
+      background: rgba(39, 174, 96, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+    
+    .alert-error {
+      background: rgba(231, 76, 60, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    .link-value a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @media (max-width: 992px) {
+      .profile-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .profile-sidebar {
+        position: relative;
+        top: 0;
+      }
+      
+      .form-row, .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .user-actions {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      
+      .profile-content {
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Your existing HTML structure remains the same until the script section -->
-  <!-- ... -->
+  <header>
+    <div class="container header-content">
+      <div class="logo">
+        <i class="fas fa-hands-helping"></i>
+        <h1>ConnectorHub</h1>
+      </div>
+      <div class="user-actions">
+        <a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </div>
+  </header>
+  
+  <div class="container">
+    <div class="profile-container">
+      <div class="profile-sidebar">
+        <div class="profile-pic">
+          <img id="profile-image" src="" alt="Profile Picture">
+          <div class="profile-pic-edit" id="edit-profile-pic">
+            <i class="fas fa-camera"></i>
+          </div>
+        </div>
+        <div class="profile-name">
+          <h2 id="display-name">Loading...</h2>
+          <p id="user-email">user@example.com</p>
+        </div>
+        <ul class="profile-menu">
+          <li><a href="#" class="active" id="profile-link" data-tab="profile"><i class="fas fa-user"></i> Profile</a></li>
+          <li><a href="#" id="settings-link" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
+          <li><a href="#" id="projects-link"><i class="fas fa-briefcase"></i> My Projects</a></li>
+          <li><a href="#" id="messages-link"><i class="fas fa-envelope"></i> Messages</a></li>
+        </ul>
+      </div>
+      
+      <div class="profile-content">
+        <!-- Profile View (Read-only) -->
+        <div id="profile-section" class="tab-content active">
+          <div class="section-title">
+            <h2>Profile Information</h2>
+          </div>
+          <div id="profile-message" class="alert hidden"></div>
+          
+          <div id="profile-data-container">
+            <!-- Profile data will be loaded here dynamically -->
+          </div>
+        </div>
+        
+        <!-- Settings View (Editable) -->
+        <div id="settings-section" class="tab-content">
+          <div class="section-title">
+            <h2>Edit Profile</h2>
+            <button class="btn btn-outline" id="back-to-profile">
+              <i class="fas fa-arrow-left"></i> Back to Profile
+            </button>
+          </div>
+          <div id="settings-message" class="alert hidden"></div>
+          
+          <form id="profile-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="full-name">Full Name</label>
+                <input type="text" id="full-name" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="whatsapp">Whatsapp Contact</label>
+                <input type="tel" id="whatsapp" class="form-control" placeholder="+923001234567" required>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="cnic">CNIC Number</label>
+                <input type="text" id="cnic" class="form-control" placeholder="4220112345678">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="address">Full Address</label>
+              <input type="text" id="address" class="form-control" placeholder="House 168 Block B Chak No 255 EB, Burewala, Punjab, Pakistan, 61010">
+            </div>
+            
+            <div class="form-group">
+              <label for="business-role">Business Role</label>
+              <input type="text" id="business-role" class="form-control" placeholder="e.g. Web Developer, Graphic Designer">
+            </div>
+            
+            <div class="form-group">
+              <label for="availability">Availability</label>
+              <input type="text" id="availability" class="form-control" placeholder="e.g. Physical Tasks, Digital Tasks">
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="available-from">Available Hours From</label>
+                <input type="time" id="available-from" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="available-to">Available Hours To</label>
+                <input type="time" id="available-to" class="form-control">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="portfolio">Portfolio/Past Experience Links</label>
+              <textarea id="portfolio" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="languages">Languages</label>
+              <input type="text" id="languages" class="form-control" placeholder="English, Urdu, etc.">
+            </div>
+            
+            <div class="form-group">
+              <label for="social-links">Social Media Links</label>
+              <textarea id="social-links" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Update Profile
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>

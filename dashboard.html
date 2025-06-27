@@ -337,6 +337,35 @@
       text-decoration: none;
     }
     
+    /* Edit mode styles */
+    .edit-button-container {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+    
+    .profile-view .info-value {
+      padding: 8px 0;
+    }
+    
+    .edit-view .form-control {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    
+    .edit-view .info-group {
+      margin-bottom: 15px;
+    }
+    
+    .edit-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -414,11 +443,20 @@
         <div id="profile-section" class="tab-content active">
           <div class="section-title">
             <h2>Profile Information</h2>
+            <div class="edit-button-container">
+              <button id="edit-profile-btn" class="btn btn-outline">
+                <i class="fas fa-edit"></i> Edit Profile
+              </button>
+            </div>
           </div>
           <div id="profile-message" class="alert hidden"></div>
           
-          <div id="profile-data-container">
+          <div id="profile-data-container" class="profile-view">
             <!-- Profile data will be loaded here dynamically -->
+          </div>
+          
+          <div id="edit-data-container" class="edit-view hidden">
+            <!-- Editable form will be loaded here dynamically -->
           </div>
         </div>
         
@@ -543,6 +581,8 @@
     const profileSection = document.getElementById('profile-section');
     const settingsSection = document.getElementById('settings-section');
     const profileDataContainer = document.getElementById('profile-data-container');
+    const editProfileBtn = document.getElementById('edit-profile-btn');
+    const editDataContainer = document.getElementById('edit-data-container');
     
     // Check auth state
     auth.onAuthStateChanged(user => {
@@ -618,19 +658,19 @@
       
       try {
         // Fetch profile data from Google Sheets
-        const response = await fetch(`${API_URL}?email=${encodeURIComponent(user.email)}`);
+        const response = await fetch(`${API_URL}?email=${encodeURIComponent(user.email)}&action=getUser`);
         const data = await response.json();
         
-        if (!data.found) {
+        if (!data.success || !data.user) {
           showMessage(profileMessage, "User profile not found in our records", "error");
           return;
         }
         
         // Process and display the profile data
-        displayProfileData(data);
+        displayProfileData(data.user);
         
         // Populate form fields if needed
-        populateFormFields(data);
+        populateFormFields(data.user);
         
       } catch (error) {
         console.error("Error loading profile:", error);
@@ -641,24 +681,23 @@
     // Display profile data in the profile view
     function displayProfileData(data) {
       let html = '';
+      let editHtml = '';
       
-      // Define the display order of fields
       const displayOrder = [
-        { key: "Full Name", label: "Full Name" },
-        { key: "Whatsapp Contact with country code (+92..)", label: "Whatsapp Contact" },
-        { key: "Email Address", label: "Email" },
-        { key: "Date of Birth", label: "Date of Birth" },
-        { key: "CNIC Number (without signs - /) Verified in a Video", label: "CNIC Number" },
-        { key: "Area/Street/Village, City, Province/State, Country, Postal code", label: "Full Address" },
-        { key: "Business Role", label: "Business Role" },
-        { key: "Availability for Task", label: "Availability" },
-        { key: "Usual Availability Hours From", label: "Available Hours", isTimeRange: true },
-        { key: "Portfolio/Past Experience (links in others)", label: "Portfolio/Experience" },
-        { key: "Languages", label: "Languages" },
-        { key: "Any Social Media Links for Verification", label: "Social Media Links" }
+        { key: "Full Name", label: "Full Name", editable: false },
+        { key: "Whatsapp Contact with country code (+92..)", label: "Whatsapp Contact", editable: false },
+        { key: "Email Address", label: "Email", editable: false },
+        { key: "Date of Birth", label: "Date of Birth", editable: false },
+        { key: "CNIC Number (without signs - /) Verified in a Video", label: "CNIC Number", editable: false },
+        { key: "Area/Street/Village, City, Province/State, Country, Postal code", label: "Full Address", editable: false },
+        { key: "Business Role", label: "Business Role", editable: true },
+        { key: "Availability for Task", label: "Availability", editable: true },
+        { key: "Usual Availability Hours From", label: "Available Hours", isTimeRange: true, editable: true },
+        { key: "Portfolio/Past Experience (links in others)", label: "Portfolio/Experience", editable: true },
+        { key: "Languages", label: "Languages", editable: true },
+        { key: "Any Social Media Links for Verification", label: "Social Media Links", editable: true }
       ];
       
-      // Generate HTML for each field in specified order
       displayOrder.forEach(item => {
         if (!data[item.key]) return;
         
@@ -678,6 +717,22 @@
               <span class="info-label">Available Hours:</span>
               <div class="info-value">${fromTime} to ${toTime}</div>
             </div>`;
+            
+            if (item.editable) {
+              editHtml += `
+                <div class="form-row">
+                  <div class="info-group">
+                    <span class="info-label">Available From:</span>
+                    <input type="time" class="form-control" 
+                      id="edit-available-from" value="${data["Usual Availability Hours From"] || ''}">
+                  </div>
+                  <div class="info-group">
+                    <span class="info-label">Available To:</span>
+                    <input type="time" class="form-control" 
+                      id="edit-available-to" value="${data["Usual Availability Hours to"] || ''}">
+                  </div>
+                </div>`;
+            }
           }
           return;
         }
@@ -690,14 +745,101 @@
           ).join(", ");
         }
         
-        // General field display
+        // Read-only view
         html += `<div class="info-group">
           <span class="info-label">${item.label}:</span>
           <div class="info-value">${value || 'NA'}</div>
         </div>`;
+        
+        // Editable view
+        if (item.editable) {
+          editHtml += `<div class="info-group">
+            <span class="info-label">${item.label}:</span>
+            ${item.key.includes("links") || item.key.includes("Experience") ? 
+              `<textarea class="form-control" id="edit-${item.key.replace(/[^a-zA-Z]/g, '-')}">${value || ''}</textarea>` :
+              `<input type="text" class="form-control" id="edit-${item.key.replace(/[^a-zA-Z]/g, '-')}" 
+                value="${value || ''}">`}
+          </div>`;
+        }
       });
       
       profileDataContainer.innerHTML = html;
+      editDataContainer.innerHTML = editHtml + `
+        <div class="edit-actions">
+          <button id="cancel-edit-btn" class="btn btn-outline">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+          <button id="save-edit-btn" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save Changes
+          </button>
+        </div>`;
+      
+      // Add event listeners for edit mode buttons
+      document.getElementById('cancel-edit-btn')?.addEventListener('click', () => {
+        toggleEditMode(false);
+      });
+      
+      document.getElementById('save-edit-btn')?.addEventListener('click', async () => {
+        await saveProfileChanges(data);
+      });
+    }
+    
+    function toggleEditMode(showEdit) {
+      if (showEdit) {
+        profileDataContainer.classList.add('hidden');
+        editDataContainer.classList.remove('hidden');
+        editProfileBtn.classList.add('hidden');
+      } else {
+        profileDataContainer.classList.remove('hidden');
+        editDataContainer.classList.add('hidden');
+        editProfileBtn.classList.remove('hidden');
+      }
+    }
+    
+    async function saveProfileChanges(originalData) {
+      const user = auth.currentUser;
+      if (!user) return;
+      
+      try {
+        // Get updated values from edit form
+        const updates = {
+          "Business Role": document.getElementById('edit-Business-Role')?.value || '',
+          "Availability for Task": document.getElementById('edit-Availability-for-Task')?.value || '',
+          "Usual Availability Hours From": document.getElementById('edit-available-from')?.value || '',
+          "Usual Availability Hours to": document.getElementById('edit-available-to')?.value || '',
+          "Portfolio/Past Experience (links in others)": document.getElementById('edit-Portfolio-Past-Experience-links-in-others')?.value || '',
+          "Languages": document.getElementById('edit-Languages')?.value || '',
+          "Any Social Media Links for Verification": document.getElementById('edit-Any-Social-Media-Links-for-Verification')?.value || ''
+        };
+        
+        // Get Firebase ID token for verification
+        const token = await user.getIdToken();
+        
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: user.email,
+            token: token,
+            updates: updates
+          })
+        });
+        
+        const result = await response.json();
+        if (!result.success) {
+          throw new Error(result.message || "Update failed");
+        }
+        
+        showMessage(profileMessage, "Profile updated successfully!", "success");
+        toggleEditMode(false);
+        await loadUserProfile(user); // Refresh the data
+        
+      } catch (error) {
+        console.error("Error saving profile:", error);
+        showMessage(profileMessage, "Error updating profile: " + error.message, "error");
+      }
     }
     
     // Populate form fields with data

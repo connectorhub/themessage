@@ -560,13 +560,20 @@
       }
       
       try {
+        // Show loading state
+        profileDataContainer.innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Loading profile data...</div>';
+        
         // Fetch profile data from Google Sheets
         const response = await fetch(`${API_URL}?email=${encodeURIComponent(user.email)}&action=getUser`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
         
         if (!data.success) {
-          showMessage(profileMessage, data.message || "User profile not found in our records", "error");
-          return;
+          throw new Error(data.message || "Failed to load profile data");
         }
         
         // Store the current user data
@@ -577,7 +584,8 @@
         
       } catch (error) {
         console.error("Error loading profile:", error);
-        showMessage(profileMessage, "Error loading profile data. Please try again later.", "error");
+        showMessage(profileMessage, `Error loading profile: ${error.message}`, "error");
+        profileDataContainer.innerHTML = `<div class="alert alert-error">Error loading profile: ${error.message}</div>`;
       }
     }
     
@@ -749,31 +757,35 @@
     async function saveProfileData() {
       const user = auth.currentUser;
       if (!user) return;
-      
-      // Collect all the data from form fields
-      const profileData = {
-        "Email Address": user.email
-      };
-      
-      // Get all info groups
-      const infoGroups = document.querySelectorAll('.info-group');
-      
-      infoGroups.forEach(group => {
-        const key = group.dataset.key;
-        const keyFrom = group.dataset.keyFrom;
-        const keyTo = group.dataset.keyTo;
-        
-        if (key) {
-          const input = group.querySelector('.info-edit input, .info-edit textarea');
-          profileData[key] = input.value;
-        } else if (keyFrom && keyTo) {
-          const inputs = group.querySelectorAll('.info-edit input');
-          profileData[keyFrom] = inputs[0].value;
-          profileData[keyTo] = inputs[1].value;
-        }
-      });
-      
+
+      // Show loading state
+      saveProfileBtn.disabled = true;
+      saveProfileBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
       try {
+        // Collect all the data from form fields
+        const profileData = {
+          "Email Address": user.email
+        };
+
+        // Get all info groups
+        const infoGroups = document.querySelectorAll('.info-group');
+        
+        infoGroups.forEach(group => {
+          const key = group.dataset.key;
+          const keyFrom = group.dataset.keyFrom;
+          const keyTo = group.dataset.keyTo;
+          
+          if (key) {
+            const input = group.querySelector('.info-edit input, .info-edit textarea');
+            profileData[key] = input.value;
+          } else if (keyFrom && keyTo) {
+            const inputs = group.querySelectorAll('.info-edit input');
+            profileData[keyFrom] = inputs[0].value;
+            profileData[keyTo] = inputs[1].value;
+          }
+        });
+
         // Update Google Sheets
         const response = await fetch(API_URL, {
           method: 'POST',
@@ -785,12 +797,17 @@
             userData: profileData
           })
         });
-        
-        const result = await response.json();
-        if (!result.success) {
-          throw new Error(result.message);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const result = await response.json();
         
+        if (!result.success) {
+          throw new Error(result.message || "Update failed");
+        }
+
         // Update display name if changed
         if (profileData["Full Name"] !== user.displayName) {
           await user.updateProfile({
@@ -798,7 +815,7 @@
           });
           displayName.textContent = profileData["Full Name"];
         }
-        
+
         // Update current data and reload view
         currentUserData = profileData;
         toggleEditMode(false);
@@ -806,7 +823,11 @@
         
       } catch (error) {
         console.error("Error saving profile:", error);
-        showMessage(profileMessage, "Error updating profile: " + error.message, "error");
+        showMessage(profileMessage, `Error updating profile: ${error.message}`, "error");
+      } finally {
+        // Reset button state
+        saveProfileBtn.disabled = false;
+        saveProfileBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
       }
     }
     

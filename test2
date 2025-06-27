@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Your Name</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f0f4f8;
+    }
+    form {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    .message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<form id="update-form">
+  <h2>Update or Add Your Name</h2>
+  <input type="text" id="name" placeholder="Your Name" required>
+  <input type="email" id="email" placeholder="Your Email" required>
+  <button type="submit">Submit</button>
+  <div class="message" id="message"></div>
+</form>
+
+<script>
+  const form = document.getElementById('update-form');
+  const message = document.getElementById('message');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    message.textContent = "Processing...";
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    const response = await fetch('https://script.google.com/macros/s/AKfycbwV7Ah6geIAwrLu7ls9oiou67iMO6EBpPLn4Ly9Un1IkEim79srlZjIGqJygGub-U60uQ/exec', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name, email })
+    });
+
+    const result = await response.json();
+    message.textContent = result.message;
+    message.style.color = result.success ? "green" : "red";
+  });
+</script>
+
+</body>
+</html>

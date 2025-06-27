@@ -16,53 +16,407 @@
       --error: #e74c3c;
       --gray: #7f8c8d;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
-    body { background-color: #f5f7fa; color: #2c3e50; line-height: 1.6;}
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px;}
-    header { background-color: white; padding: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px; position: sticky; top: 0; z-index: 100;}
-    .header-content { display: flex; justify-content: space-between; align-items: center;}
-    .logo { display: flex; align-items: center;}
-    .logo i { color: var(--primary); font-size: 1.8rem; margin-right: 10px;}
-    .logo h1 { font-size: 1.8rem; font-weight: 700; background: linear-gradient(to right, var(--primary), #1effbc); -webkit-background-clip: text; background-clip: text; color: transparent;}
-    .user-actions a { margin-left: 15px; color: var(--secondary); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 5px;}
-    .user-actions a:hover { color: var(--primary);}
-    .profile-container { display: grid; grid-template-columns: 300px 1fr; gap: 30px;}
-    .profile-sidebar { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); height: fit-content; position: sticky; top: 90px;}
-    .profile-pic { width: 150px; height: 150px; border-radius: 50%; background-color: #eee; margin: 0 auto 20px; overflow: hidden; position: relative; border: 3px solid var(--primary);}
-    .profile-pic img { width: 100%; height: 100%; object-fit: cover;}
-    .profile-pic-edit { position: absolute; bottom: 0; right: 0; background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;}
-    .profile-pic-edit:hover { transform: scale(1.1);}
-    .profile-name { text-align: center; margin-bottom: 30px;}
-    .profile-name h2 { margin-bottom: 5px; font-size: 1.5rem; color: var(--dark);}
-    .profile-name p { color: var(--gray); font-size: 1rem;}
-    .profile-menu { list-style: none;}
-    .profile-menu li { margin-bottom: 10px;}
-    .profile-menu a { display: flex; align-items: center; padding: 12px 15px; color: var(--secondary); text-decoration: none; border-radius: 8px; transition: all 0.3s; font-weight: 500;}
-    .profile-menu a:hover, .profile-menu a.active { background-color: rgba(52, 152, 219, 0.1); color: var(--primary); transform: translateX(5px);}
-    .profile-menu i { width: 25px; text-align: center; font-size: 1.1rem;}
-    .profile-content { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); min-height: 600px;}
-    .section-title { margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;}
-    .section-title h2 { font-size: 1.8rem; color: var(--dark);}
-    .info-group { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0;}
-    .info-label { font-weight: 600; color: var(--primary); margin-bottom: 5px; display: block;}
-    .info-value { color: var(--dark); font-size: 1.1rem;}
-    .edit-btn, .save-btn, .cancel-btn { margin-left: 10px; }
-    .edit-btn { background: var(--primary); color: #fff; }
-    .edit-btn:hover { background: var(--primary-dark);}
-    .save-btn { background: var(--success); color: #fff;}
-    .save-btn:hover { background: #219150;}
-    .cancel-btn { background: var(--gray); color: #fff;}
-    .cancel-btn:hover { background: #555;}
-    .form-inline { display: flex; flex-direction: column; gap: 10px;}
-    .form-group { margin-bottom: 10px;}
-    .form-control { width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; background: #f9f9f9; transition: all 0.3s;}
-    .form-control:focus { border-color: var(--primary); background: white; outline: none;}
-    .alert { padding: 15px; border-radius: 5px; margin-bottom: 20px;}
-    .alert-success { background: rgba(39, 174, 96, 0.1); border: 1px solid var(--success); color: var(--success);}
-    .alert-error { background: rgba(231, 76, 60, 0.1); border: 1px solid var(--error); color: var(--error);}
-    .hidden { display: none;}
-    @media (max-width: 992px) { .profile-container { grid-template-columns: 1fr;} .profile-sidebar { position: relative; top: 0;} }
-    @media (max-width: 576px) { .header-content { flex-direction: column; gap: 15px;} .user-actions { width: 100%; display: flex; justify-content: center;} .profile-content { padding: 20px;} }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background-color: white;
+      padding: 15px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo i {
+      color: var(--primary);
+      font-size: 1.8rem;
+      margin-right: 10px;
+    }
+    
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary), #1effbc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .user-actions a {
+      margin-left: 15px;
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .user-actions a:hover {
+      color: var(--primary);
+    }
+    
+    .profile-container {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 30px;
+    }
+    
+    .profile-sidebar {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      height: fit-content;
+      position: sticky;
+      top: 90px;
+    }
+    
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background-color: #eee;
+      margin: 0 auto 20px;
+      overflow: hidden;
+      position: relative;
+      border: 3px solid var(--primary);
+    }
+    
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .profile-pic-edit {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: var(--primary);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .profile-pic-edit:hover {
+      transform: scale(1.1);
+    }
+    
+    .profile-name {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .profile-name h2 {
+      margin-bottom: 5px;
+      font-size: 1.5rem;
+      color: var(--dark);
+    }
+    
+    .profile-name p {
+      color: var(--gray);
+      font-size: 1rem;
+    }
+    
+    .profile-menu {
+      list-style: none;
+    }
+    
+    .profile-menu li {
+      margin-bottom: 10px;
+    }
+    
+    .profile-menu a {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      color: var(--secondary);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+    
+    .profile-menu a:hover, .profile-menu a.active {
+      background-color: rgba(52, 152, 219, 0.1);
+      color: var(--primary);
+      transform: translateX(5px);
+    }
+    
+    .profile-menu i {
+      width: 25px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+    
+    .profile-content {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      min-height: 600px;
+    }
+    
+    .section-title {
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .section-title h2 {
+      font-size: 1.8rem;
+      color: var(--dark);
+    }
+    
+    .info-group {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .info-label {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 5px;
+      display: block;
+    }
+    
+    .info-value {
+      color: var(--dark);
+      font-size: 1.1rem;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--primary);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      background: #f9f9f9;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+      outline: none;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(to right, var(--primary), #1effbc);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .btn-outline:hover {
+      background: rgba(52, 152, 219, 0.1);
+    }
+    
+    .alert {
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    
+    .alert-success {
+      background: rgba(39, 174, 96, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+    
+    .alert-error {
+      background: rgba(231, 76, 60, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    .link-value a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    
+    /* Edit mode styles */
+    .edit-mode .info-value {
+      display: none;
+    }
+    
+    .edit-mode .info-edit {
+      display: block;
+    }
+    
+    .info-edit {
+      display: none;
+      margin-top: 8px;
+    }
+    
+    .info-edit input,
+    .info-edit textarea,
+    .info-edit select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    
+    .info-edit textarea {
+      min-height: 80px;
+    }
+    
+    .profile-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .edit-btn {
+      display: inline-block;
+      margin-top: 20px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @media (max-width: 992px) {
+      .profile-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .profile-sidebar {
+        position: relative;
+        top: 0;
+      }
+      
+      .form-row, .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .user-actions {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      
+      .profile-content {
+        padding: 20px;
+      }
+      
+      .profile-actions {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
@@ -77,6 +431,7 @@
       </div>
     </div>
   </header>
+  
   <div class="container">
     <div class="profile-container">
       <div class="profile-sidebar">
@@ -92,27 +447,45 @@
         </div>
         <ul class="profile-menu">
           <li><a href="#" class="active" id="profile-link" data-tab="profile"><i class="fas fa-user"></i> Profile</a></li>
-          <li><a href="#" id="settings-link" data-tab="settings" class="hidden"></a></li>
+          <li><a href="#" id="projects-link"><i class="fas fa-briefcase"></i> My Projects</a></li>
+          <li><a href="#" id="messages-link"><i class="fas fa-envelope"></i> Messages</a></li>
         </ul>
       </div>
+      
       <div class="profile-content">
+        <!-- Profile View with Edit/Save functionality -->
         <div id="profile-section" class="tab-content active">
           <div class="section-title">
             <h2>Profile Information</h2>
-            <button class="btn edit-btn" id="edit-profile-btn"><i class="fas fa-edit"></i> Edit</button>
-            <button class="btn save-btn hidden" id="save-profile-btn"><i class="fas fa-save"></i> Save</button>
-            <button class="btn cancel-btn hidden" id="cancel-profile-btn"><i class="fas fa-times"></i> Cancel</button>
+            <button id="edit-profile-btn" class="btn btn-outline">
+              <i class="fas fa-edit"></i> Edit Profile
+            </button>
           </div>
           <div id="profile-message" class="alert hidden"></div>
-          <form id="profile-form-inline" class="form-inline"></form>
+          
+          <div id="profile-data-container">
+            <!-- Profile data will be loaded here dynamically -->
+          </div>
+          
+          <div id="profile-actions" class="profile-actions hidden">
+            <button id="cancel-edit-btn" class="btn btn-outline">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+            <button id="save-profile-btn" class="btn btn-primary">
+              <i class="fas fa-save"></i> Save Changes
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  
   <script>
-    // Firebase config
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAAqMkxlTrgvPmJ5WdyeCwMWgcx2lW51WA",
       authDomain: "connectorhubsignup.firebaseapp.com",
@@ -122,169 +495,343 @@
       appId: "1:1069616706414:web:f0843d21127b358390077f",
       measurementId: "G-EEYDQT70JG"
     };
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
     const auth = firebase.auth();
     const API_URL = "https://script.google.com/macros/s/AKfycbylMFC8x75QQej-TXTKPmJgZRW8I9ITUB4Y_0JgeC3peJwcM3GrksG9fXGTcqmoB20a/exec";
-    // DOM
+    
+    // DOM Elements
+    const logoutBtn = document.getElementById('logout');
+    const profileMessage = document.getElementById('profile-message');
     const displayName = document.getElementById('display-name');
     const userEmail = document.getElementById('user-email');
     const profileImage = document.getElementById('profile-image');
-    const profileMessage = document.getElementById('profile-message');
-    const editBtn = document.getElementById('edit-profile-btn');
-    const saveBtn = document.getElementById('save-profile-btn');
-    const cancelBtn = document.getElementById('cancel-profile-btn');
-    const profileFormInline = document.getElementById('profile-form-inline');
-    const logoutBtn = document.getElementById('logout');
-    let currentUser = null;
-    let userSheetData = null;
-    let editMode = false;
-    // Field definitions (order, types, keys match your sheet headers)
-    const fields = [
-      { key: "Full Name", label: "Full Name", type: "text", required: true },
-      { key: "Whatsapp Contact with country code (+92..)", label: "Whatsapp Contact", type: "tel", required: true },
-      { key: "Email Address", label: "Email", type: "email", required: true, readonly: true },
-      { key: "Date of Birth", label: "Date of Birth", type: "date" },
-      { key: "CNIC Number (without signs - /) Verified in a Video", label: "CNIC Number", type: "text" },
-      { key: "Area/Street/Village, City, Province/State, Country, Postal code", label: "Full Address", type: "text" },
-      { key: "Business Role", label: "Business Role", type: "text" },
-      { key: "Availability for Task", label: "Availability", type: "text" },
-      { key: "Usual Availability Hours From", label: "Available Hours From", type: "time" },
-      { key: "Usual Availability Hours to", label: "Available Hours To", type: "time" },
-      { key: "Portfolio/Past Experience (links in others)", label: "Portfolio/Experience", type: "textarea" },
-      { key: "Languages", label: "Languages", type: "text" },
-      { key: "Any Social Media Links for Verification", label: "Social Media Links", type: "textarea" }
-    ];
-    // Auth
+    const profileLink = document.getElementById('profile-link');
+    const profileSection = document.getElementById('profile-section');
+    const profileDataContainer = document.getElementById('profile-data-container');
+    const editProfileBtn = document.getElementById('edit-profile-btn');
+    const saveProfileBtn = document.getElementById('save-profile-btn');
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    const profileActions = document.getElementById('profile-actions');
+    
+    // Current user data
+    let currentUserData = {};
+    
+    // Check auth state
     auth.onAuthStateChanged(user => {
-      if (!user) window.location.href = 'business.html';
-      else {
-        currentUser = user;
-        userEmail.textContent = user.email;
-        displayName.textContent = user.displayName || 'No Name Set';
-        profileImage.src = user.photoURL ? user.photoURL : `https://ui-avatars.com/api/?name=${(user.displayName || 'UU').split(' ').map(n=>n[0]).join('')}&background=3498db&color=fff&size=150`;
-        loadProfileData(user.email);
+      if (!user) {
+        window.location.href = 'business.html';
+      } else {
+        loadUserProfile(user);
       }
     });
-    // Load profile
-    async function loadProfileData(email) {
-      showMessage(profileMessage, "Loading profile...", "success");
+    
+    // Format date for display
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      return !isNaN(d.getTime()) ? d.toLocaleDateString('en-GB') : dateStr;
+    }
+
+    // Format time only
+    function formatTimeOnly(value) {
       try {
-        const resp = await fetch(`${API_URL}?action=getUser&email=${encodeURIComponent(email)}`);
-        const data = await resp.json();
-        if (!data.success && !data.user) { showMessage(profileMessage, "Profile not found", "error"); return; }
-        userSheetData = data.user || data;
-        showProfileData();
-      } catch (err) {
-        showMessage(profileMessage, "Error loading profile", "error");
+        const d = new Date(value);
+        return !isNaN(d.getTime()) ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : value;
+      } catch {
+        return value;
       }
     }
-    function showProfileData() {
-      editMode = false;
-      profileFormInline.innerHTML = '';
-      fields.forEach(f => {
-        let val = userSheetData[f.key] || '';
-        let displayVal = val;
-        if (f.type === "date" && val) {
-          const d = new Date(val);
-          if (!isNaN(d.getTime())) displayVal = d.toLocaleDateString('en-GB');
+    
+    // Load user profile data from Google Sheets
+    async function loadUserProfile(user) {
+      displayName.textContent = user.displayName || 'No Name Set';
+      userEmail.textContent = user.email;
+      
+      // Set profile image from Google account
+      if (user.photoURL) {
+        profileImage.src = user.photoURL;
+      } else {
+        const initials = (user.displayName || 'UU').split(' ').map(n => n[0]).join('');
+        profileImage.src = `https://ui-avatars.com/api/?name=${initials}&background=3498db&color=fff&size=150`;
+      }
+      
+      try {
+        // Fetch profile data from Google Sheets
+        const response = await fetch(`${API_URL}?email=${encodeURIComponent(user.email)}&action=getUser`);
+        const data = await response.json();
+        
+        if (!data.success) {
+          showMessage(profileMessage, data.message || "User profile not found in our records", "error");
+          return;
         }
-        if (f.type === "time" && val) {
-          displayVal = val.length > 5 ? val.slice(0,5) : val;
+        
+        // Store the current user data
+        currentUserData = data.user;
+        
+        // Process and display the profile data
+        displayProfileData(data.user);
+        
+      } catch (error) {
+        console.error("Error loading profile:", error);
+        showMessage(profileMessage, "Error loading profile data. Please try again later.", "error");
+      }
+    }
+    
+    // Display profile data in the profile view
+    function displayProfileData(data) {
+      let html = '';
+      
+      // Define the display order of fields and their input types
+      const displayOrder = [
+        { 
+          key: "Full Name", 
+          label: "Full Name", 
+          type: "text",
+          required: true
+        },
+        { 
+          key: "Whatsapp Contact with country code (+92..)", 
+          label: "Whatsapp Contact", 
+          type: "tel",
+          placeholder: "+923001234567",
+          required: true
+        },
+        { 
+          key: "Email Address", 
+          label: "Email", 
+          type: "email",
+          readonly: true
+        },
+        { 
+          key: "Date of Birth", 
+          label: "Date of Birth", 
+          type: "date"
+        },
+        { 
+          key: "CNIC Number (without signs - /) Verified in a Video", 
+          label: "CNIC Number", 
+          type: "text",
+          placeholder: "4220112345678"
+        },
+        { 
+          key: "Area/Street/Village, City, Province/State, Country, Postal code", 
+          label: "Full Address", 
+          type: "text",
+          placeholder: "House 168 Block B Chak No 255 EB, Burewala, Punjab, Pakistan, 61010"
+        },
+        { 
+          key: "Business Role", 
+          label: "Business Role", 
+          type: "text",
+          placeholder: "e.g. Web Developer, Graphic Designer"
+        },
+        { 
+          key: "Availability for Task", 
+          label: "Availability", 
+          type: "text",
+          placeholder: "e.g. Physical Tasks, Digital Tasks"
+        },
+        { 
+          key: "Usual Availability Hours From", 
+          label: "Available Hours", 
+          isTimeRange: true,
+          fromKey: "Usual Availability Hours From",
+          toKey: "Usual Availability Hours to",
+          fromType: "time",
+          toType: "time"
+        },
+        { 
+          key: "Portfolio/Past Experience (links in others)", 
+          label: "Portfolio/Experience", 
+          type: "textarea",
+          placeholder: "Enter links separated by commas"
+        },
+        { 
+          key: "Languages", 
+          label: "Languages", 
+          type: "text",
+          placeholder: "English, Urdu, etc."
+        },
+        { 
+          key: "Any Social Media Links for Verification", 
+          label: "Social Media Links", 
+          type: "textarea",
+          placeholder: "Enter links separated by commas"
         }
-        if (f.type === "textarea") {
-          if (val && val.includes("http")) {
-            displayVal = val.split(/, ?/).map(v => v.startsWith("http") ? `<a href="${v}" target="_blank">${v}</a>` : v).join(", ");
+      ];
+      
+      // Generate HTML for each field in specified order
+      displayOrder.forEach(item => {
+        if (item.isTimeRange) {
+          const fromTime = formatTimeOnly(data[item.fromKey]);
+          const toTime = formatTimeOnly(data[item.toKey]);
+          if (fromTime || toTime) {
+            html += `<div class="info-group" data-key-from="${item.fromKey}" data-key-to="${item.toKey}">
+              <span class="info-label">${item.label}:</span>
+              <div class="info-value">${fromTime || '--'} to ${toTime || '--'}</div>
+              <div class="info-edit">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>From</label>
+                    <input type="${item.fromType}" value="${data[item.fromKey] || ''}" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label>To</label>
+                    <input type="${item.toType}" value="${data[item.toKey] || ''}" class="form-control">
+                  </div>
+                </div>
+              </div>
+            </div>`;
           }
+          return;
         }
-        profileFormInline.innerHTML += `
-        <div class="info-group">
-          <span class="info-label">${f.label}:</span>
-          <div class="info-value">${displayVal || 'NA'}</div>
-        </div>`;
-      });
-      editBtn.classList.remove('hidden');
-      saveBtn.classList.add('hidden');
-      cancelBtn.classList.add('hidden');
-    }
-    function showEditProfile() {
-      editMode = true;
-      profileFormInline.innerHTML = '';
-      fields.forEach(f => {
-        let val = userSheetData[f.key] || '';
-        let input;
-        if (f.type === 'textarea') {
-          input = `<textarea class="form-control" name="${f.key}" id="field-${f.key}" rows="2" ${f.required ? 'required' : ''} ${f.readonly ? 'readonly' : ''}>${val}</textarea>`;
+        
+        let value = data[item.key] || '';
+        
+        // Format date fields for display
+        if (item.key.toLowerCase().includes("date") && value) {
+          value = formatDate(value);
+        }
+        
+        // Hyperlink URLs
+        let displayValue = value;
+        if (typeof value === "string" && value.includes("http")) {
+          const parts = value.split(/, ?/);
+          displayValue = parts.map(v =>
+            v.startsWith("http") ? `<a href="${v}" target="_blank" class="link-value">${v}</a>` : v
+          ).join(", ");
+        }
+        
+        // Create input based on type
+        let inputField = '';
+        if (item.type === "textarea") {
+          inputField = `<textarea class="form-control" ${item.required ? 'required' : ''} 
+            placeholder="${item.placeholder || ''}">${value}</textarea>`;
         } else {
-          input = `<input class="form-control" name="${f.key}" id="field-${f.key}" type="${f.type}" value="${val}" ${f.required ? 'required' : ''} ${f.readonly ? 'readonly' : ''}/>`;
+          inputField = `<input type="${item.type}" class="form-control" value="${value}" 
+            ${item.required ? 'required' : ''} ${item.readonly ? 'readonly' : ''}
+            placeholder="${item.placeholder || ''}">`;
         }
-        profileFormInline.innerHTML += `
-        <div class="form-group">
-          <label for="field-${f.key}">${f.label}${f.required ? ' *' : ''}</label>
-          ${input}
+        
+        // General field display
+        html += `<div class="info-group" data-key="${item.key}">
+          <span class="info-label">${item.label}:</span>
+          <div class="info-value">${displayValue || 'NA'}</div>
+          <div class="info-edit">
+            ${inputField}
+          </div>
         </div>`;
       });
-      editBtn.classList.add('hidden');
-      saveBtn.classList.remove('hidden');
-      cancelBtn.classList.remove('hidden');
+      
+      profileDataContainer.innerHTML = html;
     }
-    editBtn.addEventListener('click', e => {
-      showEditProfile();
-      profileMessage.classList.add('hidden');
-    });
-    cancelBtn.addEventListener('click', e => {
-      showProfileData();
-      profileMessage.classList.add('hidden');
-    });
-    saveBtn.addEventListener('click', async e => {
-      e.preventDefault();
-      // Collect form
-      const updated = {};
-      let valid = true;
-      fields.forEach(f => {
-        let el = document.getElementById('field-' + f.key);
-        if (!el) return;
-        let value = (el.value || '').trim();
-        if (f.required && !value) valid = false;
-        updated[f.key] = value;
+    
+    // Toggle edit mode
+    function toggleEditMode(enable) {
+      if (enable) {
+        profileSection.classList.add('edit-mode');
+        editProfileBtn.classList.add('hidden');
+        profileActions.classList.remove('hidden');
+      } else {
+        profileSection.classList.remove('edit-mode');
+        editProfileBtn.classList.remove('hidden');
+        profileActions.classList.add('hidden');
+        // Reload original data
+        displayProfileData(currentUserData);
+      }
+    }
+    
+    // Save profile data
+    async function saveProfileData() {
+      const user = auth.currentUser;
+      if (!user) return;
+      
+      // Collect all the data from form fields
+      const profileData = {
+        "Email Address": user.email
+      };
+      
+      // Get all info groups
+      const infoGroups = document.querySelectorAll('.info-group');
+      
+      infoGroups.forEach(group => {
+        const key = group.dataset.key;
+        const keyFrom = group.dataset.keyFrom;
+        const keyTo = group.dataset.keyTo;
+        
+        if (key) {
+          const input = group.querySelector('.info-edit input, .info-edit textarea');
+          profileData[key] = input.value;
+        } else if (keyFrom && keyTo) {
+          const inputs = group.querySelectorAll('.info-edit input');
+          profileData[keyFrom] = inputs[0].value;
+          profileData[keyTo] = inputs[1].value;
+        }
       });
-      // Email field stays unchanged
-      updated["Email Address"] = currentUser.email;
-      if (!valid) { showMessage(profileMessage, "Please fill all required fields", "error"); return; }
-      showMessage(profileMessage, "Saving...", "success");
+      
       try {
-        // POST to Apps Script
-        const resp = await fetch(API_URL, {
+        // Update Google Sheets
+        const response = await fetch(API_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
-            email: currentUser.email,
-            userData: updated
+            email: user.email,
+            userData: profileData
           })
         });
-        const result = await resp.json();
-        if (!result.success) throw new Error(result.message);
-        // Update Firebase displayName if changed
-        if (updated["Full Name"] !== currentUser.displayName) {
-          await currentUser.updateProfile({ displayName: updated["Full Name"] });
-          displayName.textContent = updated["Full Name"];
+        
+        const result = await response.json();
+        if (!result.success) {
+          throw new Error(result.message);
         }
-        userSheetData = updated;
-        showProfileData();
-        showMessage(profileMessage, "Profile updated!", "success");
-      } catch (err) {
-        showMessage(profileMessage, "Failed to update: " + (err.message || err), "error");
+        
+        // Update display name if changed
+        if (profileData["Full Name"] !== user.displayName) {
+          await user.updateProfile({
+            displayName: profileData["Full Name"]
+          });
+          displayName.textContent = profileData["Full Name"];
+        }
+        
+        // Update current data and reload view
+        currentUserData = profileData;
+        toggleEditMode(false);
+        showMessage(profileMessage, "Profile updated successfully!", "success");
+        
+      } catch (error) {
+        console.error("Error saving profile:", error);
+        showMessage(profileMessage, "Error updating profile: " + error.message, "error");
       }
-    });
+    }
+    
+    // Event Listeners
+    editProfileBtn.addEventListener('click', () => toggleEditMode(true));
+    cancelEditBtn.addEventListener('click', () => toggleEditMode(false));
+    saveProfileBtn.addEventListener('click', saveProfileData);
+    
     // Logout
     logoutBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      auth.signOut().then(() => window.location.href = 'business.html');
+      auth.signOut().then(() => {
+        window.location.href = 'business.html';
+      });
     });
+    
+    // Helper function to show messages
     function showMessage(element, text, type) {
       element.textContent = text;
       element.className = `alert alert-${type}`;
       element.classList.remove('hidden');
-      setTimeout(() => { element.classList.add('hidden'); }, 4000);
+      
+      setTimeout(() => {
+        element.classList.add('hidden');
+      }, 5000);
     }
   </script>
 </body>

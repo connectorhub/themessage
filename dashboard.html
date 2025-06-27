@@ -16,392 +16,53 @@
       --error: #e74c3c;
       --gray: #7f8c8d;
     }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    body {
-      background-color: #f5f7fa;
-      color: #2c3e50;
-      line-height: 1.6;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    
-    header {
-      background-color: white;
-      padding: 15px 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .logo {
-      display: flex;
-      align-items: center;
-    }
-    
-    .logo i {
-      color: var(--primary);
-      font-size: 1.8rem;
-      margin-right: 10px;
-    }
-    
-    .logo h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: linear-gradient(to right, var(--primary), #1effbc);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    .user-actions a {
-      margin-left: 15px;
-      color: var(--secondary);
-      text-decoration: none;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    
-    .user-actions a:hover {
-      color: var(--primary);
-    }
-    
-    .profile-container {
-      display: grid;
-      grid-template-columns: 300px 1fr;
-      gap: 30px;
-    }
-    
-    .profile-sidebar {
-      background: white;
-      border-radius: 10px;
-      padding: 30px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      height: fit-content;
-      position: sticky;
-      top: 90px;
-    }
-    
-    .profile-pic {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      background-color: #eee;
-      margin: 0 auto 20px;
-      overflow: hidden;
-      position: relative;
-      border: 3px solid var(--primary);
-    }
-    
-    .profile-pic img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .profile-pic-edit {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      background: var(--primary);
-      color: white;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .profile-pic-edit:hover {
-      transform: scale(1.1);
-    }
-    
-    .profile-name {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    
-    .profile-name h2 {
-      margin-bottom: 5px;
-      font-size: 1.5rem;
-      color: var(--dark);
-    }
-    
-    .profile-name p {
-      color: var(--gray);
-      font-size: 1rem;
-    }
-    
-    .profile-menu {
-      list-style: none;
-    }
-    
-    .profile-menu li {
-      margin-bottom: 10px;
-    }
-    
-    .profile-menu a {
-      display: flex;
-      align-items: center;
-      padding: 12px 15px;
-      color: var(--secondary);
-      text-decoration: none;
-      border-radius: 8px;
-      transition: all 0.3s;
-      font-weight: 500;
-    }
-    
-    .profile-menu a:hover, .profile-menu a.active {
-      background-color: rgba(52, 152, 219, 0.1);
-      color: var(--primary);
-      transform: translateX(5px);
-    }
-    
-    .profile-menu i {
-      width: 25px;
-      text-align: center;
-      font-size: 1.1rem;
-    }
-    
-    .profile-content {
-      background: white;
-      border-radius: 10px;
-      padding: 30px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      min-height: 600px;
-    }
-    
-    .section-title {
-      margin-bottom: 30px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .section-title h2 {
-      font-size: 1.8rem;
-      color: var(--dark);
-    }
-    
-    .info-group {
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    
-    .info-label {
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 5px;
-      display: block;
-    }
-    
-    .info-value {
-      color: var(--dark);
-      font-size: 1.1rem;
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: var(--primary);
-    }
-    
-    .form-control {
-      width: 100%;
-      padding: 12px 15px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 1rem;
-      background: #f9f9f9;
-      transition: all 0.3s;
-    }
-    
-    .form-control:focus {
-      border-color: var(--primary);
-      background: white;
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-      outline: none;
-    }
-    
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
-    
-    .btn {
-      padding: 12px 25px;
-      border: none;
-      border-radius: 5px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    
-    .btn-primary {
-      background: linear-gradient(to right, var(--primary), #1effbc);
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-    }
-    
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-      font-weight: 600;
-    }
-    
-    .btn-outline:hover {
-      background: rgba(52, 152, 219, 0.1);
-    }
-    
-    .alert {
-      padding: 15px;
-      border-radius: 5px;
-      margin-bottom: 20px;
-    }
-    
-    .alert-success {
-      background: rgba(39, 174, 96, 0.1);
-      border: 1px solid var(--success);
-      color: var(--success);
-    }
-    
-    .alert-error {
-      background: rgba(231, 76, 60, 0.1);
-      border: 1px solid var(--error);
-      color: var(--error);
-    }
-    
-    .hidden {
-      display: none;
-    }
-    
-    .tab-content {
-      display: none;
-    }
-    
-    .tab-content.active {
-      display: block;
-      animation: fadeIn 0.5s ease;
-    }
-    
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
-    
-    .link-value a {
-      color: #007BFF;
-      text-decoration: none;
-    }
-    
-    /* Edit mode styles */
-    .edit-button-container {
-      text-align: right;
-      margin-bottom: 20px;
-    }
-    
-    .profile-view .info-value {
-      padding: 8px 0;
-    }
-    
-    .edit-view .form-control {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 1rem;
-    }
-    
-    .edit-view .info-group {
-      margin-bottom: 15px;
-    }
-    
-    .edit-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 20px;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @media (max-width: 992px) {
-      .profile-container {
-        grid-template-columns: 1fr;
-      }
-      
-      .profile-sidebar {
-        position: relative;
-        top: 0;
-      }
-      
-      .form-row, .info-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    @media (max-width: 576px) {
-      .header-content {
-        flex-direction: column;
-        gap: 15px;
-      }
-      
-      .user-actions {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-      }
-      
-      .profile-content {
-        padding: 20px;
-      }
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+    body { background-color: #f5f7fa; color: #2c3e50; line-height: 1.6;}
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px;}
+    header { background-color: white; padding: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px; position: sticky; top: 0; z-index: 100;}
+    .header-content { display: flex; justify-content: space-between; align-items: center;}
+    .logo { display: flex; align-items: center;}
+    .logo i { color: var(--primary); font-size: 1.8rem; margin-right: 10px;}
+    .logo h1 { font-size: 1.8rem; font-weight: 700; background: linear-gradient(to right, var(--primary), #1effbc); -webkit-background-clip: text; background-clip: text; color: transparent;}
+    .user-actions a { margin-left: 15px; color: var(--secondary); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 5px;}
+    .user-actions a:hover { color: var(--primary);}
+    .profile-container { display: grid; grid-template-columns: 300px 1fr; gap: 30px;}
+    .profile-sidebar { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); height: fit-content; position: sticky; top: 90px;}
+    .profile-pic { width: 150px; height: 150px; border-radius: 50%; background-color: #eee; margin: 0 auto 20px; overflow: hidden; position: relative; border: 3px solid var(--primary);}
+    .profile-pic img { width: 100%; height: 100%; object-fit: cover;}
+    .profile-pic-edit { position: absolute; bottom: 0; right: 0; background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;}
+    .profile-pic-edit:hover { transform: scale(1.1);}
+    .profile-name { text-align: center; margin-bottom: 30px;}
+    .profile-name h2 { margin-bottom: 5px; font-size: 1.5rem; color: var(--dark);}
+    .profile-name p { color: var(--gray); font-size: 1rem;}
+    .profile-menu { list-style: none;}
+    .profile-menu li { margin-bottom: 10px;}
+    .profile-menu a { display: flex; align-items: center; padding: 12px 15px; color: var(--secondary); text-decoration: none; border-radius: 8px; transition: all 0.3s; font-weight: 500;}
+    .profile-menu a:hover, .profile-menu a.active { background-color: rgba(52, 152, 219, 0.1); color: var(--primary); transform: translateX(5px);}
+    .profile-menu i { width: 25px; text-align: center; font-size: 1.1rem;}
+    .profile-content { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); min-height: 600px;}
+    .section-title { margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;}
+    .section-title h2 { font-size: 1.8rem; color: var(--dark);}
+    .info-group { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0;}
+    .info-label { font-weight: 600; color: var(--primary); margin-bottom: 5px; display: block;}
+    .info-value { color: var(--dark); font-size: 1.1rem;}
+    .edit-btn, .save-btn, .cancel-btn { margin-left: 10px; }
+    .edit-btn { background: var(--primary); color: #fff; }
+    .edit-btn:hover { background: var(--primary-dark);}
+    .save-btn { background: var(--success); color: #fff;}
+    .save-btn:hover { background: #219150;}
+    .cancel-btn { background: var(--gray); color: #fff;}
+    .cancel-btn:hover { background: #555;}
+    .form-inline { display: flex; flex-direction: column; gap: 10px;}
+    .form-group { margin-bottom: 10px;}
+    .form-control { width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; background: #f9f9f9; transition: all 0.3s;}
+    .form-control:focus { border-color: var(--primary); background: white; outline: none;}
+    .alert { padding: 15px; border-radius: 5px; margin-bottom: 20px;}
+    .alert-success { background: rgba(39, 174, 96, 0.1); border: 1px solid var(--success); color: var(--success);}
+    .alert-error { background: rgba(231, 76, 60, 0.1); border: 1px solid var(--error); color: var(--error);}
+    .hidden { display: none;}
+    @media (max-width: 992px) { .profile-container { grid-template-columns: 1fr;} .profile-sidebar { position: relative; top: 0;} }
+    @media (max-width: 576px) { .header-content { flex-direction: column; gap: 15px;} .user-actions { width: 100%; display: flex; justify-content: center;} .profile-content { padding: 20px;} }
   </style>
 </head>
 <body>
@@ -416,7 +77,6 @@
       </div>
     </div>
   </header>
-  
   <div class="container">
     <div class="profile-container">
       <div class="profile-sidebar">
@@ -432,123 +92,27 @@
         </div>
         <ul class="profile-menu">
           <li><a href="#" class="active" id="profile-link" data-tab="profile"><i class="fas fa-user"></i> Profile</a></li>
-          <li><a href="#" id="settings-link" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
-          <li><a href="#" id="projects-link"><i class="fas fa-briefcase"></i> My Projects</a></li>
-          <li><a href="#" id="messages-link"><i class="fas fa-envelope"></i> Messages</a></li>
+          <li><a href="#" id="settings-link" data-tab="settings" class="hidden"></a></li>
         </ul>
       </div>
-      
       <div class="profile-content">
-        <!-- Profile View (Read-only) -->
         <div id="profile-section" class="tab-content active">
           <div class="section-title">
             <h2>Profile Information</h2>
-            <div class="edit-button-container">
-              <button id="edit-profile-btn" class="btn btn-outline">
-                <i class="fas fa-edit"></i> Edit Profile
-              </button>
-            </div>
+            <button class="btn edit-btn" id="edit-profile-btn"><i class="fas fa-edit"></i> Edit</button>
+            <button class="btn save-btn hidden" id="save-profile-btn"><i class="fas fa-save"></i> Save</button>
+            <button class="btn cancel-btn hidden" id="cancel-profile-btn"><i class="fas fa-times"></i> Cancel</button>
           </div>
           <div id="profile-message" class="alert hidden"></div>
-          
-          <div id="profile-data-container" class="profile-view">
-            <!-- Profile data will be loaded here dynamically -->
-          </div>
-          
-          <div id="edit-data-container" class="edit-view hidden">
-            <!-- Editable form will be loaded here dynamically -->
-          </div>
-        </div>
-        
-        <!-- Settings View (Editable) -->
-        <div id="settings-section" class="tab-content">
-          <div class="section-title">
-            <h2>Edit Profile</h2>
-            <button class="btn btn-outline" id="back-to-profile">
-              <i class="fas fa-arrow-left"></i> Back to Profile
-            </button>
-          </div>
-          <div id="settings-message" class="alert hidden"></div>
-          
-          <form id="profile-form">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="full-name">Full Name</label>
-                <input type="text" id="full-name" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label for="whatsapp">Whatsapp Contact</label>
-                <input type="tel" id="whatsapp" class="form-control" placeholder="+923001234567" required>
-              </div>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label for="dob">Date of Birth</label>
-                <input type="date" id="dob" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="cnic">CNIC Number</label>
-                <input type="text" id="cnic" class="form-control" placeholder="4220112345678">
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="address">Full Address</label>
-              <input type="text" id="address" class="form-control" placeholder="House 168 Block B Chak No 255 EB, Burewala, Punjab, Pakistan, 61010">
-            </div>
-            
-            <div class="form-group">
-              <label for="business-role">Business Role</label>
-              <input type="text" id="business-role" class="form-control" placeholder="e.g. Web Developer, Graphic Designer">
-            </div>
-            
-            <div class="form-group">
-              <label for="availability">Availability</label>
-              <input type="text" id="availability" class="form-control" placeholder="e.g. Physical Tasks, Digital Tasks">
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label for="available-from">Available Hours From</label>
-                <input type="time" id="available-from" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="available-to">Available Hours To</label>
-                <input type="time" id="available-to" class="form-control">
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="portfolio">Portfolio/Past Experience Links</label>
-              <textarea id="portfolio" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
-            </div>
-            
-            <div class="form-group">
-              <label for="languages">Languages</label>
-              <input type="text" id="languages" class="form-control" placeholder="English, Urdu, etc.">
-            </div>
-            
-            <div class="form-group">
-              <label for="social-links">Social Media Links</label>
-              <textarea id="social-links" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
-            </div>
-            
-            <button type="submit" class="btn btn-primary">
-              <i class="fas fa-save"></i> Update Profile
-            </button>
-          </form>
+          <form id="profile-form-inline" class="form-inline"></form>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-  
   <script>
-    // Firebase configuration
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyAAqMkxlTrgvPmJ5WdyeCwMWgcx2lW51WA",
       authDomain: "connectorhubsignup.firebaseapp.com",
@@ -558,413 +122,169 @@
       appId: "1:1069616706414:web:f0843d21127b358390077f",
       measurementId: "G-EEYDQT70JG"
     };
-
-    // Initialize Firebase
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const API_URL = "https://script.google.com/macros/s/AKfycbylMFC8x75QQej-TXTKPmJgZRW8I9ITUB4Y_0JgeC3peJwcM3GrksG9fXGTcqmoB20a/exec";
-    
-    // DOM Elements
-    const logoutBtn = document.getElementById('logout');
-    const profileForm = document.getElementById('profile-form');
-    const profileMessage = document.getElementById('profile-message');
-    const settingsMessage = document.getElementById('settings-message');
+    // DOM
     const displayName = document.getElementById('display-name');
     const userEmail = document.getElementById('user-email');
     const profileImage = document.getElementById('profile-image');
-    const backToProfileBtn = document.getElementById('back-to-profile');
-    const profileLink = document.getElementById('profile-link');
-    const settingsLink = document.getElementById('settings-link');
-    const profileSection = document.getElementById('profile-section');
-    const settingsSection = document.getElementById('settings-section');
-    const profileDataContainer = document.getElementById('profile-data-container');
-    const editProfileBtn = document.getElementById('edit-profile-btn');
-    const editDataContainer = document.getElementById('edit-data-container');
-    
-    // Check auth state
+    const profileMessage = document.getElementById('profile-message');
+    const editBtn = document.getElementById('edit-profile-btn');
+    const saveBtn = document.getElementById('save-profile-btn');
+    const cancelBtn = document.getElementById('cancel-profile-btn');
+    const profileFormInline = document.getElementById('profile-form-inline');
+    const logoutBtn = document.getElementById('logout');
+    let currentUser = null;
+    let userSheetData = null;
+    let editMode = false;
+    // Field definitions (order, types, keys match your sheet headers)
+    const fields = [
+      { key: "Full Name", label: "Full Name", type: "text", required: true },
+      { key: "Whatsapp Contact with country code (+92..)", label: "Whatsapp Contact", type: "tel", required: true },
+      { key: "Email Address", label: "Email", type: "email", required: true, readonly: true },
+      { key: "Date of Birth", label: "Date of Birth", type: "date" },
+      { key: "CNIC Number (without signs - /) Verified in a Video", label: "CNIC Number", type: "text" },
+      { key: "Area/Street/Village, City, Province/State, Country, Postal code", label: "Full Address", type: "text" },
+      { key: "Business Role", label: "Business Role", type: "text" },
+      { key: "Availability for Task", label: "Availability", type: "text" },
+      { key: "Usual Availability Hours From", label: "Available Hours From", type: "time" },
+      { key: "Usual Availability Hours to", label: "Available Hours To", type: "time" },
+      { key: "Portfolio/Past Experience (links in others)", label: "Portfolio/Experience", type: "textarea" },
+      { key: "Languages", label: "Languages", type: "text" },
+      { key: "Any Social Media Links for Verification", label: "Social Media Links", type: "textarea" }
+    ];
+    // Auth
     auth.onAuthStateChanged(user => {
-      if (!user) {
-        window.location.href = 'business.html';
-      } else {
-        loadUserProfile(user);
+      if (!user) window.location.href = 'business.html';
+      else {
+        currentUser = user;
+        userEmail.textContent = user.email;
+        displayName.textContent = user.displayName || 'No Name Set';
+        profileImage.src = user.photoURL ? user.photoURL : `https://ui-avatars.com/api/?name=${(user.displayName || 'UU').split(' ').map(n=>n[0]).join('')}&background=3498db&color=fff&size=150`;
+        loadProfileData(user.email);
       }
     });
-    
-    // Tab switching
-    profileLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      switchTab('profile');
-    });
-    
-    settingsLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      switchTab('settings');
-    });
-    
-    backToProfileBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      switchTab('profile');
-    });
-    
-    function switchTab(tabName) {
-      document.querySelectorAll('.profile-menu a').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      
-      document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.remove('active');
-      });
-      
-      if (tabName === 'profile') {
-        profileLink.classList.add('active');
-        profileSection.classList.add('active');
-      } else if (tabName === 'settings') {
-        settingsLink.classList.add('active');
-        settingsSection.classList.add('active');
-      }
-    }
-    
-    // Format date for display
-    function formatDate(dateStr) {
-      const d = new Date(dateStr);
-      return !isNaN(d.getTime()) ? d.toLocaleDateString('en-GB') : dateStr;
-    }
-
-    // Format time only
-    function formatTimeOnly(value) {
+    // Load profile
+    async function loadProfileData(email) {
+      showMessage(profileMessage, "Loading profile...", "success");
       try {
-        const d = new Date(value);
-        return !isNaN(d.getTime()) ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : value;
-      } catch {
-        return value;
+        const resp = await fetch(`${API_URL}?action=getUser&email=${encodeURIComponent(email)}`);
+        const data = await resp.json();
+        if (!data.success && !data.user) { showMessage(profileMessage, "Profile not found", "error"); return; }
+        userSheetData = data.user || data;
+        showProfileData();
+      } catch (err) {
+        showMessage(profileMessage, "Error loading profile", "error");
       }
     }
-    
-    // Load user profile data from Google Sheets
-    async function loadUserProfile(user) {
-      displayName.textContent = user.displayName || 'No Name Set';
-      userEmail.textContent = user.email;
-      
-      // Set profile image from Google account
-      if (user.photoURL) {
-        profileImage.src = user.photoURL;
-      } else {
-        const initials = (user.displayName || 'UU').split(' ').map(n => n[0]).join('');
-        profileImage.src = `https://ui-avatars.com/api/?name=${initials}&background=3498db&color=fff&size=150`;
-      }
-      
-      try {
-        // Fetch profile data from Google Sheets
-        const response = await fetch(`${API_URL}?email=${encodeURIComponent(user.email)}&action=getUser`);
-        const data = await response.json();
-        
-        if (!data.success || !data.user) {
-          showMessage(profileMessage, "User profile not found in our records", "error");
-          return;
+    function showProfileData() {
+      editMode = false;
+      profileFormInline.innerHTML = '';
+      fields.forEach(f => {
+        let val = userSheetData[f.key] || '';
+        let displayVal = val;
+        if (f.type === "date" && val) {
+          const d = new Date(val);
+          if (!isNaN(d.getTime())) displayVal = d.toLocaleDateString('en-GB');
         }
-        
-        // Process and display the profile data
-        displayProfileData(data.user);
-        
-        // Populate form fields if needed
-        populateFormFields(data.user);
-        
-      } catch (error) {
-        console.error("Error loading profile:", error);
-        showMessage(profileMessage, "Error loading profile data. Please try again later.", "error");
-      }
-    }
-    
-    // Display profile data in the profile view
-    function displayProfileData(data) {
-      let html = '';
-      let editHtml = '';
-      
-      const displayOrder = [
-        { key: "Full Name", label: "Full Name", editable: false },
-        { key: "Whatsapp Contact with country code (+92..)", label: "Whatsapp Contact", editable: false },
-        { key: "Email Address", label: "Email", editable: false },
-        { key: "Date of Birth", label: "Date of Birth", editable: false },
-        { key: "CNIC Number (without signs - /) Verified in a Video", label: "CNIC Number", editable: false },
-        { key: "Area/Street/Village, City, Province/State, Country, Postal code", label: "Full Address", editable: false },
-        { key: "Business Role", label: "Business Role", editable: true },
-        { key: "Availability for Task", label: "Availability", editable: true },
-        { key: "Usual Availability Hours From", label: "Available Hours", isTimeRange: true, editable: true },
-        { key: "Portfolio/Past Experience (links in others)", label: "Portfolio/Experience", editable: true },
-        { key: "Languages", label: "Languages", editable: true },
-        { key: "Any Social Media Links for Verification", label: "Social Media Links", editable: true }
-      ];
-      
-      displayOrder.forEach(item => {
-        if (!data[item.key]) return;
-        
-        let value = data[item.key];
-        
-        // Format date fields
-        if (item.key.toLowerCase().includes("date")) {
-          value = formatDate(value);
+        if (f.type === "time" && val) {
+          displayVal = val.length > 5 ? val.slice(0,5) : val;
         }
-        
-        // Handle time range specially
-        if (item.isTimeRange) {
-          const fromTime = formatTimeOnly(data["Usual Availability Hours From"]);
-          const toTime = formatTimeOnly(data["Usual Availability Hours to"]);
-          if (fromTime && toTime) {
-            html += `<div class="info-group">
-              <span class="info-label">Available Hours:</span>
-              <div class="info-value">${fromTime} to ${toTime}</div>
-            </div>`;
-            
-            if (item.editable) {
-              editHtml += `
-                <div class="form-row">
-                  <div class="info-group">
-                    <span class="info-label">Available From:</span>
-                    <input type="time" class="form-control" 
-                      id="edit-available-from" value="${data["Usual Availability Hours From"] || ''}">
-                  </div>
-                  <div class="info-group">
-                    <span class="info-label">Available To:</span>
-                    <input type="time" class="form-control" 
-                      id="edit-available-to" value="${data["Usual Availability Hours to"] || ''}">
-                  </div>
-                </div>`;
-            }
+        if (f.type === "textarea") {
+          if (val && val.includes("http")) {
+            displayVal = val.split(/, ?/).map(v => v.startsWith("http") ? `<a href="${v}" target="_blank">${v}</a>` : v).join(", ");
           }
-          return;
         }
-        
-        // Hyperlink URLs
-        if (typeof value === "string" && value.includes("http")) {
-          const parts = value.split(/, ?/);
-          value = parts.map(v =>
-            v.startsWith("http") ? `<a href="${v}" target="_blank" class="link-value">${v}</a>` : v
-          ).join(", ");
-        }
-        
-        // Read-only view
-        html += `<div class="info-group">
-          <span class="info-label">${item.label}:</span>
-          <div class="info-value">${value || 'NA'}</div>
+        profileFormInline.innerHTML += `
+        <div class="info-group">
+          <span class="info-label">${f.label}:</span>
+          <div class="info-value">${displayVal || 'NA'}</div>
         </div>`;
-        
-        // Editable view
-        if (item.editable) {
-          editHtml += `<div class="info-group">
-            <span class="info-label">${item.label}:</span>
-            ${item.key.includes("links") || item.key.includes("Experience") ? 
-              `<textarea class="form-control" id="edit-${item.key.replace(/[^a-zA-Z]/g, '-')}">${value || ''}</textarea>` :
-              `<input type="text" class="form-control" id="edit-${item.key.replace(/[^a-zA-Z]/g, '-')}" 
-                value="${value || ''}">`}
-          </div>`;
+      });
+      editBtn.classList.remove('hidden');
+      saveBtn.classList.add('hidden');
+      cancelBtn.classList.add('hidden');
+    }
+    function showEditProfile() {
+      editMode = true;
+      profileFormInline.innerHTML = '';
+      fields.forEach(f => {
+        let val = userSheetData[f.key] || '';
+        let input;
+        if (f.type === 'textarea') {
+          input = `<textarea class="form-control" name="${f.key}" id="field-${f.key}" rows="2" ${f.required ? 'required' : ''} ${f.readonly ? 'readonly' : ''}>${val}</textarea>`;
+        } else {
+          input = `<input class="form-control" name="${f.key}" id="field-${f.key}" type="${f.type}" value="${val}" ${f.required ? 'required' : ''} ${f.readonly ? 'readonly' : ''}/>`;
         }
-      });
-      
-      profileDataContainer.innerHTML = html;
-      editDataContainer.innerHTML = editHtml + `
-        <div class="edit-actions">
-          <button id="cancel-edit-btn" class="btn btn-outline">
-            <i class="fas fa-times"></i> Cancel
-          </button>
-          <button id="save-edit-btn" class="btn btn-primary">
-            <i class="fas fa-save"></i> Save Changes
-          </button>
+        profileFormInline.innerHTML += `
+        <div class="form-group">
+          <label for="field-${f.key}">${f.label}${f.required ? ' *' : ''}</label>
+          ${input}
         </div>`;
-      
-      // Add event listeners for edit mode buttons
-      document.getElementById('cancel-edit-btn')?.addEventListener('click', () => {
-        toggleEditMode(false);
       });
-      
-      document.getElementById('save-edit-btn')?.addEventListener('click', async () => {
-        await saveProfileChanges(data);
+      editBtn.classList.add('hidden');
+      saveBtn.classList.remove('hidden');
+      cancelBtn.classList.remove('hidden');
+    }
+    editBtn.addEventListener('click', e => {
+      showEditProfile();
+      profileMessage.classList.add('hidden');
+    });
+    cancelBtn.addEventListener('click', e => {
+      showProfileData();
+      profileMessage.classList.add('hidden');
+    });
+    saveBtn.addEventListener('click', async e => {
+      e.preventDefault();
+      // Collect form
+      const updated = {};
+      let valid = true;
+      fields.forEach(f => {
+        let el = document.getElementById('field-' + f.key);
+        if (!el) return;
+        let value = (el.value || '').trim();
+        if (f.required && !value) valid = false;
+        updated[f.key] = value;
       });
-    }
-    
-    function toggleEditMode(showEdit) {
-      if (showEdit) {
-        profileDataContainer.classList.add('hidden');
-        editDataContainer.classList.remove('hidden');
-        editProfileBtn.classList.add('hidden');
-      } else {
-        profileDataContainer.classList.remove('hidden');
-        editDataContainer.classList.add('hidden');
-        editProfileBtn.classList.remove('hidden');
-      }
-    }
-    
-    async function saveProfileChanges(originalData) {
-      const user = auth.currentUser;
-      if (!user) return;
-      
+      // Email field stays unchanged
+      updated["Email Address"] = currentUser.email;
+      if (!valid) { showMessage(profileMessage, "Please fill all required fields", "error"); return; }
+      showMessage(profileMessage, "Saving...", "success");
       try {
-        // Get updated values from edit form
-        const updates = {
-          "Business Role": document.getElementById('edit-Business-Role')?.value || '',
-          "Availability for Task": document.getElementById('edit-Availability-for-Task')?.value || '',
-          "Usual Availability Hours From": document.getElementById('edit-available-from')?.value || '',
-          "Usual Availability Hours to": document.getElementById('edit-available-to')?.value || '',
-          "Portfolio/Past Experience (links in others)": document.getElementById('edit-Portfolio-Past-Experience-links-in-others')?.value || '',
-          "Languages": document.getElementById('edit-Languages')?.value || '',
-          "Any Social Media Links for Verification": document.getElementById('edit-Any-Social-Media-Links-for-Verification')?.value || ''
-        };
-        
-        // Get Firebase ID token for verification
-        const token = await user.getIdToken();
-        
-        const response = await fetch(API_URL, {
+        // POST to Apps Script
+        const resp = await fetch(API_URL, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            email: user.email,
-            token: token,
-            updates: updates
+            email: currentUser.email,
+            userData: updated
           })
         });
-        
-        const result = await response.json();
-        if (!result.success) {
-          throw new Error(result.message || "Update failed");
+        const result = await resp.json();
+        if (!result.success) throw new Error(result.message);
+        // Update Firebase displayName if changed
+        if (updated["Full Name"] !== currentUser.displayName) {
+          await currentUser.updateProfile({ displayName: updated["Full Name"] });
+          displayName.textContent = updated["Full Name"];
         }
-        
-        showMessage(profileMessage, "Profile updated successfully!", "success");
-        toggleEditMode(false);
-        await loadUserProfile(user); // Refresh the data
-        
-      } catch (error) {
-        console.error("Error saving profile:", error);
-        showMessage(profileMessage, "Error updating profile: " + error.message, "error");
-      }
-    }
-    
-    // Populate form fields with data
-    function populateFormFields(data) {
-      if (!data) return;
-      
-      document.getElementById('full-name').value = data["Full Name"] || '';
-      document.getElementById('whatsapp').value = data["Whatsapp Contact with country code (+92..)"] || '';
-      document.getElementById('dob').value = data["Date of Birth"] || '';
-      document.getElementById('cnic').value = data["CNIC Number (without signs - /) Verified in a Video"] || '';
-      document.getElementById('address').value = data["Area/Street/Village, City, Province/State, Country, Postal code"] || '';
-      document.getElementById('business-role').value = data["Business Role"] || '';
-      document.getElementById('availability').value = data["Availability for Task"] || '';
-      document.getElementById('available-from').value = data["Usual Availability Hours From"] || '';
-      document.getElementById('available-to').value = data["Usual Availability Hours to"] || '';
-      document.getElementById('portfolio').value = data["Portfolio/Past Experience (links in others)"] || '';
-      document.getElementById('languages').value = data["Languages"] || '';
-      document.getElementById('social-links').value = data["Any Social Media Links for Verification"] || '';
-    }
-    
-    // Save profile data
-    profileForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const user = auth.currentUser;
-      if (!user) return;
-      
-      const profileData = {
-        fullName: document.getElementById('full-name').value,
-        whatsapp: document.getElementById('whatsapp').value,
-        dob: document.getElementById('dob').value,
-        cnic: document.getElementById('cnic').value,
-        address: document.getElementById('address').value,
-        businessRole: document.getElementById('business-role').value,
-        availability: document.getElementById('availability').value,
-        availableFrom: document.getElementById('available-from').value,
-        availableTo: document.getElementById('available-to').value,
-        portfolio: document.getElementById('portfolio').value,
-        languages: document.getElementById('languages').value,
-        socialLinks: document.getElementById('social-links').value,
-        email: user.email
-      };
-      
-      try {
-        // Update Google Sheets
-        await updateGoogleSheets(profileData);
-        
-        // Update display name if changed
-        if (profileData.fullName !== user.displayName) {
-          await user.updateProfile({
-            displayName: profileData.fullName
-          });
-          displayName.textContent = profileData.fullName;
-        }
-        
-        // Reload profile data
-        await loadUserProfile(user);
-        
-        showMessage(settingsMessage, "Profile updated successfully!", "success");
-        setTimeout(() => {
-          switchTab('profile');
-        }, 1500);
-      } catch (error) {
-        console.error("Error saving profile:", error);
-        showMessage(settingsMessage, "Error updating profile: " + error.message, "error");
+        userSheetData = updated;
+        showProfileData();
+        showMessage(profileMessage, "Profile updated!", "success");
+      } catch (err) {
+        showMessage(profileMessage, "Failed to update: " + (err.message || err), "error");
       }
     });
-    
-    // Update Google Sheets
-    async function updateGoogleSheets(data) {
-      try {
-        const sheetData = {
-          "Email Address": data.email,
-          "Full Name": data.fullName,
-          "Whatsapp Contact with country code (+92..)": data.whatsapp,
-          "Date of Birth": data.dob,
-          "CNIC Number (without signs - /) Verified in a Video": data.cnic,
-          "Area/Street/Village, City, Province/State, Country, Postal code": data.address,
-          "Business Role": data.businessRole,
-          "Availability for Task": data.availability,
-          "Usual Availability Hours From": data.availableFrom,
-          "Usual Availability Hours to": data.availableTo,
-          "Portfolio/Past Experience (links in others)": data.portfolio,
-          "Languages": data.languages,
-          "Any Social Media Links for Verification": data.socialLinks
-        };
-        
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: data.email,
-            userData: sheetData
-          })
-        });
-        
-        const result = await response.json();
-        if (!result.success) {
-          throw new Error(result.message);
-        }
-      } catch (error) {
-        console.error("Error updating Google Sheets:", error);
-        throw error;
-      }
-    }
-    
     // Logout
     logoutBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      auth.signOut().then(() => {
-        window.location.href = 'business.html';
-      });
+      auth.signOut().then(() => window.location.href = 'business.html');
     });
-    
-    // Helper function to show messages
     function showMessage(element, text, type) {
       element.textContent = text;
       element.className = `alert alert-${type}`;
       element.classList.remove('hidden');
-      
-      setTimeout(() => {
-        element.classList.add('hidden');
-      }, 5000);
+      setTimeout(() => { element.classList.add('hidden'); }, 4000);
     }
   </script>
 </body>

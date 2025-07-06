@@ -2,59 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Profile Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-  <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-md">
+  <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-2xl">
     <h2 class="text-2xl font-bold mb-4">Profile Lookup</h2>
     <input id="email" type="email" placeholder="Enter Email" class="border p-2 w-full mb-2 rounded" />
     <button id="fetchBtn" class="bg-blue-500 text-white px-4 py-2 rounded w-full">Display</button>
-    <pre id="result" class="bg-gray-200 p-4 mt-4 rounded text-sm"></pre>
+    <div id="result" class="bg-gray-100 p-4 mt-4 rounded text-sm whitespace-pre-wrap"></div>
 
     <h2 class="text-2xl font-bold mt-8 mb-4">Add New Profile</h2>
-    <input id="newEmail" type="email" placeholder="Email" class="border p-2 w-full mb-2 rounded" />
-    <input id="fullName" type="text" placeholder="Full Name" class="border p-2 w-full mb-2 rounded" />
-    <input id="age" type="text" placeholder="Date of Birth (dd/mm/yyyy)" class="border p-2 w-full mb-2 rounded" />
-    <button id="addBtn" class="bg-green-500 text-white px-4 py-2 rounded w-full">Add Profile</button>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <input id="newEmail" type="email" placeholder="Email" class="border p-2 rounded" />
+      <input id="fullName" type="text" placeholder="Full Name" class="border p-2 rounded" />
+      <input id="whatsapp" type="text" placeholder="WhatsApp" class="border p-2 rounded" />
+      <input id="dob" type="text" placeholder="Date of Birth (dd/mm/yyyy)" class="border p-2 rounded" />
+      <input id="cnic" type="text" placeholder="CNIC" class="border p-2 rounded" />
+      <input id="address" type="text" placeholder="Address" class="border p-2 rounded" />
+      <input id="businessRole" type="text" placeholder="Business Role" class="border p-2 rounded" />
+      <input id="availability" type="text" placeholder="Availability" class="border p-2 rounded" />
+      <input id="availableFrom" type="text" placeholder="Available From" class="border p-2 rounded" />
+      <input id="availableTo" type="text" placeholder="Available To" class="border p-2 rounded" />
+      <input id="portfolio" type="text" placeholder="Portfolio Link" class="border p-2 rounded" />
+      <input id="languages" type="text" placeholder="Languages" class="border p-2 rounded" />
+      <input id="socialLinks" type="text" placeholder="Social Links" class="border p-2 rounded" />
+      <input id="profilePicture" type="text" placeholder="Profile Picture URL" class="border p-2 rounded" />
+    </div>
+
+    <button id="addBtn" class="bg-green-500 text-white px-4 py-2 rounded w-full mt-4">Add Profile</button>
   </div>
 
   <script>
-    const GAS_URL = "PASTE_YOUR_DEPLOYED_GAS_WEB_APP_URL_HERE";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxvfyLULPhcscypMLotTLbukiMiUVNqZjqFPKEVrJgji97dcqvww-UN54PIwcNJ7liHaA/exec";
 
     document.getElementById("fetchBtn").addEventListener("click", async () => {
       const email = document.getElementById("email").value;
-      if (!email) {
-        alert("Please enter an email to search.");
-        return;
-      }
+      if (!email) return alert("Please enter an email to search.");
       document.getElementById("result").innerText = "Loading...";
+
       try {
         const res = await fetch(`${GAS_URL}?action=getProfileByEmail&email=${encodeURIComponent(email)}`);
         const data = await res.json();
-        document.getElementById("result").innerText = JSON.stringify(data, null, 2);
+        if (data.error) {
+          document.getElementById("result").innerText = data.error;
+        } else {
+          let display = "";
+          for (const key in data) {
+            display += `${key}: ${data[key] || "-"}\n`;
+          }
+          document.getElementById("result").innerText = display;
+        }
       } catch (error) {
         document.getElementById("result").innerText = "Error fetching data.";
       }
     });
 
     document.getElementById("addBtn").addEventListener("click", async () => {
-      const newProfile = {
+      const profile = {
         email: document.getElementById("newEmail").value,
         fullName: document.getElementById("fullName").value,
-        dob: document.getElementById("age").value
+        whatsapp: document.getElementById("whatsapp").value,
+        dob: document.getElementById("dob").value,
+        cnic: document.getElementById("cnic").value,
+        address: document.getElementById("address").value,
+        businessRole: document.getElementById("businessRole").value,
+        availability: document.getElementById("availability").value,
+        availableFrom: document.getElementById("availableFrom").value,
+        availableTo: document.getElementById("availableTo").value,
+        portfolio: document.getElementById("portfolio").value,
+        languages: document.getElementById("languages").value,
+        socialLinks: document.getElementById("socialLinks").value,
+        profilePicture: document.getElementById("profilePicture").value
       };
 
-      if (!newProfile.email || !newProfile.fullName || !newProfile.dob) {
-        alert("Please fill all fields before adding.");
-        return;
+      if (!profile.email || !profile.fullName || !profile.dob) {
+        return alert("Please fill in at least Email, Full Name, and DOB.");
       }
 
       try {
         const res = await fetch(GAS_URL, {
           method: "POST",
-          body: JSON.stringify(newProfile),
+          body: JSON.stringify(profile),
           headers: { "Content-Type": "application/json" }
         });
         const data = await res.json();

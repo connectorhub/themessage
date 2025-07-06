@@ -328,8 +328,23 @@
     
     .info-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr;
       gap: 20px;
+    }
+    
+    .link-value a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
     
     @keyframes fadeIn {
@@ -399,6 +414,8 @@
         <ul class="profile-menu">
           <li><a href="#" class="active" id="profile-link" data-tab="profile"><i class="fas fa-user"></i> Profile</a></li>
           <li><a href="#" id="settings-link" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
+          <li><a href="#" id="projects-link"><i class="fas fa-briefcase"></i> My Projects</a></li>
+          <li><a href="#" id="messages-link"><i class="fas fa-envelope"></i> Messages</a></li>
         </ul>
       </div>
       
@@ -407,87 +424,11 @@
         <div id="profile-section" class="tab-content active">
           <div class="section-title">
             <h2>Profile Information</h2>
-            <button class="btn btn-outline" id="edit-profile-btn">
-              <i class="fas fa-edit"></i> Edit Profile
-            </button>
           </div>
           <div id="profile-message" class="alert hidden"></div>
           
-          <div class="info-grid">
-            <div class="info-group">
-              <span class="info-label">Full Name</span>
-              <div class="info-value" id="view-full-name"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Whatsapp Contact</span>
-              <div class="info-value" id="view-whatsapp"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Date of Birth</span>
-              <div class="info-value" id="view-dob"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">CNIC Number</span>
-              <div class="info-value" id="view-cnic"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Address</span>
-              <div class="info-value" id="view-address"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">City</span>
-              <div class="info-value" id="view-city"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Province/State</span>
-              <div class="info-value" id="view-province"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Country</span>
-              <div class="info-value" id="view-country"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Postal Code</span>
-              <div class="info-value" id="view-postal-code"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Business Role</span>
-              <div class="info-value" id="view-business-role"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Availability</span>
-              <div class="info-value" id="view-availability"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Available Hours</span>
-              <div class="info-value" id="view-available-hours"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Portfolio/Experience</span>
-              <div class="info-value" id="view-portfolio"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Languages</span>
-              <div class="info-value" id="view-languages"></div>
-            </div>
-            
-            <div class="info-group">
-              <span class="info-label">Social Media Links</span>
-              <div class="info-value" id="view-social-links"></div>
-            </div>
+          <div id="profile-data-container">
+            <!-- Profile data will be loaded here dynamically -->
           </div>
         </div>
         
@@ -525,30 +466,8 @@
             </div>
             
             <div class="form-group">
-              <label for="address">Address</label>
-              <input type="text" id="address" class="form-control" placeholder="Street/Village">
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label for="city">City</label>
-                <input type="text" id="city" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="province">Province/State</label>
-                <input type="text" id="province" class="form-control">
-              </div>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label for="country">Country</label>
-                <input type="text" id="country" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="postal-code">Postal Code</label>
-                <input type="text" id="postal-code" class="form-control">
-              </div>
+              <label for="address">Full Address</label>
+              <input type="text" id="address" class="form-control" placeholder="House 168 Block B Chak No 255 EB, Burewala, Punjab, Pakistan, 61010">
             </div>
             
             <div class="form-group">
@@ -557,12 +476,8 @@
             </div>
             
             <div class="form-group">
-              <label for="availability">Availability for Task</label>
-              <select id="availability" class="form-control">
-                <option value="available">Available</option>
-                <option value="not-available">Not Available</option>
-                <option value="limited">Limited Availability</option>
-              </select>
+              <label for="availability">Availability</label>
+              <input type="text" id="availability" class="form-control" placeholder="e.g. Physical Tasks, Digital Tasks">
             </div>
             
             <div class="form-row">
@@ -591,7 +506,7 @@
               <textarea id="social-links" class="form-control" rows="3" placeholder="Enter links separated by commas"></textarea>
             </div>
             
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" id="update-btn">
               <i class="fas fa-save"></i> Update Profile
             </button>
           </form>
@@ -600,12 +515,31 @@
     </div>
   </div>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  
   <script>
-    // Configuration
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxvfyLULPhcscypMLotTLbukiMiUVNqZjqFPKEVrJgji97dcqvww-UN54PIwcNJ7liHaA/exec";
-    const API_TOKEN = "CHUB_$5a9K#pL2!mX8*";
-    const USER_EMAIL = "mtamnf255@gmail.com";
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAAqMkxlTrgvPmJ5WdyeCwMWgcx2lW51WA",
+      authDomain: "connectorhubsignup.firebaseapp.com",
+      projectId: "connectorhubsignup",
+      storageBucket: "connectorhubsignup.appspot.com",
+      messagingSenderId: "1069616706414",
+      appId: "1:1069616706414:web:f0843d21127b358390077f",
+      measurementId: "G-EEYDQT70JG"
+    };
 
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
+    const auth = firebase.auth();
+    const OLD_API_URL = "https://script.google.com/macros/s/AKfycbylMFC8x75QQej-TXTKPmJgZRW8I9ITUB4Y_0JgeC3peJwcM3GrksG9fXGTcqmoB20a/exec";
+    const NEW_API_URL = "https://cors-anywhere.herokuapp.com/https://talhahub.onrender.com/edit?api_key=meowmeow";
+    
     // DOM Elements
     const logoutBtn = document.getElementById('logout');
     const profileForm = document.getElementById('profile-form');
@@ -615,26 +549,23 @@
     const userEmail = document.getElementById('user-email');
     const profileImage = document.getElementById('profile-image');
     const backToProfileBtn = document.getElementById('back-to-profile');
-    const editProfileBtn = document.getElementById('edit-profile-btn');
     const profileLink = document.getElementById('profile-link');
     const settingsLink = document.getElementById('settings-link');
     const profileSection = document.getElementById('profile-section');
     const settingsSection = document.getElementById('settings-section');
-
-    // Tab switching
-    function switchTab(tabName) {
-      document.querySelectorAll('.profile-menu a').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-      
-      if (tabName === 'profile') {
-        profileLink.classList.add('active');
-        profileSection.classList.add('active');
+    const profileDataContainer = document.getElementById('profile-data-container');
+    const updateBtn = document.getElementById('update-btn');
+    
+    // Check auth state
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = 'business.html';
       } else {
-        settingsLink.classList.add('active');
-        settingsSection.classList.add('active');
+        loadUserProfile(user);
       }
-    }
-
+    });
+    
+    // Tab switching
     profileLink.addEventListener('click', (e) => {
       e.preventDefault();
       switchTab('profile');
@@ -650,194 +581,262 @@
       switchTab('profile');
     });
     
-    editProfileBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      switchTab('settings');
-    });
-
-    // Load profile data
-    async function loadProfile() {
-      try {
-        const url = `${GAS_URL}?action=getUser&email=${encodeURIComponent(USER_EMAIL)}&token=${encodeURIComponent(API_TOKEN)}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        
-        if (data.success) {
-          populateProfileView(data.user);
-          populateForm(data.user);
-          
-          // Set profile image if available
-          if (data.user["Profile Picture"]) {
-            profileImage.src = data.user["Profile Picture"];
-          } else {
-            // Use placeholder image
-            const initials = (data.user["Full Name"] || 'UU').split(' ').map(n => n[0]).join('');
-            profileImage.src = `https://ui-avatars.com/api/?name=${initials}&background=3498db&color=fff&size=150`;
-          }
-          
-          displayName.textContent = data.user["Full Name"] || 'No Name';
-          userEmail.textContent = USER_EMAIL;
-        } else {
-          showMessage(profileMessage, data.message || "Failed to load profile", "error");
-        }
-      } catch (error) {
-        console.error("Error loading profile:", error);
-        showMessage(profileMessage, "Error loading profile data", "error");
+    function switchTab(tabName) {
+      document.querySelectorAll('.profile-menu a').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      if (tabName === 'profile') {
+        profileLink.classList.add('active');
+        profileSection.classList.add('active');
+      } else if (tabName === 'settings') {
+        settingsLink.classList.add('active');
+        settingsSection.classList.add('active');
       }
     }
-
-    // Populate profile view
-    function populateProfileView(data) {
-      document.getElementById('view-full-name').textContent = data["Full Name"] || 'Not provided';
-      document.getElementById('view-whatsapp').textContent = data["Whatsapp Contact with country code (+92..)"] || 'Not provided';
-      document.getElementById('view-dob').textContent = formatDate(data["Date of Birth"]) || 'Not provided';
-      document.getElementById('view-cnic').textContent = data["CNIC Number (without signs - /) Verified in a Video"] || 'Not provided';
-      
-      const addressParts = (data["Area/Street/Village, City, Province/State, Country, Postal code"] || '').split(',');
-      document.getElementById('view-address').textContent = addressParts[0]?.trim() || 'Not provided';
-      document.getElementById('view-city').textContent = addressParts[1]?.trim() || 'Not provided';
-      document.getElementById('view-province').textContent = addressParts[2]?.trim() || 'Not provided';
-      document.getElementById('view-country').textContent = addressParts[3]?.trim() || 'Not provided';
-      document.getElementById('view-postal-code').textContent = addressParts[4]?.trim() || 'Not provided';
-      
-      document.getElementById('view-business-role').textContent = data["Business Role"] || 'Not provided';
-      document.getElementById('view-availability').textContent = data["Availability for Task"] || 'Not provided';
-      
-      const fromTime = formatTime(data["Usual Availability Hours From"]);
-      const toTime = formatTime(data["Usual Availability Hours to"]);
-      document.getElementById('view-available-hours').textContent = `${fromTime || '--:--'} to ${toTime || '--:--'}`;
-      
-      document.getElementById('view-portfolio').textContent = data["Portfolio/Past Experience (links in others)"] || 'Not provided';
-      document.getElementById('view-languages').textContent = data["Languages"] || 'Not provided';
-      document.getElementById('view-social-links').textContent = data["Any Social Media Links for Verification"] || 'Not provided';
+    
+    // Format date for display
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      return !isNaN(d.getTime()) ? d.toLocaleDateString('en-GB') : dateStr;
     }
 
-    // Populate edit form
-    function populateForm(data) {
+    // Format time only
+    function formatTimeOnly(value) {
+      try {
+        const d = new Date(value);
+        return !isNaN(d.getTime()) ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : value;
+      } catch {
+        return value;
+      }
+    }
+    
+    // Load user profile data from Google Sheets (using old API for reading)
+    async function loadUserProfile(user) {
+      displayName.textContent = user.displayName || 'No Name Set';
+      userEmail.textContent = user.email;
+      
+      // Set profile image from Google account
+      if (user.photoURL) {
+        profileImage.src = user.photoURL;
+      } else {
+        const initials = (user.displayName || 'UU').split(' ').map(n => n[0]).join('');
+        profileImage.src = https://ui-avatars.com/api/?name=${initials}&background=3498db&color=fff&size=150;
+      }
+      
+      try {
+        // Fetch profile data from Google Sheets (using old API for reading)
+        const response = await fetch(${OLD_API_URL}?email=${encodeURIComponent(user.email)});
+        const data = await response.json();
+        
+        if (!data.found) {
+          showMessage(profileMessage, "User profile not found in our records", "error");
+          return;
+        }
+        
+        // Process and display the profile data
+        displayProfileData(data);
+        
+        // Populate form fields if needed
+        populateFormFields(data);
+        
+      } catch (error) {
+        console.error("Error loading profile:", error);
+        showMessage(profileMessage, "Error loading profile data. Please try again later.", "error");
+      }
+    }
+    
+    // Display profile data in the profile view
+    function displayProfileData(data) {
+      let html = '';
+      
+      // Define the display order of fields
+      const displayOrder = [
+        { key: "Full Name", label: "Full Name" },
+        { key: "Whatsapp Contact with country code (+92..)", label: "Whatsapp Contact" },
+        { key: "Email Address", label: "Email" },
+        { key: "Date of Birth", label: "Date of Birth" },
+        { key: "CNIC Number (without signs - /) Verified in a Video", label: "CNIC Number" },
+        { key: "Area/Street/Village, City, Province/State, Country, Postal code", label: "Full Address" },
+        { key: "Business Role", label: "Business Role" },
+        { key: "Availability for Task", label: "Availability" },
+        { key: "Usual Availability Hours From", label: "Available Hours", isTimeRange: true },
+        { key: "Portfolio/Past Experience (links in others)", label: "Portfolio/Experience" },
+        { key: "Languages", label: "Languages" },
+        { key: "Any Social Media Links for Verification", label: "Social Media Links" }
+      ];
+      
+      // Generate HTML for each field in specified order
+      displayOrder.forEach(item => {
+        if (!data[item.key]) return;
+        
+        let value = data[item.key];
+        
+        // Format date fields
+        if (item.key.toLowerCase().includes("date")) {
+          value = formatDate(value);
+        }
+        
+        // Handle time range specially
+        if (item.isTimeRange) {
+          const fromTime = formatTimeOnly(data["Usual Availability Hours From"]);
+          const toTime = formatTimeOnly(data["Usual Availability Hours to"]);
+          if (fromTime && toTime) {
+            html += `<div class="info-group">
+              <span class="info-label">Available Hours:</span>
+              <div class="info-value">${fromTime} to ${toTime}</div>
+            </div>`;
+          }
+          return;
+        }
+        
+        // Hyperlink URLs
+        if (typeof value === "string" && value.includes("http")) {
+          const parts = value.split(/, ?/);
+          value = parts.map(v =>
+            v.startsWith("http") ? <a href="${v}" target="_blank" class="link-value">${v}</a> : v
+          ).join(", ");
+        }
+        
+        // General field display
+        html += `<div class="info-group">
+          <span class="info-label">${item.label}:</span>
+          <div class="info-value">${value || 'NA'}</div>
+        </div>`;
+      });
+      
+      profileDataContainer.innerHTML = html;
+    }
+    
+    // Populate form fields with data
+    function populateFormFields(data) {
+      if (!data) return;
+      
       document.getElementById('full-name').value = data["Full Name"] || '';
       document.getElementById('whatsapp').value = data["Whatsapp Contact with country code (+92..)"] || '';
-      document.getElementById('dob').value = formatDateForInput(data["Date of Birth"]);
+      document.getElementById('dob').value = data["Date of Birth"] || '';
       document.getElementById('cnic').value = data["CNIC Number (without signs - /) Verified in a Video"] || '';
-      
-      const addressParts = (data["Area/Street/Village, City, Province/State, Country, Postal code"] || '').split(',');
-      document.getElementById('address').value = addressParts[0]?.trim() || '';
-      document.getElementById('city').value = addressParts[1]?.trim() || '';
-      document.getElementById('province').value = addressParts[2]?.trim() || '';
-      document.getElementById('country').value = addressParts[3]?.trim() || '';
-      document.getElementById('postal-code').value = addressParts[4]?.trim() || '';
-      
+      document.getElementById('address').value = data["Area/Street/Village, City, Province/State, Country, Postal code"] || '';
       document.getElementById('business-role').value = data["Business Role"] || '';
-      document.getElementById('availability').value = data["Availability for Task"] || 'available';
-      
-      document.getElementById('available-from').value = formatTimeForInput(data["Usual Availability Hours From"]);
-      document.getElementById('available-to').value = formatTimeForInput(data["Usual Availability Hours to"]);
-      
+      document.getElementById('availability').value = data["Availability for Task"] || '';
+      document.getElementById('available-from').value = data["Usual Availability Hours From"] || '';
+      document.getElementById('available-to').value = data["Usual Availability Hours to"] || '';
       document.getElementById('portfolio').value = data["Portfolio/Past Experience (links in others)"] || '';
       document.getElementById('languages').value = data["Languages"] || '';
       document.getElementById('social-links').value = data["Any Social Media Links for Verification"] || '';
     }
-
-    // Save profile data
+    
+    // Save profile data using the new API
     profileForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const updates = {
-        "Full Name": document.getElementById('full-name').value,
-        "Whatsapp Contact with country code (+92..)": document.getElementById('whatsapp').value,
-        "Date of Birth": document.getElementById('dob').value,
-        "CNIC Number (without signs - /) Verified in a Video": document.getElementById('cnic').value,
-        "Area/Street/Village, City, Province/State, Country, Postal code": [
-          document.getElementById('address').value,
-          document.getElementById('city').value,
-          document.getElementById('province').value,
-          document.getElementById('country').value,
-          document.getElementById('postal-code').value
-        ].join(', '),
-        "Business Role": document.getElementById('business-role').value,
-        "Availability for Task": document.getElementById('availability').value,
-        "Usual Availability Hours From": document.getElementById('available-from').value,
-        "Usual Availability Hours to": document.getElementById('available-to').value,
-        "Portfolio/Past Experience (links in others)": document.getElementById('portfolio').value,
-        "Languages": document.getElementById('languages').value,
-        "Any Social Media Links for Verification": document.getElementById('social-links').value
-      };
-
+      const user = auth.currentUser;
+      if (!user) return;
+      
+      // Disable the form during submission
+      updateBtn.disabled = true;
+      updateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+      profileForm.classList.add('loading');
+      
       try {
-        const response = await fetch(GAS_URL, {
+        // Prepare data for the new API
+        const updateData = {
+          "email": user.email,
+          "Full Name": document.getElementById('full-name').value,
+          "Whatsapp Contact with country code (+92..)": document.getElementById('whatsapp').value,
+          "Date of Birth": document.getElementById('dob').value,
+          "CNIC Number (without signs - /) Verified in a Video": document.getElementById('cnic').value,
+          "Area/Street/Village, City, Province/State, Country, Postal code": document.getElementById('address').value,
+          "Business Role": document.getElementById('business-role').value,
+          "Availability for Task": document.getElementById('availability').value,
+          "Usual Availability Hours From": document.getElementById('available-from').value,
+          "Usual Availability Hours to": document.getElementById('available-to').value,
+          "Portfolio/Past Experience (links in others)": document.getElementById('portfolio').value,
+          "Languages": document.getElementById('languages').value,
+          "Any Social Media Links for Verification": document.getElementById('social-links').value
+        };
+        
+        // Remove empty fields to only send what needs to be updated
+        const cleanedData = {};
+        Object.keys(updateData).forEach(key => {
+          if (updateData[key] && updateData[key].trim() !== '') {
+            cleanedData[key] = updateData[key];
+          }
+        });
+        
+        // Always include email for identification
+        cleanedData.email = user.email;
+        
+        // Send POST request to the new API
+        const response = await fetch(NEW_API_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            token: API_TOKEN,
-            email: USER_EMAIL,
-            updates: updates
-          })
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(cleanedData)
         });
         
         const result = await response.json();
         
-        if (result.success) {
+        if (response.ok) {
+          // Update Firebase display name if it changed
+          if (cleanedData["Full Name"] && cleanedData["Full Name"] !== user.displayName) {
+            try {
+              await user.updateProfile({
+                displayName: cleanedData["Full Name"]
+              });
+              displayName.textContent = cleanedData["Full Name"];
+            } catch (error) {
+              console.warn("Could not update Firebase display name:", error);
+            }
+          }
+          
+          // Reload profile data to reflect changes
+          await loadUserProfile(user);
+          
           showMessage(settingsMessage, "Profile updated successfully!", "success");
-          loadProfile(); // Refresh data
-          setTimeout(() => switchTab('profile'), 1500);
+          
+          // Switch back to profile view after successful update
+          setTimeout(() => {
+            switchTab('profile');
+          }, 1500);
         } else {
-          showMessage(settingsMessage, result.message || "Failed to update profile", "error");
+          throw new Error(result.message || result.error || 'Failed to update profile');
         }
+        
       } catch (error) {
         console.error("Error updating profile:", error);
-        showMessage(settingsMessage, "Error updating profile", "error");
+        showMessage(settingsMessage, "Error updating profile: " + error.message, "error");
+      } finally {
+        // Re-enable the form
+        updateBtn.disabled = false;
+        updateBtn.innerHTML = '<i class="fas fa-save"></i> Update Profile';
+        profileForm.classList.remove('loading');
       }
     });
-
-    // Helper functions
-    function formatDate(dateStr) {
-      if (!dateStr) return '';
-      try {
-        return new Date(dateStr).toLocaleDateString();
-      } catch {
-        return dateStr;
-      }
-    }
-
-    function formatDateForInput(dateStr) {
-      if (!dateStr) return '';
-      try {
-        return new Date(dateStr).toISOString().split('T')[0];
-      } catch {
-        return dateStr;
-      }
-    }
-
-    function formatTime(timeStr) {
-      if (!timeStr) return '';
-      try {
-        return new Date(timeStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      } catch {
-        return timeStr;
-      }
-    }
-
-    function formatTimeForInput(timeStr) {
-      if (!timeStr) return '';
-      try {
-        const date = new Date(timeStr);
-        return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-      } catch {
-        return timeStr;
-      }
-    }
-
+    
+    // Logout
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      auth.signOut().then(() => {
+        window.location.href = 'business.html';
+      });
+    });
+    
+    // Helper function to show messages
     function showMessage(element, text, type) {
       element.textContent = text;
-      element.className = `alert alert-${type}`;
+      element.className = alert alert-${type};
       element.classList.remove('hidden');
       
       setTimeout(() => {
         element.classList.add('hidden');
       }, 5000);
     }
-
-    // Initialize
-    loadProfile();
   </script>
 </body>
 </html>

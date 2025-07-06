@@ -1,151 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Find Your Signup Profile</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      padding: 30px;
-      background-color: #f1f5f9;
-    }
-    input, button {
-      padding: 10px;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    h2 {
-      margin-bottom: 20px;
-    }
-    #profile {
-      margin-top: 30px;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-      max-width: 800px;
-    }
-    .field {
-      margin-bottom: 15px;
-    }
-    .label {
-      font-weight: bold;
-      color: #222;
-    }
-    .value {
-      color: #444;
-    }
-    .profile-pic {
-      width: 220px;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 20px;
-      border: 2px solid #aaa;
-      margin-top: 10px;
-    }
-    a {
-      color: #007BFF;
-      text-decoration: none;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-4">Profile Lookup</h2>
+    <input id="email" type="email" placeholder="Enter Email" class="border p-2 w-full mb-2 rounded" />
+    <button id="fetchBtn" class="bg-blue-500 text-white px-4 py-2 rounded w-full">Display</button>
+    <pre id="result" class="bg-gray-200 p-4 mt-4 rounded text-sm"></pre>
 
-  <h2>Find Your Signup Profile</h2>
-  <input type="email" id="emailInput" placeholder="Enter your email" size="40" />
-  <button onclick="getProfile()">Get Profile</button>
-
-  <div id="profile"></div>
+    <h2 class="text-2xl font-bold mt-8 mb-4">Add New Profile</h2>
+    <input id="newEmail" type="email" placeholder="Email" class="border p-2 w-full mb-2 rounded" />
+    <input id="fullName" type="text" placeholder="Full Name" class="border p-2 w-full mb-2 rounded" />
+    <input id="age" type="text" placeholder="Date of Birth (dd/mm/yyyy)" class="border p-2 w-full mb-2 rounded" />
+    <button id="addBtn" class="bg-green-500 text-white px-4 py-2 rounded w-full">Add Profile</button>
+  </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbylMFC8x75QQej-TXTKPmJgZRW8I9ITUB4Y_0JgeC3peJwcM3GrksG9fXGTcqmoB20a/exec";
+    const GAS_URL = "PASTE_YOUR_DEPLOYED_GAS_WEB_APP_URL_HERE";
 
-    function formatDate(dateStr) {
-      const d = new Date(dateStr);
-      return !isNaN(d.getTime()) ? d.toLocaleDateString('en-GB') : dateStr;
-    }
-
-    function formatTimeOnly(value) {
-      try {
-        const d = new Date(value);
-        return !isNaN(d.getTime()) ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : value;
-      } catch {
-        return value;
-      }
-    }
-
-    async function getProfile() {
-      const email = document.getElementById("emailInput").value.trim();
-      const profileBox = document.getElementById("profile");
-      profileBox.innerHTML = "";
-
+    document.getElementById("fetchBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
       if (!email) {
-        profileBox.innerHTML = "<p>Please enter a valid email.</p>";
+        alert("Please enter an email to search.");
+        return;
+      }
+      document.getElementById("result").innerText = "Loading...";
+      try {
+        const res = await fetch(`${GAS_URL}?action=getProfileByEmail&email=${encodeURIComponent(email)}`);
+        const data = await res.json();
+        document.getElementById("result").innerText = JSON.stringify(data, null, 2);
+      } catch (error) {
+        document.getElementById("result").innerText = "Error fetching data.";
+      }
+    });
+
+    document.getElementById("addBtn").addEventListener("click", async () => {
+      const newProfile = {
+        email: document.getElementById("newEmail").value,
+        fullName: document.getElementById("fullName").value,
+        dob: document.getElementById("age").value
+      };
+
+      if (!newProfile.email || !newProfile.fullName || !newProfile.dob) {
+        alert("Please fill all fields before adding.");
         return;
       }
 
       try {
-        const res = await fetch(`${API_URL}?email=${encodeURIComponent(email)}`);
+        const res = await fetch(GAS_URL, {
+          method: "POST",
+          body: JSON.stringify(newProfile),
+          headers: { "Content-Type": "application/json" }
+        });
         const data = await res.json();
-
-        if (!data.found) {
-          profileBox.innerHTML = "<p><strong>Email not found.</strong></p>";
-          return;
-        }
-
-        let html = "";
-
-        for (const key in data) {
-          if (key === "found") continue;
-          let value = data[key];
-
-          // Format date fields
-          if (key.toLowerCase().includes("date")) {
-            value = formatDate(value);
-          }
-
-          // Format time fields
-          if (key.toLowerCase().includes("from") || key.toLowerCase().includes("to")) {
-            value = formatTimeOnly(value);
-          }
-
-          // Hyperlink URLs
-          if (typeof value === "string" && value.includes("http")) {
-            const parts = value.split(/, ?/);
-            value = parts.map(v =>
-              v.startsWith("http") ? `<a href="${v}" target="_blank">${v}</a>` : v
-            ).join(", ");
-          }
-
-          // Handle profile picture
-          if (key.toLowerCase().includes("profile picture") && value.includes("drive.google.com")) {
-            const fileIdMatch = value.match(/[-\w]{25,}/);
-            if (fileIdMatch) {
-              const fileId = fileIdMatch[0];
-              const imgUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-              html += `
-                <div class="field">
-                  <div class="label">${key}:</div>
-                  <img src="${imgUrl}" class="profile-pic" alt="Profile Picture" />
-                </div>`;
-              continue;
-            }
-          }
-
-          // General display
-          html += `<div class="field">
-            <div class="label">${key}:</div>
-            <div class="value">${value}</div>
-          </div>`;
-        }
-
-        profileBox.innerHTML = html;
-
-      } catch (err) {
-        console.error(err);
-        profileBox.innerHTML = "<p>Error fetching profile. Please try again.</p>";
+        alert(data.message);
+      } catch (error) {
+        alert("Error adding profile.");
       }
-    }
+    });
   </script>
-
 </body>
 </html>
